@@ -280,10 +280,7 @@ order by p.nombre asc";
               </select>
             </div>
 
-            <div class="col-4">
-              <label class="form-label">PVP</label>
-              <input class="form-control" type="text" name="pvp" id="pvp">
-            </div>
+            
           </div>
 
         </div> <!-- ✅ CIERRE modal-body -->

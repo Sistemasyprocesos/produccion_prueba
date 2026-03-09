@@ -183,7 +183,7 @@ $res=$conn->query($sql);
                 <th>Actividad</th>
                 <th>Envase</th>
                 <th>KG standar</th>
-                <th>Peso</th>
+                <th>Personas Estandar</th>
                 <th></th>
               </tr>
             </thead>
@@ -260,9 +260,9 @@ $res=$conn->query($sql);
       <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
     </td>
           
-          <!---------udm----------->
+          <!---------CANTIDAD DE PERSONAS ESTANDAR----------->
           <td>
-             <input type="text" onkeypress="return solonum(event)" required class="form-control" name="udm[]">
+             <input type="number" min="0" step="1.0" onkeypress="return solonum(event)" required class="form-control" name="personas[]">
           </td>
                 <td><button type="button" class="btn btn-sm btn-danger eliminar-fila"><i class="bi bi-trash"></i></button></td>
               </tr>

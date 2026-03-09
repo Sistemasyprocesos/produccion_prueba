@@ -45,6 +45,7 @@
       <th>CANTIDAD</th>
       <th>PRODUCTO</th>
       <th>ESTADO</th>
+      <th>ACCIONES</th>
       <th>% CUMPLIMIENTO</th>
     </tr>
   </thead>
@@ -92,7 +93,7 @@ order by p.id_pedido desc");
 
   ?> 
   <tr>
-    <td style="background-color: #2b14d569; width: 170px;">
+    <td>
       <?=$g['num_pedido'] ?>
         <button 
           class="btn btn-warning btn-sm btnVerPedido"
@@ -103,7 +104,7 @@ order by p.id_pedido desc");
         </button>
     </td>
     <td><?=$g['cliente'] ?></td>
-    <td style="background-color: #ced41b; width: 100px;"><?=$g['fecha_entrega'] ?></td>
+    <td><?=$g['fecha_entrega'] ?></td>
     <td><?=$g['cantidad'].' '.$g['um'] ?></td>
     <td><?=$g['producto'] ?></td>
 
@@ -118,17 +119,36 @@ order by p.id_pedido desc");
   <?php  }
     ?>
 
-    <td style=" width: 400px;">
-  
-  <div class="d-flex align-items-center gap-2">
-  
-  <!-----------BOTON ELIMINAR------------------------------->
+
+
+<td>
+ <!---------BOTON DE DETALLES---------------------------->
+    <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i> Detalle</button>
+    
+    <!---------BOTON EDITAR---------------------------->
+
+<button class="btn btn-sm btn-primary btnEditar"
+  data-identi="<?=$g['id_pedido']?>"
+  data-bs-toggle="modal"
+  data-bs-target="#modaleditar">
+  <i class="bi bi-pencil-square"></i>
+</button> 
+
+<!-----------BOTON ELIMINAR------------------------------->
 <button class="btn btn-sm btn-danger btn-elim" data-identificacion="<?=$g['id_pedido']?>">
   <i class="bi bi-trash-fill"></i>
 </button>
 
-  <!---------BOTON DE DETALLES---------------------------->
-    <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i> Detalle</button>
+ 
+
+</td>
+
+
+<td style=" width: 400px;">
+  
+  <div class="d-flex align-items-center gap-2">
+  
+
   
   
   <!-----------BARRA DE PROGRESO----------------------------->
@@ -294,7 +314,31 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 </div>
 
 <!--------------------------------------------------->
-
+<!--------------MODAL EDITAR PEDIDO--------------------->
+<div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #0d6efd; color: white;">
+        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Editar pedido</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="contenidoEditar">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2">Cargando datos...</p>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" id="btnGuardarEdicion">
+          <i class="bi bi-floppy2-fill"></i> Guardar cambios
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -351,9 +395,52 @@ $(document).on("click", ".btnVerDetalle", function(){
 
 });
 </script>
+<!-------------------------->
 
+<!------AJAX EDITAR PEDIDO--------------------------------------------------->
+<script>
+$(document).on("click", ".btnEditar", function(){
+  const id = $(this).data("identi");
+  $("#contenidoEditar").html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando datos...</p></div>');
 
+  $.ajax({
+    url: "ajax_editar_pedido.php",
+    type: "POST",
+    data: { id: id },
+    success: function(res){
+      $("#contenidoEditar").html(res);
+    },
+    error: function(){
+      $("#contenidoEditar").html('<div class="alert alert-danger">Error al cargar datos</div>');
+    }
+  });
+});
 
+$(document).on("click", "#btnGuardarEdicion", function(){
+  const datos = $("#formEditar").serialize();
+
+  $.ajax({
+    url: "../procedimiento/updped.php",
+    type: "POST",
+    data: datos,
+    success: function(res){
+      Swal.fire({
+        icon: 'success',
+        title: 'Actualizado',
+        text: 'Pedido actualizado correctamente'
+      }).then(() => {
+        $('#modaleditar').modal('hide');
+        location.reload();
+      });
+    },
+    error: function(){
+      Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar' });
+    }
+  });
+});
+</script>
+
+<!----------------------->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>

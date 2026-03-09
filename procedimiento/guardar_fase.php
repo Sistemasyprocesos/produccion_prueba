@@ -12,7 +12,7 @@ $tipo      = $_POST['tipo'];
 $area      = $_POST['area'];
 $act       = $_POST['act'];
 $envase    = $_POST['envase'];
-
+$personas=$_POST['personas'];
 $kgstd = isset($_POST['kgstd']) ? $_POST['kgstd'] : [];
 
 $proceso_id = date('YmdHis') . '_' . uniqid();
@@ -28,14 +28,14 @@ try {
         $are = $area[$i];
         $env = $envase[$i];
         $kg  = isset($kgstd[$i]) ? $kgstd[$i] : 0;
-
+$people=$personas[$i];
         $actividades = $act[$i];
 
         foreach ($actividades as $actividad) {
 
             $sql = "INSERT INTO prod_fases_prod
-                    (producto, secuencia, tipo_fase, area, actividad, kg_std, proceso_id, envase)
-                    VALUES (?,?,?,?,?,?,?,?)";
+                    (producto, secuencia, tipo_fase, area, actividad, kg_std, proceso_id, envase,personas_std)
+                    VALUES (?,?,?,?,?,?,?,?,?)";
 
             $stmt = $conn->prepare($sql);
 
@@ -44,7 +44,7 @@ try {
             }
 
             $stmt->bind_param(
-                "iiiiiiii",
+                "iiiiiiiii",
                 $producto,
                 $seq,
                 $tip,
@@ -52,7 +52,8 @@ try {
                 $actividad,
                 $kg,
                 $proceso_id,
-                $env
+                $env,
+                $people
             );
 
             if(!$stmt->execute()){
