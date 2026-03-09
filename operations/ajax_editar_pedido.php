@@ -103,43 +103,5 @@ $fases = $conn->query("
     </div>
   </div>
 
-  <!-- FASES DE PRODUCCIÓN --
-  <div class="card border-success">
-    <div class="card-header bg-success text-white">
-      <i class="bi bi-diagram-3"></i> Fases de producción
-    </div>
-    <div class="card-body p-2">
-      <?php
-      $i = 0;
-      while($f = $fases->fetch_assoc()):
-        $i++;
-        $color = ($i % 2 == 0) ? '#f8f9fa' : '#ffffff';
-      ?>
-      <div class="border rounded p-2 mb-2" style="background:<?= $color ?>">
-        <input type="hidden" name="fases[<?= $i ?>][secuencia]" value="<?= $f['secuencia'] ?>">
 
-       
-        <div class="row g-2">
-          <div class="col-4">
-            <label class="form-label small mb-1">Producido (kg/und)</label>
-            <input type="number" step="0.01"
-              name="fases[<?= $i ?>][kg_real]"
-              class="form-control form-control-sm"
-              value="<?= $f['kg_real'] ?>"
-              placeholder="0.00">
-          </div>
-          <div class="col-4">
-            <label class="form-label small mb-1">Fecha producción</label>
-            <input type="date"
-              name="fases[<?= $i ?>][fecha_prod]"
-              class="form-control form-control-sm"
-              value="<?= $f['fecha_prod'] ?>">
-          </div>
-        
-        </div>
-      </div>
-      <?php endwhile; ?>
-    </div>
-  </div>
------>
 </form>
