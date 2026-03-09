@@ -284,31 +284,60 @@ $res=$conn->query($sql);
 </div>
 
 <!-- ================= MODAL EDITAR ================= -->
+<!-- ================= MODAL EDITAR ================= -->
 <div class="modal fade" tabindex="-1" id="modaleditar">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Editar fases</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+      <div class="modal-header" style="background-color: #0d6efd; color: white;">
+        <h5 class="modal-title">Editar Fases de Producción</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
-        <form>
+        <div id="loadingEditar" class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2">Cargando fases...</p>
+        </div>
+
+        <form id="formEditar" style="display:none;">
+          <input type="hidden" name="proceso_id" id="edit_proceso_id">
+
           <div class="row mb-3">
             <div class="col-6">
-              <label class="form-label">Nombre</label>
-              <input type="text" class="form-control">
+              <label class="form-label fw-bold">Producto</label>
+              <input type="text" class="form-control" id="edit_producto_nombre" readonly>
             </div>
-            <div class="col-6">
-              <label class="form-label">Identificación</label>
-              <input type="text" class="form-control">
-            </div>
+          </div>
+
+          <table class="table table-bordered table-sm" id="tablaEditar">
+            <thead class="table-dark">
+              <tr>
+                <th>Sec.</th>
+                <th>Tipo de Fase</th>
+                <th>Área de Producción</th>
+                <th>Actividad(es)</th>
+                <th>Envase</th>
+                <th>KG Estándar</th>
+                <th>Personas Estándar</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyEditar">
+            </tbody>
+          </table>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> Guardar Cambios
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </form>
       </div>
+
     </div>
   </div>
 </div>
-
 <!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -460,9 +489,123 @@ $(function(){
 });
 </script>
 
+<!------BTN EDITAR-------------->
+<script>
+/* =============================================
+   MODAL EDITAR — carga fases por proceso_id
+   ============================================= */
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btnEditarProceso');
+  if (!btn) return;
+
+  const procesoId = btn.dataset.proceso;
+
+  // reset modal
+  document.getElementById('loadingEditar').style.display = 'block';
+  document.getElementById('formEditar').style.display   = 'none';
+  document.getElementById('tbodyEditar').innerHTML = '';
 
 
+  // AJAX: cargar fases
+  fetch('../procedimiento/get_fases_proceso.php?proceso_id=' + procesoId)
+    .then(r => r.json())
+    .then(data => {
 
+      document.getElementById('loadingEditar').style.display = 'none';
+      document.getElementById('formEditar').style.display    = 'block';
+      document.getElementById('edit_proceso_id').value       = procesoId;
+
+      if (data.fases && data.fases.length > 0) {
+        document.getElementById('edit_producto_nombre').value = data.fases[0].producto;
+      }
+
+      const tbody = document.getElementById('tbodyEditar');
+
+      data.fases.forEach(function(fase) {
+        const actividades = fase.actividades.map(a =>
+          `<span class="badge bg-primary me-1">${a.nombre}</span>`
+        ).join('');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="text-center fw-bold">${fase.secuencia}</td>
+          <td>
+            <select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
+              ${data.tipos.map(t =>
+                `<option value="${t.cod}" ${t.cod == fase.tipo ? 'selected' : ''}>
+                  ${t.abreviatura}
+                 </option>`
+              ).join('')}
+            </select>
+          </td>
+          <td>
+            <select name="area[${fase.secuencia}]" class="form-select form-select-sm">
+              ${data.areas.map(a =>
+                `<option value="${a.id}" ${a.id == fase.area ? 'selected' : ''}>
+                  ${a.nombre}
+                 </option>`
+              ).join('')}
+            </select>
+          </td>
+          <td>${actividades}</td>
+          <td>
+            <select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
+              ${data.envases.map(v =>
+                `<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
+                  ${v.nombre}
+                 </option>`
+              ).join('')}
+            </select>
+          </td>
+          <td>
+            <input type="number" step="0.01" min="0" 
+              name="kgstd[${fase.secuencia}]" 
+              value="${fase.kg_std}" 
+              class="form-control form-control-sm">
+          </td>
+          <td>
+            <input type="number" step="1" min="0" 
+              name="personas[${fase.secuencia}]" 
+              value="${fase.personas_std}" 
+              class="form-control form-control-sm">
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      document.getElementById('loadingEditar').style.display = 'none';
+      Swal.fire('Error', 'No se pudieron cargar las fases. ' + err, 'error');
+    });
+});
+
+
+/* =============================================
+   SUBMIT EDITAR
+   ============================================= */
+document.addEventListener('submit', function(e) {
+  if (e.target.id !== 'formEditar') return;
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  fetch('../procedimiento/actualizar_fase.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.ok) {
+      Swal.fire({ icon: 'success', title: 'Actualizado', timer: 1500, showConfirmButton: false })
+        .then(() => location.reload());
+    } else {
+      Swal.fire('Error', res.msg || 'No se pudo actualizar.', 'error');
+    }
+  })
+  .catch(() => Swal.fire('Error', 'Fallo de conexión.', 'error'));
+});
+</script>
+<!------------------------->
 <!---------BTN ELIMINAR------------------>
 <script>
 document.addEventListener("click", function(e) {

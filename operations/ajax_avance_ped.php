@@ -100,19 +100,29 @@ if($pedido){
     <div class="col-12"><b>Pedido: </b> <?= $num_pedido ?></div>
     <div class="col-auto"><b>Cliente: </b> <?= $cliente ?></div>
     <div class="col-auto"><b>Fecha Registro: </b> <?= $fecha_registro ?></div>
-    <div class="col-auto"><b>Fecha Entrega: </b><?= $fecha_entrega ?></div>
+    <div class="col-auto"><b>Fecha Entrega: </b><?= $fecha_entrega ?>
+ <div class="col-auto">
+        <button class="btn btn-sm btn-primary" id="btnAgregarFilaModal"><i class="bi bi-plus-circle-fill"></i> Añadir linea</button>
+    </div>
+</div>
+
+   
+
 </div>
 
 <!----ENVIA EL FORM------->
 <form id="formAvance">
 <input type="hidden" name="id_pedido" value="<?= $id ?>">
 <table class="table table-bordered">
-<thead>
+<thead class="table-dark">
 <tr>
     <th>Turno</th>
     <th>Etapa</th>
     <th>Estimado(KG)</th>
     <th>Produccion real(KG)</th>
+    <th>Jornada</th>
+    <th>HC</th>
+    <th></th>
 </tr>
 </thead>
 <tbody class="table-group-divider">
@@ -145,6 +155,21 @@ class="form-control"
 value="<?= $valor ?>"
 name="real[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
             </td>
+
+<td>
+    <select class="form-select">
+        <option value="1">DIA</option>
+        <option value="2">NOCHE</option>
+    </select>
+</td>
+
+
+<td>
+<input type="number" class="form-select" min=0>
+</td>
+
+
+<td><button class="btn btn-sm btn-danger"><i class="bi bi-eraser-fill"></i></button></td>
 
         </tr>
 
