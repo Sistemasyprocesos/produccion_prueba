@@ -3,26 +3,32 @@ include '../connection/conexion.php';
 
 $date = date('Y-m-d');
 $id_pedido = $_POST['id_pedido'];
-
 foreach($_POST['real'] as $turno => $fases){
 
     foreach($fases as $secuencia => $kg_real){
 
-        $stmt=$conn->prepare("
-        INSERT INTO prod_avance_pedido
-        (id_pedido,turno,secuencia,kg_real,fecha_registro)
-        VALUES (?,?,?,?,?)
-        ON DUPLICATE KEY UPDATE
-        kg_real = VALUES(kg_real)
-        ");
+        $jornada = $_POST['jornada'][$turno][$secuencia] ?? null;
+        $hc = $_POST['hc'][$turno][$secuencia] ?? 0;
 
-        $stmt->bind_param("iiids",
-            $id_pedido,
-            $turno,
-            $secuencia,
-            $kg_real,
-            $date
-        );
+       $stmt=$conn->prepare("
+INSERT INTO prod_avance_pedido
+(id_pedido,turno,secuencia,kg_real,turnodn,hc,fecha_registro)
+VALUES (?,?,?,?,?,?,?)
+ON DUPLICATE KEY UPDATE
+kg_real = VALUES(kg_real),
+turnodn = VALUES(turnodn),
+hc = VALUES(hc)
+");
+
+$stmt->bind_param("iiidsds",
+    $id_pedido,
+    $turno,
+    $secuencia,
+    $kg_real,
+    $jornada,
+    $hc,
+    $date
+);
 
         $stmt->execute();
     }

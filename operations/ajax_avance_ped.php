@@ -9,7 +9,7 @@ $avance = [];
 
 /*---------PRECARGAR AVANCES EXISTENTES-----------*/
 
-$q="SELECT turno,secuencia,kg_real
+$q="SELECT turno,secuencia,kg_real,turnodn,hc
     FROM prod_avance_pedido
     WHERE id_pedido=?";
 
@@ -19,7 +19,20 @@ $stmt->execute();
 $res=$stmt->get_result();
 
 while($r=$res->fetch_assoc()){
-    $avance[$r['turno']][$r['secuencia']] = $r['kg_real'];
+
+    $avance[$r['turno']][$r['secuencia']] = [
+        'kg_real'=>$r['kg_real'],
+        'turnodn'=>$r['turnodn'],
+        'hc'=>$r['hc']
+    ];
+
+$max_turno = 1;
+
+if(!empty($avance)){
+    $max_turno = max(array_keys($avance));
+}
+
+
 }
 
 /* ===============================
@@ -97,16 +110,13 @@ $totalFases = count($fases);
 <div class="col-auto"><b>Fecha Registro: </b> <?= $fecha_registro ?></div>
 <div class="col-auto"><b>Fecha Entrega: </b> <?= $fecha_entrega ?></div>
 
-
-
-
 </div>
 
 <div class="row mb-3">
 <div class="col-auto"><b>Turnos Aprox: </b><?= $dias?></div>
 <div class="col-auto">
 <button type="button" class="btn btn-sm btn-primary" id="btnAgregarTurno">
-<i class="bi bi-plus-circle-fill"></i> Añadir turno
+Añadir turno
 </button>
 </div>
 </div>
@@ -134,7 +144,7 @@ $totalFases = count($fases);
 
 <tbody>
 
-<?php for($turno=1; $turno <= 1; $turno++): ?>
+<?php for($turno=1; $turno <= $max_turno; $turno++): ?>
 
 <?php foreach($fases as $index => $fase): ?>
 
@@ -155,23 +165,28 @@ $totalFases = count($fases);
 <td>
 
 <?php
-$valor = $avance[$turno][$fase['secuencia']] ?? '';
+$valor = $avance[$turno][$fase['secuencia']]['kg_real'] ?? '';
 ?>
 
 <input type="text"
 class="form-control"
-value="<?= $valor ?>" onkeypress=soloNumeros(event)
+value="<?= $valor ?>"
+onkeypress="soloNumeros(event)"
 name="real[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
 
 </td>
 
 <td>
 
+<?php
+$jornada = $avance[$turno][$fase['secuencia']]['turnodn'] ?? '';
+?>
+
 <select class="form-select"
 name="jornada[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
 
-<option value="1">DIA</option>
-<option value="2">NOCHE</option>
+<option value="DIA" <?= $jornada=='DIA'?'selected':'' ?>>DIA</option>
+<option value="NOCHE" <?= $jornada=='NOCHE'?'selected':'' ?>>NOCHE</option>
 
 </select>
 
@@ -179,8 +194,13 @@ name="jornada[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
 
 <td>
 
+<?php
+$hc = $avance[$turno][$fase['secuencia']]['hc'] ?? '';
+?>
+
 <input type="number"
-class="form-control" onkeypress=soloNumeros(event)
+class="form-control"
+value="<?= $hc ?>"
 name="hc[<?= $turno ?>][<?= $fase['secuencia'] ?>]"
 min="0">
 
@@ -190,7 +210,7 @@ min="0">
 
 <button type="button"
 class="btn btn-sm btn-danger btnEliminarFila">
-<i class="bi bi-eraser-fill"></i>
+<i class="bi bi-trash"></i>
 </button>
 
 </td>
@@ -259,21 +279,22 @@ tr.append(`
 
 <td>
 <input type="text"
-class="form-control" onkeypress="soloNumeros(event)"
+class="form-control"
+onkeypress="soloNumeros(event)"
 name="real[${nuevoTurno}][${fase.secuencia}]">
 </td>
 
 <td>
 <select class="form-select"
 name="jornada[${nuevoTurno}][${fase.secuencia}]">
-<option value="1">DIA</option>
-<option value="2">NOCHE</option>
+<option value="DIA">DIA</option>
+<option value="NOCHE">NOCHE</option>
 </select>
 </td>
 
 <td>
 <input type="number"
-class="form-control" onkeypress="soloNumeros(event)"
+class="form-control"
 name="hc[${nuevoTurno}][${fase.secuencia}]"
 min="0">
 </td>
@@ -281,7 +302,7 @@ min="0">
 <td>
 <button type="button"
 class="btn btn-sm btn-danger btnEliminarFila">
-<i class="bi bi-eraser-fill"></i>
+X
 </button>
 </td>
 
@@ -292,7 +313,6 @@ tbody.append(tr);
 });
 
 });
-
 
 /* =====================
 ELIMINAR FILA (AJUSTA ROWSPAN)
@@ -340,9 +360,13 @@ $(document).on('click', '.btnEliminarFila', function(){
 </script>
 
 <script>
+
 function soloNumeros(e){
-    if (!/[0-9.,]/.test(e.key)) {
-        e.preventDefault();
-    }
+
+if (!/[0-9.,]/.test(e.key)) {
+e.preventDefault();
 }
+
+}
+
 </script>
