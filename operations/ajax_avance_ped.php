@@ -134,7 +134,7 @@ $totalFases = count($fases);
 
 <tbody>
 
-<?php for($turno=1; $turno <= $dias; $turno++): ?>
+<?php for($turno=1; $turno <= 1; $turno++): ?>
 
 <?php foreach($fases as $index => $fase): ?>
 
@@ -160,7 +160,7 @@ $valor = $avance[$turno][$fase['secuencia']] ?? '';
 
 <input type="text"
 class="form-control"
-value="<?= $valor ?>"
+value="<?= $valor ?>" onkeypress=soloNumeros(event)
 name="real[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
 
 </td>
@@ -180,7 +180,7 @@ name="jornada[<?= $turno ?>][<?= $fase['secuencia'] ?>]">
 <td>
 
 <input type="number"
-class="form-control"
+class="form-control" onkeypress=soloNumeros(event)
 name="hc[<?= $turno ?>][<?= $fase['secuencia'] ?>]"
 min="0">
 
@@ -259,7 +259,7 @@ tr.append(`
 
 <td>
 <input type="text"
-class="form-control"
+class="form-control" onkeypress="soloNumeros(event)"
 name="real[${nuevoTurno}][${fase.secuencia}]">
 </td>
 
@@ -273,7 +273,7 @@ name="jornada[${nuevoTurno}][${fase.secuencia}]">
 
 <td>
 <input type="number"
-class="form-control"
+class="form-control" onkeypress="soloNumeros(event)"
 name="hc[${nuevoTurno}][${fase.secuencia}]"
 min="0">
 </td>
@@ -339,4 +339,10 @@ $(document).on('click', '.btnEliminarFila', function(){
 
 </script>
 
-
+<script>
+function soloNumeros(e){
+    if (!/[0-9.,]/.test(e.key)) {
+        e.preventDefault();
+    }
+}
+</script>
