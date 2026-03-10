@@ -17,7 +17,7 @@ $stmt=$conn->prepare($q);
 $stmt->bind_param("i",$id);
 $stmt->execute();
 $res=$stmt->get_result();
-
+$max_turno = 1;
 while($r=$res->fetch_assoc()){
 
     $avance[$r['turno']][$r['secuencia']] = [
@@ -26,7 +26,7 @@ while($r=$res->fetch_assoc()){
         'hc'=>$r['hc']
     ];
 
-$max_turno = 1;
+
 
 if(!empty($avance)){
     $max_turno = max(array_keys($avance));
