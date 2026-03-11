@@ -6,7 +6,7 @@ $codigo = $_POST['cod'] ?? null;
 $nombre = $_POST['nombre'] ?? null;
 $tipo = $_POST['tipo'] ?? null;
 $cat = $_POST['cate'] ?? null;
-$pvp = $_POST['pv'] ?? null;
+
 $peso = $_POST['peso'] ?? null;
 $udm = $_POST['udm'] ?? null;
 $env = $_POST['env'] ?? null;
@@ -51,7 +51,7 @@ codigo_prod=?,
 nombre=?,
 tipo_prod=?,
 cat_prod=?,
-pvp=?,
+
 peso_prod=?,
 udm=?,
 envase=?,
@@ -61,12 +61,12 @@ und_pallet=?,
 estado=?
 WHERE id=?");  
 
-$er->bind_param("ssisdiiiiiiii",
+$er->bind_param("ssisiiiiiiii",
 $codigo,
 $nombre,
 $tipo,
 $cat,
-$pvp,
+
 $peso,
 $udm,
 $env,

@@ -55,7 +55,7 @@ p.und_pallet,
 p.producto_base,
 p.estado,
 p.codigo_prod as codigo_prod,
-p.pvp as pvp,
+
 p.id as idprod,
 u.sigla,u.id,
 p.estado as estado,
@@ -134,7 +134,7 @@ order by p.nombre asc";
               data-unds_cjsc="<?= $row["unds_cjsc"] ?>"
               data-tipo_embalaje="<?= $row["tipo_embalaje"] ?>"
               data-und_pallet="<?= $row["und_pallet"] ?>"
-              data-pvp="<?= $row["pvp"] ?>"
+             
               data-producto_base="<?= $row["producto_base"] ?>"
               data-estado="<?= $row["estado"] ?>"
               ><i class="bi bi-pencil-square"></i></button>
@@ -218,7 +218,7 @@ order by p.nombre asc";
           <div class="row mb-3">
             <div class="col-4">
               <label class="form-label">Peso</label>
-              <input type="text" class="form-control" name="pesoprod" id="pesoprod">
+              <input type="text" class="form-control" onkeypress=soloNumeros(event) name="pesoprod" id="pesoprod">
             </div>
            
             <div class="col-4"> 
@@ -250,7 +250,7 @@ order by p.nombre asc";
           <div class="row mb-3">
             <div class="col-4">
               <label class="form-label">Unds(CJ/SC)</label>
-              <input type="text" class="form-control" id="unds_cjsc" name="unds_cjsc">
+              <input type="text" class="form-control" id="unds_cjsc" onkeypress=soloNumeros(event) name="unds_cjsc">
             </div>
             <div class="col-4">
               <label class="form-label">Embalaje</label>
@@ -264,7 +264,7 @@ order by p.nombre asc";
             </div>
             <div class="col-4">
               <label class="form-label">Unds por pallet</label>
-              <input type="text" class="form-control" name="unds_pallet" id="unds_pallet">
+              <input type="text" class="form-control" onkeypress=soloNumeros(event) name="unds_pallet" id="unds_pallet">
             </div>
           </div>
 
@@ -344,13 +344,10 @@ order by p.nombre asc";
               <label class="form-label">Categoría</label>
               <input type="text" class="form-control" required name="cate" id="cate">
             </div>
-            <div class="col-4">
-              <label class="form-label">PVP unidad</label>
-              <input type="number" name="pv" id="pv" step="0.01" required min="0" class="form-control">
-            </div>
+            
             <div class="col-2">
               <label class="form-label">Peso (kg)</label>
-              <input type="number"  step="0.01" min="0" class="form-control" required id="peso" name="peso">
+              <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
             </div>
              <div class="col-2">
               <label class="form-label">UDM</label>
@@ -397,19 +394,15 @@ order by p.nombre asc";
 
 <!-- Unidades -->
           <div class="row mb-3">
-            <div class="col-6">
+            <div class="col-4">
               <label class="form-label">Unidades x cj/sc</label>
-              <input type="number" required min="0" class="form-control" name="undscjsc" id="undscjsc">
+              <input type="number" required min="0" onkeypress=soloNumeros(event) class="form-control" name="undscjsc" id="undscjsc">
             </div>
-            <div class="col-6">
+            <div class="col-4">
               <label class="form-label">Unidades en pallet</label>
-              <input type="number" required min="0" class="form-control" name="und_pallet" id="und_pallet">
+              <input type="number" required min="0" onkeypress=soloNumeros(event) class="form-control" name="und_pallet" id="und_pallet">
             </div>
-          </div>
-
-<!-- ESTADO -->
-                   <div class="row mb-3">
-            <div class="col-6">
+              <div class="col-4">
               <label class="form-label">Estado</label>
                 <select name="estate" required id="estate" class="form-select">
                   <?php $f=$conn->query("select id,nom from prod_estados order by nom desc");
@@ -419,8 +412,9 @@ order by p.nombre asc";
                   <?php } ?>
                 </select>
             </div>
-          
           </div>
+
+                 
 
 
         </div>
@@ -485,7 +479,7 @@ document.addEventListener("click", function(e) {
   const tipo = button.getAttribute('data-tipo');
   const peso= button.getAttribute('data-peso');
   const envase = button.getAttribute('data-envase');
- const precio=button.getAttribute('data-pvp'); 
+
   const unds_cjsc = button.getAttribute('data-unds_cjsc');
   //const tipo_embalaje = button.getAttribute('data-tipo_embalaje');
   const und_pallet = button.getAttribute('data-und_pallet');
@@ -501,7 +495,7 @@ document.addEventListener("click", function(e) {
  
   document.getElementById('estate').value = parseInt(estado) || "";
   document.getElementById('env').value=envase;
-  document.getElementById('pv').value=precio;
+
   document.getElementById('und_pallet').value=und_pallet;
   document.getElementById('undscjsc').value=unds_cjsc;
 
@@ -588,6 +582,17 @@ document.getElementById('formguarda').addEventListener('submit', function(e) {
 
 
 
+<script>
+
+function soloNumeros(e){
+
+if (!/[0-9.,]/.test(e.key)) {
+e.preventDefault();
+}
+
+}
+
+</script>
 
 
 

@@ -200,7 +200,7 @@ $hc = $avance[$turno][$fase['secuencia']]['hc'] ?? '';
 ?>
 
 <input type="number"
-class="form-control"
+class="form-control" onkeypress=soloNumeros(event)
 value="<?= $hc ?>"
 name="hc[<?= $turno ?>][<?= $fase['secuencia'] ?>]"
 min="0">
@@ -230,7 +230,7 @@ class="btn btn-sm btn-danger btnEliminarFila">
 <?php
 
 }else{
-echo "Producto no tiene fases definidas.";
+echo "Producto no tiene fases definidas.Debe agregarlas";
 }
 
 $stmt->close();
@@ -303,7 +303,7 @@ min="0">
 <td>
 <button type="button"
 class="btn btn-sm btn-danger btnEliminarFila">
-X
+<i class="bi bi-trash"></i>
 </button>
 </td>
 

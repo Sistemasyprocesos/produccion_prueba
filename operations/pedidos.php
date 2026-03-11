@@ -123,8 +123,15 @@ order by p.id_pedido desc");
 
 <td>
  <!---------BOTON DE DETALLES---------------------------->
-    <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i> Detalle</button>
+    <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i> Detalle V1</button>
     
+
+
+
+
+ <!---------BOTON DE DETALLES---------------------------->
+    <button class="btn btn-success btn-sm btnVerDetallev2" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv2"><i class="bi bi-card-checklist"></i> Detalle V2</button>
+
     <!---------BOTON EDITAR---------------------------->
 
 <button class="btn btn-sm btn-primary btnEditar"
@@ -313,6 +320,35 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
   </div>
 </div>
 
+
+
+
+<!--------------------MODAL DETALLEv2----------------------->
+<div class="modal fade" id="modaldetallesv2" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #198754; color: white;">
+        <h5 class="modal-title">Añadir produccion real</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" id="avancepedido">
+        Cargando...
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
+        <button class="btn btn-success btn-sm"  id="guardarAvancev2"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
 <!--------------------------------------------------->
 <!--------------MODAL EDITAR PEDIDO--------------------->
 <div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">
@@ -395,8 +431,31 @@ $(document).on("click", ".btnVerDetalle", function(){
 
 });
 </script>
-<!-------------------------->
 
+<!----------AVANCE V2---------------->
+<script>
+$(document).on("click", ".btnVerDetallev2", function(){
+
+  const id = $(this).data("iddet");
+
+  $("#avancepedido").html("Cargando...");
+
+  $.ajax({
+    url: "ajax_avance_pedv2.php",
+    type: "POST",
+    data: { id: id },
+
+    success: function(res){
+      $("#avancepedido").html(res);
+    },
+
+    error: function(){
+      $("#avancepedido").html("Error al cargar datos");
+    }
+  });
+
+});
+</script>
 <!------AJAX EDITAR PEDIDO--------------------------------------------------->
 <script>
 $(document).on("click", ".btnEditar", function(){
@@ -501,7 +560,38 @@ document.querySelectorAll('.btn-elim').forEach(btn => {
 });
 </script>
 
+<!---------------------->
+<script>
 
+  $(document).on("click","#guardarAvancev2",function(){
+
+    let datos = $("#formAvance").serialize();
+
+    $.ajax({
+        url:"guardar_avancev2.php",
+        type:"POST",
+        data:datos,
+
+        success:function(resp){
+
+            Swal.fire({
+                icon:'success',
+                title:'Guardado',
+                text:'Producción registrada'
+            });
+
+        },
+        error:function(){
+            alert("Error al guardar");
+        }
+    });
+
+});
+</script>
+
+
+
+<!--------------------------->
 <script>
 document.querySelectorAll(".progress-bar").forEach(function(barra){
   let porcentaje = parseInt(barra.closest('.progress').dataset.porcentaje);

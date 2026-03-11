@@ -90,16 +90,12 @@ $cantidad_pedido = $r3['cantidad'];
 =================================== */
 
 if($total_producido >= $cantidad_pedido){
-
-    $up=$conn->prepare("
-    UPDATE prod_pedidos
-    SET estado = 2
-    WHERE id_pedido=?
-    ");
-
-    $up->bind_param("i",$id_pedido);
-    $up->execute();
+    $est=2;  
+}else {
+    $est=1;
 }
 
-echo "ok";
+ $up=$conn->prepare(" UPDATE prod_pedidos SET estado = ? WHERE id_pedido=?");
+    $up->bind_param("ii",$est ,$id_pedido);
+    $up->execute();
 ?>
