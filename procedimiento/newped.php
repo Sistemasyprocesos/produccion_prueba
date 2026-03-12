@@ -98,26 +98,26 @@ try {
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Guardando...</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Guardando...</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
 
-<script>
-Swal.fire({
-  title: "Éxito",
-  text: "Pedido creado correctamente\nN° <?= $num_pedido ?>",
-  icon: "success",
-  timer: 1800,
-  showConfirmButton: false
-}).then(() => {
-  window.location.href = "../operations/pedidos.php";
-});
-</script>
+        <script>
+            Swal.fire({
+            title: "Éxito",
+            text: "Pedido creado correctamente\nN° <?= $num_pedido ?>",
+            icon: "success",
+            timer: 1800,
+            showConfirmButton: false
+            }).then(() => {
+            window.location.href = "../operations/pedidos.php";
+            });
+        </script>
 
-</body>
+    </body>
 </html>
 
 <?php
@@ -129,26 +129,26 @@ Swal.fire({
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Error</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Error</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
 
-<script>
-Swal.fire({
-  title: "Error",
-  text: "No se pudo registrar el pedido",
-  icon: "error",
-  timer: 2000,
-  showConfirmButton: false
-}).then(() => {
-  window.history.back();
-});
-</script>
+        <script>
+            Swal.fire({
+            title: "Error",
+            text: "No se pudo registrar el pedido",
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false
+            }).then(() => {
+            window.history.back();
+            });
+        </script>
 
-</body>
+    </body>
 </html>
 
 <?php

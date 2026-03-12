@@ -18,16 +18,16 @@
 
 
 $consulta = "
-SELECT 
-  p.id,
-  p.nombre,
-  p.abreviatura,
-  e.id   AS idestado,
-  e.nom  AS nombreestado
-FROM prod_act_prod AS p
-INNER JOIN prod_estados AS e
-  ON p.estado = e.id
-ORDER BY p.nombre ASC
+    SELECT 
+      p.id,
+      p.nombre,
+      p.abreviatura,
+      e.id   AS idestado,
+      e.nom  AS nombreestado
+    FROM prod_act_prod AS p
+    INNER JOIN prod_estados AS e
+      ON p.estado = e.id
+    ORDER BY p.nombre ASC
 ";
 
 ?>
@@ -41,14 +41,14 @@ ORDER BY p.nombre ASC
 
 <!------------------------>
 <div class="container mt-2">
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Actividad de Produccion</button>
-</div>
-<div class="col-4">
-<input type="text" id="Buscador" class="form-control mb-3" placeholder="Buscar actividad de producción...">
-</div>
-</div>
+    <div class="row mb-3">
+        <div class="col-2">
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Actividad de Produccion</button>
+        </div>
+        <div class="col-4">
+          <input type="text" id="Buscador" class="form-control mb-3" placeholder="Buscar actividad de producción...">
+        </div>
+    </div>
 
 <table class="table mt-5 table-sm" id="tblcolab">
   <thead class="table-dark">
@@ -57,7 +57,7 @@ ORDER BY p.nombre ASC
       <th>Sigla</th>
       <th>Estado</th>
       <th>Acciones</th>
-  <!----    <th>Activar/Inactivar</th>----->
+
     </tr>
   </thead>
   <tbody>
@@ -72,10 +72,10 @@ ORDER BY p.nombre ASC
             <td><?=  $row["nombreestado"]?></td>
             <td>
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
-              data-id=<?=$row["id"] ?> 
-              data-nombre=<?=$row['nombre'] ?> 
-              data-abrev=<?=$row['abreviatura'] ?>
-              data-est=<?=$row['idestado']?>
+                data-id=<?=$row["id"] ?> 
+                data-nombre=<?=$row['nombre'] ?> 
+                data-abrev=<?=$row['abreviatura'] ?>
+                data-est=<?=$row['idestado']?>
               ><i class="bi bi-pencil-square"></i></button>
               
               <!-------BOTON ELIMINAR-------->
@@ -83,9 +83,7 @@ ORDER BY p.nombre ASC
               <i class="bi bi-trash3"></i>
             </button>
 
-              <!------BOTON ACTIVAR/INACTIVAR------>
-             <!--- <td><button class="btn btn-sm btn-warning btn-inactivar"><i class="bi bi-check-circle text-white"></i></button></td>--->
-            </tr>
+              </tr>
      <?php   }
     } else {
       ?>
@@ -96,11 +94,9 @@ ORDER BY p.nombre ASC
 </table>
 <!----PAGINADOR------->
 
-
-
 <nav>
-<?php include '../complemento/paginator.php' ?>
-<ul class="pagination justify-content-center" id="pagination"></ul>
+    <?php include '../complemento/paginator.php' ?>
+    <ul class="pagination justify-content-center" id="pagination"></ul>
 </nav>
 
 </div>
@@ -136,7 +132,6 @@ ORDER BY p.nombre ASC
     </div>
       </div>
       <div class="modal-footer">
-        
         <button type="submit" class="btn btn-primary">Guardar</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
       </form>
@@ -228,12 +223,12 @@ document.getElementById('tblcolab').addEventListener('click', function (e) {
   const fila = btn.closest('tr');
 
   Swal.fire({
-    title: "Confirmar eliminación",
-    text: "Va a eliminar esta actividad. ¿Desea continuar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Eliminar",
-    cancelButtonText: "Cancelar"
+        title: "Confirmar eliminación",
+        text: "Va a eliminar esta actividad. ¿Desea continuar?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar"
   }).then((result) => {
 
     if (result.isConfirmed) {

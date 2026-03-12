@@ -529,6 +529,7 @@ document.addEventListener('click', function(e) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="text-center fw-bold">${fase.secuencia}</td>
+          
           <td>
             <select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
               ${data.tipos.map(t =>
@@ -538,6 +539,8 @@ document.addEventListener('click', function(e) {
               ).join('')}
             </select>
           </td>
+
+
           <td>
             <select name="area[${fase.secuencia}]" class="form-select form-select-sm">
               ${data.areas.map(a =>
@@ -547,7 +550,11 @@ document.addEventListener('click', function(e) {
               ).join('')}
             </select>
           </td>
+
+
           <td>${actividades}</td>
+
+          
           <td>
             <select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
               ${data.envases.map(v =>
@@ -557,14 +564,15 @@ document.addEventListener('click', function(e) {
               ).join('')}
             </select>
           </td>
+          
           <td>
-            <input type="number" step="0.01" min="0" 
+            <input type="number" step="0.01" min="0" onkeypress=solonum(event) 
               name="kgstd[${fase.secuencia}]" 
               value="${fase.kg_std}" 
               class="form-control form-control-sm">
           </td>
           <td>
-            <input type="number" step="1" min="0" 
+            <input type="number" step="1" min="0" onkeypress=solonum(event) 
               name="personas[${fase.secuencia}]" 
               value="${fase.personas_std}" 
               class="form-control form-control-sm">
@@ -574,8 +582,11 @@ document.addEventListener('click', function(e) {
       });
     })
     .catch(err => {
-      document.getElementById('loadingEditar').style.display = 'none';
-      Swal.fire('Error', 'No se pudieron cargar las fases. ' + err, 'error');
+        document.getElementById('loadingEditar').style.display = 'none';
+        Swal.fire('Error', 
+        'No se pudieron cargar las fases. '
+        + err,
+        'error');
     });
 });
 

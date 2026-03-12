@@ -13,11 +13,9 @@
 
 <body>
 
-<?php include '../complemento/sidebar.php';
-  include '../connection/conexion.php';
-
-
-
+<?php
+ include '../complemento/sidebar.php';
+ include '../connection/conexion.php';
 ?>
 
 <!-- CONTENIDO -->
@@ -30,14 +28,14 @@
 <!------------------------>
 <div class="container mt-1">
   
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Nuevo</button>
-</div>
-<div class="col-4">
-<input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar orden de produccion...">
-</div>
-</div>
+  <div class="row mb-3">
+    <div class="col-2">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Nuevo</button>
+    </div>
+    <div class="col-4">
+      <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar orden de produccion...">
+    </div>
+  </div>
 
 <table class="table mt-2 table-sm" id="tblcolab">
   <thead class="table-dark">
@@ -46,9 +44,9 @@
       <th>CLIENTE</th>
       <th >FECHA DE ENTREGA</th>
       <th >CANTIDAD</th>
-        <th>PRODUCTO</th>
-        <th></th>
-       <th >% CUMPLIMIENTO</th>
+      <th>PRODUCTO</th>
+      <th></th>
+      <th >% CUMPLIMIENTO</th>
       
       
     </tr>
@@ -56,29 +54,23 @@
   <tbody>
   <?php 
   $f=$conn->query("select 
-  p.id_pedido,
-  p.id_cliente,
-  p.fecha_registro,
-  p.fecha_entrega,
-  p.producto,
-  p.cantidad,
-  p.und_medida,
-  p.num_pedido,
-  c.razon_social as cliente,
-  pr.nombre as producto
-  from prod_pedidos as p 
-  inner join prod_clientes as c on c.id=p.id_cliente
-  inner join prod_productos as pr on pr.id=p.producto order by p.id_pedido desc");
+      p.id_pedido,
+      p.id_cliente,
+      p.fecha_registro,
+      p.fecha_entrega,
+      p.producto,
+      p.cantidad,
+      p.und_medida,
+      p.num_pedido,
+      c.razon_social as cliente,
+      pr.nombre as producto
+      from prod_pedidos as p 
+      inner join prod_clientes as c on c.id=p.id_cliente
+      inner join prod_productos as pr on pr.id=p.producto order by p.id_pedido desc");
   
   while($g=$f->fetch_assoc()){
 
   ?> 
-        <!-----
-            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 55%">55%</div>
-</div>
-
------->
 
 <?php $esc = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
   <tr>
@@ -88,18 +80,17 @@
     <td><?= $esc($g['cantidad']) ?></td>
     <td><?=$esc($g['producto']) ?></td>
     <td>
-         <button 
-  class="btn btn-warning btn-sm btnVerPedido"
-data-id="<?= $esc($g['id_pedido']) ?>"
-  data-bs-toggle="modal"
-  data-bs-target="#modalver">
-  <i class="bi bi-eye-fill"></i>
-</button>
+         <button class="btn btn-warning btn-sm btnVerPedido"
+            data-id="<?= $esc($g['id_pedido']) ?>"
+            data-bs-toggle="modal"
+            data-bs-target="#modalver">
+            <i class="bi bi-eye-fill"></i>
+        </button>
 
-</td><td>
+    </td><td>
           <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar" style="width: 55%">55%</div>
-</div>
+            <div class="progress-bar" style="width: 55%">55%</div>
+          </div>
     </td>
    </tr>
    <?php

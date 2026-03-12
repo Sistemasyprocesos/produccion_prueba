@@ -26,17 +26,15 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
   <h1>Unidades de Medida</h1>
   <div class="row justify-content-center">
     <!----------------------------->
-  
-
 <!------------------------>
 <div class="container mt-2">
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Unidades de Medida</button>
-</div>
-<div class="col-4">
-<input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar unidad de medida...">
-</div>
+    <div class="row mb-3">
+      <div class="col-2">
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Unidades de Medida</button>
+      </div>
+      <div class="col-4">
+          <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar unidad de medida...">
+      </div>
 </div>
 
 <table class="table mt-5 table-sm" id="tblcolab">
@@ -54,23 +52,25 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) { ?>
             <tr>
-            <td><?=  $row["nombre"]?></td>
-            <td><?=  $row["sigla"]?></td>
-            
-            <td>
-              <!----MODAL EDITAR-------->
-              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
-              data-id="<?= $row["id"]?>"
-              data-nombre="<?= $row["nombre"]?>"
-              data-sigla="<?= $row["sigla"]?>">             
-              <i class="bi bi-pencil-square"></i></button>
-              <!------BOTON ELIMINAR------>
-              <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?=$row["id"]?>"><i class="bi bi-trash3"></i></button></td>
+                <td><?=  $row["nombre"]?></td>
+                <td><?=  $row["sigla"]?></td>
+                
+                <td>
+                  <!----MODAL EDITAR-------->
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
+                      data-id="<?= $row["id"]?>"
+                      data-nombre="<?= $row["nombre"]?>"
+                      data-sigla="<?= $row["sigla"]?>">             
+                      <i class="bi bi-pencil-square"></i></button>
+                  <!------BOTON ELIMINAR------>
+                  <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?=$row["id"]?>"><i class="bi bi-trash3"></i></button></td>
             </tr>
      <?php   }
     } else {
       ?>
-        <tr><td colspan='5'>No hay registros</td></tr>
+        <tr>
+          <td colspan='5'>No hay registros</td>
+        </tr>
    <?php }
     ?>
   </tbody>
@@ -79,10 +79,10 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
 
 
 
-<nav>
-<?php include '../complemento/paginator.php' ?>
-<ul class="pagination justify-content-center" id="pagination"></ul>
-</nav>
+  <nav>
+      <?php include '../complemento/paginator.php' ?>
+      <ul class="pagination justify-content-center" id="pagination"></ul>
+  </nav>
 
 </div>
   </div>
@@ -100,7 +100,6 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
       <div class="modal-body">
           <div class="col-12 ">
  
-
       <form method="post" action="../procedimiento/newudm.php">
       <div class="row mb-3">
         <div class="col-6">
@@ -113,12 +112,9 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
         </div>
       </div>
 
-      
-
     </div>
       </div>
       <div class="modal-footer">
-        
         <button type="submit" class="btn btn-primary">Guardar</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
       </form>
@@ -128,8 +124,6 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
 </div>
 
 <!----------------------------------->
-
-
 
 <!--------------MODAL EDITAR--------------------->
 <div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">
@@ -141,8 +135,6 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
       </div>
       <div class="modal-body">
           <div class="col-12 ">
- 
-
       <form method="post" action="../procedimiento/actudm.php">
         <input name="cod" id="cod" required type="hidden">
       <div class="row mb-3">
@@ -172,17 +164,16 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
 
 <script>
 const modaleditar=document.getElementById('modaleditar');
-modaleditar.addEventListener('show.bs.modal', function (event) {
-  const button = event.relatedTarget;
-  const id = button.getAttribute('data-id');
-  const nombre = button.getAttribute('data-nombre');
-  const sigla = button.getAttribute('data-sigla');
+  modaleditar.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const id = button.getAttribute('data-id');
+      const nombre = button.getAttribute('data-nombre');
+      const sigla = button.getAttribute('data-sigla');
 
- document.getElementById('cod').value=id;
- document.getElementById('nombre').value=nombre;
- document.getElementById('sigla').value=sigla;
+      document.getElementById('cod').value=id;
+      document.getElementById('nombre').value=nombre;
+      document.getElementById('sigla').value=sigla;
 });
-
 </script>
 
 
