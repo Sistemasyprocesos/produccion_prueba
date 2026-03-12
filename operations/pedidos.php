@@ -58,8 +58,8 @@
               <th>ACCIONES</th>
               <th>% CUMPLIMIENTO</th>
             </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
             <?php 
               $f=$conn->query("SELECT 
                 p.id_pedido,
@@ -158,14 +158,14 @@
                           aria-valuemax="100">
                       <div class="progress-bar" style="width: <?= $g['cumplimiento'] ?>%"><?= $g['cumplimiento'] ?>%</div>
                   </div>
-      </div>
+                  </div>
                 </td>
             </tr>
           <?php
             } 
             ?>
 
-          </tbody>
+      </tbody>
         </table>
 
     <!----PAGINADOR------->
