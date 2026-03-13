@@ -13,7 +13,7 @@ $env = $_POST['env'] ?? null;
 $udmenvase = $_POST['udmenvase'] ?? null;
 $undcjsc = $_POST['undscjsc'] ?? null;
 $undpallet = $_POST['und_pallet'] ?? null;
-$estado = $_POST['est'] ?? null;
+$estado = $_POST['estate'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -51,17 +51,17 @@ codigo_prod=?,
 nombre=?,
 tipo_prod=?,
 cat_prod=?,
-
 peso_prod=?,
 udm=?,
 envase=?,
-udm=?,
+
 unds_cjsc=?,
+
 und_pallet=?,
 estado=?
 WHERE id=?");  
 
-$er->bind_param("ssisiiiiiiii",
+$er->bind_param("ssisiiiiiii",
 $codigo,
 $nombre,
 $tipo,
@@ -70,7 +70,7 @@ $cat,
 $peso,
 $udm,
 $env,
-$udmenvase,
+
 $undcjsc,
 $undpallet,
 $estado,

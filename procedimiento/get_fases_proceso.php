@@ -13,19 +13,20 @@ if(!$proceso_id){
     exit;
 }
 
-$sql="
-SELECT
+$sql="SELECT
     f.secuencia,
     f.kg_std,
     f.personas_std,
     f.tipo_fase,
     f.area,
     f.envase,
+    
     p.nombre AS producto,
     GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR ', ') AS actividades
 FROM prod_fases_prod f
 INNER JOIN prod_productos p ON p.id=f.producto
 INNER JOIN prod_act_prod a ON a.id=f.actividad
+
 WHERE f.proceso_id=?
 GROUP BY f.secuencia,f.kg_std,f.personas_std,f.tipo_fase,f.area,f.envase,p.nombre
 ORDER BY f.secuencia
@@ -70,9 +71,17 @@ $areas=$conn->query("SELECT id,nombre FROM prod_area_prod ORDER BY nombre")->fet
 
 $envases=$conn->query("SELECT id,nombre FROM prod_envase ORDER BY nombre")->fetch_all(MYSQLI_ASSOC);
 
+$actividades=$conn->query("
+SELECT id,nombre 
+FROM prod_act_prod 
+ORDER BY nombre
+")->fetch_all(MYSQLI_ASSOC);
+
+
 echo json_encode([
     "fases"=>$fases,
     "tipos"=>$tipos,
     "areas"=>$areas,
-    "envases"=>$envases
+   "envases"=>$envases,
+    "actividades"=>$actividades
 ],JSON_UNESCAPED_UNICODE);

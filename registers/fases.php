@@ -158,7 +158,7 @@ $res=$conn->query($sql);
           
             <div class="col-6">
               <label class="form-label">Producto</label>
-             <?php   $g=$conn->query("select id,nombre from  prod_productos order by nombre asc");   ?>
+                <?php   $g=$conn->query("select id,nombre from  prod_productos order by nombre asc");   ?>
               <select name="producto" id="producto" class="form-select" required>
                 <?php  while($r=$g->fetch_assoc()){   ?>
                   <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=htmlspecialchars($r['nombre'], ENT_QUOTES, 'UTF-8') ?></option>
@@ -182,6 +182,8 @@ $res=$conn->query($sql);
                 <th>Area de Produccion</th>
                 <th>Actividad</th>
                 <th>Envase</th>
+                <th>Peso Envase</th>
+                <th>UDM envase</th>
                 <th>KG standar</th>
                 <th>Personas Estandar</th>
                 <th></th>
@@ -211,7 +213,7 @@ $res=$conn->query($sql);
                    <td> <?php
             $g=$conn->query("select id,nombre from  prod_area_prod order by nombre asc");
             ?>
-            <!----------------AREA--------------->
+<!----------------AREA--------------->
           <select name="area[]" required id="area" class="form-select">
             <?php
             while($r=$g->fetch_assoc()){
@@ -224,7 +226,7 @@ $res=$conn->query($sql);
   <div class="actividad-container">
 
     <div class="actividad-item input-group mb-2">
-
+<!-----ACTIVIDAD------------>
       <select name="act[0][]" required class="form-select actividad-select">
         <?php
         $g=$conn->query("select id,nombre from prod_act_prod order by nombre asc");
@@ -243,7 +245,7 @@ $res=$conn->query($sql);
   </div>
 </td>
           
-          <!---------envase----------->
+<!---------envase----------->
           <td>
             <select class="form-select" required name="envase[]">
             <?php 
@@ -252,9 +254,29 @@ $res=$conn->query($sql);
             ?>
             <option value="<?=$t['id'] ?>"><?=$t['nombre'] ?></option>
             <?php } ?>
-</select>
+            </select>
+          </td>
+          <!--------PESO ENVASE---------------------->
+          <td>
+            <input type="number" min="0" class="form-control" onkeypress="return solonum(event)" name="pesoenv[]">
+
           </td>
           
+          <!----------UDM ENVASE-------------------------->
+          <td>
+            <select class="form-select" required name="udmenv[]">
+              <option selected>-seleccione--</option>
+            <?php
+              $h=$conn->query("select id,sigla from prod_udm order by sigla asc");
+              while($l=$h->fetch_assoc()){
+            ?>
+              <option value=<?=$l['id'] ?>><?=$l['sigla'] ?></option>
+            <?php }   ?>
+            </select>
+          </td>
+
+
+
           <!---------kg stdr----------->
     <td>
       <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
@@ -283,8 +305,11 @@ $res=$conn->query($sql);
   </div>
 </div>
 
+
+
 <!-- ================= MODAL EDITAR ================= -->
-<!-- ================= MODAL EDITAR ================= -->
+
+
 <div class="modal fade" tabindex="-1" id="modaleditar">
   <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
     <div class="modal-content">
@@ -527,57 +552,89 @@ document.addEventListener('click', function(e) {
         ).join('');
 
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="text-center fw-bold">${fase.secuencia}</td>
-          
-          <td>
-            <select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
-              ${data.tipos.map(t =>
-                `<option value="${t.cod}" ${t.cod == fase.tipo ? 'selected' : ''}>
-                  ${t.abreviatura}
-                 </option>`
-              ).join('')}
-            </select>
-          </td>
 
+let actividadesHTML = '';
 
-          <td>
-            <select name="area[${fase.secuencia}]" class="form-select form-select-sm">
-              ${data.areas.map(a =>
-                `<option value="${a.id}" ${a.id == fase.area ? 'selected' : ''}>
-                  ${a.nombre}
-                 </option>`
-              ).join('')}
-            </select>
-          </td>
+fase.actividades.forEach(function(act, i){
 
+  actividadesHTML += `
+  <div class="actividad-item input-group mb-1">
 
-          <td>${actividades}</td>
+    <select name="actividad[${fase.secuencia}][]" class="form-select form-select-sm">
 
-          
-          <td>
-            <select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
-              ${data.envases.map(v =>
-                `<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
-                  ${v.nombre}
-                 </option>`
-              ).join('')}
-            </select>
-          </td>
-          
-          <td>
-            <input type="number" step="0.01" min="0" onkeypress=solonum(event) 
-              name="kgstd[${fase.secuencia}]" 
-              value="${fase.kg_std}" 
-              class="form-control form-control-sm">
-          </td>
-          <td>
-            <input type="number" step="1" min="0" onkeypress=solonum(event) 
-              name="personas[${fase.secuencia}]" 
-              value="${fase.personas_std}" 
-              class="form-control form-control-sm">
-          </td>
-        `;
+      ${data.actividades.map(a => {
+
+        const selected = (a.nombre == act.nombre) ? 'selected' : '';
+
+        return `<option value="${a.id}" ${selected}>${a.nombre}</option>`;
+
+      }).join('')}
+
+    </select>
+
+    ${i === 0 
+      ? `<button type="button" class="btn btn-success btnAgregarActividadEditar">
+           <i class="bi bi-plus"></i>
+         </button>`
+      : `<button type="button" class="btn btn-danger eliminarActividadEditar">
+           <i class="bi bi-trash"></i>
+         </button>`
+    }
+
+  </div>
+  `;
+});
+
+tr.innerHTML = `
+<td class="text-center fw-bold">${fase.secuencia}</td>
+
+<td>
+<select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
+${data.tipos.map(t =>
+`<option value="${t.cod}" ${t.cod == fase.tipo ? 'selected' : ''}>
+${t.abreviatura}
+</option>`).join('')}
+</select>
+</td>
+
+<td>
+<select name="area[${fase.secuencia}]" class="form-select form-select-sm">
+${data.areas.map(a =>
+`<option value="${a.id}" ${a.id == fase.area ? 'selected' : ''}>
+${a.nombre}
+</option>`).join('')}
+</select>
+</td>
+
+<td>
+<div class="actividad-container">
+${actividadesHTML}
+</div>
+</td>
+
+<td>
+<select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
+${data.envases.map(v =>
+`<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
+${v.nombre}
+</option>`).join('')}
+</select>
+</td>
+
+<td>
+<input type="number" step="0.01" min="0"
+name="kgstd[${fase.secuencia}]"
+value="${fase.kg_std}"
+class="form-control form-control-sm">
+</td>
+
+<td>
+<input type="number" step="1" min="0"
+name="personas[${fase.secuencia}]"
+value="${fase.personas_std}"
+class="form-control form-control-sm">
+</td>
+`;
         tbody.appendChild(tr);
       });
     })
@@ -615,6 +672,79 @@ document.addEventListener('submit', function(e) {
   })
   .catch(() => Swal.fire('Error', 'Fallo de conexión.', 'error'));
 });
+</script>
+
+
+
+<!------SCRIPT AGREGAR ACTIVIDAD---------------------->
+<script>
+
+
+
+/* =============================================
+   AGREGAR ACTIVIDAD EN EDITAR
+   ============================================= */
+
+document.addEventListener("click", function(e){
+
+  if(e.target.closest(".btnAgregarActividadEditar")){
+
+    const btn = e.target.closest(".btnAgregarActividadEditar");
+
+    const fila = btn.closest("tr");
+
+    const contenedor = fila.querySelector(".actividad-container");
+
+    const secuencia = fila.querySelector("td").innerText.trim();
+
+    let opciones = "";
+
+    if(window.catalogoActividades){
+      window.catalogoActividades.forEach(function(a){
+        opciones += `<option value="${a.id}">${a.nombre}</option>`;
+      });
+    }
+
+    const nuevaActividad = document.createElement("div");
+
+    nuevaActividad.className = "actividad-item input-group mb-1";
+
+    nuevaActividad.innerHTML = `
+      <select name="actividad[${secuencia}][]" class="form-select form-select-sm">
+        ${opciones}
+      </select>
+
+      <button type="button" class="btn btn-danger eliminarActividadEditar">
+        <i class="bi bi-trash"></i>
+      </button>
+    `;
+
+    contenedor.appendChild(nuevaActividad);
+
+  }
+
+});
+
+
+/* =============================================
+   ELIMINAR ACTIVIDAD EN EDITAR
+   ============================================= */
+
+document.addEventListener("click", function(e){
+
+  if(e.target.closest(".eliminarActividadEditar")){
+
+    const btn = e.target.closest(".eliminarActividadEditar");
+
+    const actividad = btn.closest(".actividad-item");
+
+    actividad.remove();
+
+  }
+
+});
+
+
 </script>
 <!------------------------->
 <!---------BTN ELIMINAR------------------>

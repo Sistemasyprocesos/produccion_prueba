@@ -11,7 +11,7 @@ $envase = $_POST['envase_prod'];
 $undcjsc = $_POST['unds_cjsc'];
 $embalaje = $_POST['tipo_embalaje'];
 $unds_pallet = $_POST['unds_pallet'];
-$pvp = $_POST['pvp'];
+
 $base = $_POST['prod_base'];
 $udm = $_POST['udm'];
 $estado = 1;
@@ -46,14 +46,14 @@ $sql = "INSERT INTO prod_productos (
   producto_base,
   estado,
   codigo_prod,
-  pvp,
+
   udm,
   fase
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
-  "ssiidiiisisdi",
+  "ssiidiiisiiii",
   $nombre_completo,
   $cat,
   $tipoprod,
@@ -65,7 +65,7 @@ $stmt->bind_param(
   $base,
   $estado,
   $codprod,
-  $pvp,
+  
   $udm,
   $faseado
 );

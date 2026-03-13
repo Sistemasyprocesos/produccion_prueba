@@ -1,3 +1,14 @@
+<style>
+#tablaAvance thead th{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #212529;
+    color: white;
+}
+</style>
+
+
 
 <?php
 include '../connection/conexion.php';
@@ -104,14 +115,15 @@ $actividadesJS = json_encode($actividades,JSON_UNESCAPED_UNICODE);
 
 
 <form id="formAvance">
+    <div style="max-height:400px; overflow-y:auto;">
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
         <table class="table table-bordered" id="tablaAvance">
             <thead class="table-dark">
                 <tr>
                     <th>Turno</th>
-                    <th>Actividad</th>
-                    <th>Estimado</th>
-                    <th>Produccion real(KG)</th>
+                    <th>Etapa</th>
+                    <th>Kg (S)</th>
+                    <th>Kg(R)</th>
                     <th>Jornada</th>
                     <th>HC</th>
                     <th></th>
@@ -123,7 +135,7 @@ $actividadesJS = json_encode($actividades,JSON_UNESCAPED_UNICODE);
                 <?php foreach($filas as $f): ?>
                     <tr>
                         <td>
-                            <input type="number" class="form-control" name="turno[]" value="<?= $f['turno'] ?>">
+                            <input type="number" min=1 class="form-control" name="turno[]" value="<?= $f['turno'] ?>">
                         </td>
                         <td>
                             <select class="form-select" name="fase[]">
@@ -173,7 +185,7 @@ $actividadesJS = json_encode($actividades,JSON_UNESCAPED_UNICODE);
             </tbody>
         </table>
 </form>
-
+                                    </div>
 
 
 <script>
