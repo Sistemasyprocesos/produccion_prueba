@@ -701,7 +701,7 @@ document.addEventListener("click", function(e){
 
     if(window.catalogoActividades){
       window.catalogoActividades.forEach(function(a){
-        opciones += `<option value="${a.id}">${a.nombre}</option>`;
+        opciones += `<option value="${a.id}">${a.actividades}</option>`;
       });
     }
 

@@ -97,11 +97,11 @@ if($pedido){
 ?>
 
 <div class="row mb-2">
-    <div class="col-12"><b>Pedido: </b> <?= $num_pedido ?></div>
-    <div class="col-auto"><b>Cliente: </b> <?= $cliente ?></div>
-    <div class="col-auto"><b>Fecha Registro: </b> <?= $fecha_registro ?></div>
+    <div class="col-12"><b>Pedido: </b><?= $num_pedido?></div>
+    <div class="col-auto"><b>Cliente: </b><?= $cliente?></div>
+    <div class="col-auto"><b>Fecha Registro: </b><?= $fecha_registro ?></div>
     <div class="col-auto"><b>Fecha Entrega: </b><?= $fecha_entrega ?></div>
-    <div class="col-auto"><b>fases aprox: </b><?= $dias ?></div>
+    <div class="col-auto"><b>fases aprox: </b><?= $dias?></div>
 </div>
 
 <!----ENVIA EL FORM------->

@@ -330,6 +330,28 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 </div>
 
 
+<!--------------------MODAL DETALLEv3----------------------->
+<div class="modal fade" id="modaldetallesv3" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #198754; color: white;">
+        <h5 class="modal-title">Añadir produccion real</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" id="avancepedidov3">
+        Cargando...
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
+        <button class="btn btn-success btn-sm"  id="guardarAvancev2"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 <!--------------------------------------------------->
 <!--------------MODAL EDITAR PEDIDO--------------------->
@@ -438,6 +460,34 @@ $(document).on("click", ".btnVerDetallev2", function(){
 
 });
 </script>
+
+
+<!----------AVANCE V3---------------->
+<script>
+$(document).on("click", ".btnVerDetallev3", function(){
+
+  const id = $(this).data("iddet");
+
+  $("#avancepedidov3").html("Cargando...");
+
+  $.ajax({
+      url: "ajax_avance_pedv3.php",
+      type: "POST",
+      data: { id: id },
+
+    success: function(res){
+      $("#avancepedidov3").html(res);
+    },
+
+    error: function(){
+      $("#avancepedidov3").html("Error al cargar datos");
+    }
+  });
+
+});
+</script>
+
+
 <!------AJAX EDITAR PEDIDO--------------------------------------------------->
 <script>
 $(document).on("click", ".btnEditar", function(){
