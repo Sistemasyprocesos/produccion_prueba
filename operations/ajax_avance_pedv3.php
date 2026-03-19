@@ -23,17 +23,20 @@ $d = "SELECT
     p.fecha_registro,
     p.fecha_entrega,
     p.cantidad,
+    pr.nombre as productonombre,
     p.num_pedido,
     p.id_pedido,
     c.razon_social,
+    e.nombre as nombreenvase,
     f.secuencia,
-    GROUP_CONCAT(a.abreviatura ORDER BY a.abreviatura SEPARATOR '/') as etapanombre,
+    GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR '/') as etapanombre,
     MAX(f.kg_std) as kg_std
 FROM prod_pedidos AS p 
 INNER JOIN prod_productos AS pr ON pr.id = p.producto 
 INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
 INNER JOIN prod_clientes AS c ON c.id = p.id_cliente
 INNER JOIN prod_act_prod AS a ON a.id = f.actividad
+inner join prod_envase as e on e.id=pr.envase
 WHERE p.id_pedido = ?
 GROUP BY f.secuencia,
          p.fecha_registro,
@@ -72,15 +75,25 @@ if ($pedido) {
     $cantidad       = $pedido['cantidad'];
     $num_pedido     = $pedido['num_pedido'];
     $cliente        = $pedido['razon_social'];
+    $envase=$pedido["nombreenvase"];
+    $prod=$pedido["productonombre"];
 ?>
 
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
 <div class="row mb-3">
-    <div class="col-3"><b>Pedido:</b> <?= htmlspecialchars($num_pedido) ?></div>
-    <div class="col-3"><b>Cliente:</b> <?= htmlspecialchars($cliente) ?></div>
-    <div class="col-3"><b>Fecha Registro:</b> <?= htmlspecialchars($fecha_registro) ?></div>
-    <div class="col-3"><b>Fecha Entrega:</b> <?= htmlspecialchars($fecha_entrega) ?></div>
+    <div class="col-auto"><b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?></div>
 </div>
+
+<div class="row mb-3">
+<div class="col-auto"><b>Pedido:</b> <?= htmlspecialchars($prod) ?></div>
+<div class="col-auto"><b>Cliente:</b> <?= htmlspecialchars($cliente) ?></div>
+
+    <div class="col-auto"><b>Cantidad: </b><?=$cantidad ?></div>
+    <div class="col-auto"><b>Fecha Entrega:</b> <?= htmlspecialchars($fecha_entrega) ?></div>
+</div>
+
+
+
 
 <!-- ===== FORMULARIO ===== -->
 <form id="formAvance">
@@ -100,7 +113,7 @@ if ($pedido) {
 
             <div class="row mb-2">
 
-                <div class="col-6">
+                <div class="col-auto">
                     <h6 class="mt-2 mb-1">
                                 <span class="badge bg-primary me-2">Fase <?= $fase['secuencia'] ?></span>
                                 <?= htmlspecialchars($fase['etapa']) ?>
@@ -108,13 +121,13 @@ if ($pedido) {
                             </h6>
                 </div>
 
-                <div class="col-3">
+                <div class="col-auto">
                     <!-- CLASE en lugar de ID + datos de la fase en data-* -->
                     <button type="button"
-                            class="btn btn-sm btn-primary btnAgregarTurno"
+                            class="btn btn-sm btn-success btnAgregarTurno"
                             data-std="<?= $fase['std'] ?>"
                             data-secuencia="<?= $fase['secuencia'] ?>">
-                        <i class="bi bi-plus-circle"></i> Añadir fila
+                        <i class="bi bi-plus-circle"></i> AÑADIR TURNO
                     </button>
                 </div>
             </div>
@@ -126,12 +139,12 @@ if ($pedido) {
                         <th class="text-center" style="width:80px;">Turno</th>
                         <th>Fecha</th>
                         <th>Jornada</th>
-                        <th># Colaboradores</th>
+                        <th># Colab</th>
                         <th class="text-center">Estimado (KG)</th>
                         <th>Real (KG)</th>
                         <th>Dif</th>
                         <th>Cump</th>
-                        <th></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -163,7 +176,7 @@ if ($pedido) {
                             </td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                         
                         </tr>
                     <?php endfor; ?>
                 </tbody>
@@ -175,8 +188,7 @@ if ($pedido) {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                       
                     </tr>
                 </tfoot>
             </table>

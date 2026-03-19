@@ -39,7 +39,19 @@ try {
         foreach ($actividades as $actividad) {
 
             $sql = "INSERT INTO prod_fases_prod
-                    (producto, secuencia, tipo_fase, area, actividad, kg_std, proceso_id, envase,personas_std,peso_env,udm_env)
+                    (
+                    producto,
+                    secuencia, 
+                    tipo_fase,
+                    area,
+                    actividad,
+                    kg_std,
+                    proceso_id,
+                    envase,
+                    personas_std,
+                    peso_env,
+                    udm_env
+                    )
                     VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
             $stmt = $conn->prepare($sql);
@@ -49,7 +61,7 @@ try {
             }
 
             $stmt->bind_param(
-                "iiiiiiiiiii",
+                "iiiiidiiidi",
                 $producto,
                 $seq,
                 $tip,

@@ -2,13 +2,13 @@
 require '../connection/conexion.php';
 
 $id = $_POST['iden'] ?? null;
-$codigo = $_POST['cod'] ?? null;
-$nombre = $_POST['nombre'] ?? null;
+$codigo = strtoupper($_POST['cod'] )?? null;
+$nombre = strtoupper($_POST['nombre']) ?? null;
 $tipo = $_POST['tipo'] ?? null;
-$cat = $_POST['cate'] ?? null;
+$cat = strtoupper($_POST['cate']) ?? null;
 
 $peso = $_POST['peso'] ?? null;
-$udm = $_POST['udm'] ?? null;
+$udm = $_POST['um'] ?? null;
 $env = $_POST['env'] ?? null;
 $udmenvase = $_POST['udmenvase'] ?? null;
 $undcjsc = $_POST['undscjsc'] ?? null;

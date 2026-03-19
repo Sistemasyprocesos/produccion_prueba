@@ -69,12 +69,13 @@
                 p.producto,
                 p.cantidad,
                 p.und_medida,
+                pr.peso_prod as peso,
                 u.sigla as um,
                 p.num_pedido,
                 e.nom as estado,
                 c.razon_social as cliente,
                 pr.nombre as producto,
-
+                ev.abreviatura as envase,
                 COALESCE(SUM(a.kg_real),0) as producido,
 
                 ROUND(
@@ -87,7 +88,8 @@
                 inner join prod_productos as pr on pr.id=p.producto
                 inner join prod_estados as e on e.id=p.estado
                 inner join prod_udm as u on p.und_medida=u.id
-
+                inner join prod_envase as ev on ev.id=pr.envase
+                
                 left join prod_avance_pedido a 
                 on a.id_pedido = p.id_pedido
                 AND a.secuencia = (
@@ -115,7 +117,7 @@
                 <td><?=$g['cliente'] ?></td>
                 <td><?=$g['fecha_entrega'] ?></td>
                 <td><?=$g['cantidad'].' '.$g['um'] ?></td>
-                <td><?=$g['producto'] ?></td>
+                <td><?=$g['producto'].' '.$g['envase'].' '.$g['peso'].' '.$g['um'] ?></td>
 
                 <?php  
                 if($g['estado'] == 'ACTIVO'){

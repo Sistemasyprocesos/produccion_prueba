@@ -26,8 +26,11 @@ $sql="SELECT
     p.nombre AS producto,
     f.secuencia AS sec,
     t.total_fases,
+    e.abreviatura as envase,
+    p.peso_prod,
     f.kg_std AS kg,
     f.proceso_id AS proce,
+    u.sigla as umed,
     GROUP_CONCAT(a.abreviatura ORDER BY a.abreviatura SEPARATOR '+') AS act
 
 FROM prod_fases_prod f
@@ -37,6 +40,12 @@ INNER JOIN prod_act_prod a
 
 INNER JOIN prod_productos p 
     ON p.id = f.producto
+
+inner join prod_envase as e 
+    on e.id=p.envase 
+
+inner join prod_udm as u
+on p.udm=u.id
 
 INNER JOIN (
     SELECT
@@ -94,8 +103,10 @@ $res=$conn->query($sql);
 
   <?php while ($f = $res->fetch_assoc()) { ?>
     <tr>
-      <td><?=htmlspecialchars($f['producto'], ENT_QUOTES, 'UTF-8')  ?></td>
+      <td><?=htmlspecialchars($f['producto'].' '.$f['envase'].' '.$f['peso_prod'].' '.$f['umed'], ENT_QUOTES, 'UTF-8')  ?></td>
+
       <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
+
       <td><?= $f['kg'] ?></td>
     <td>
 
@@ -158,10 +169,22 @@ $res=$conn->query($sql);
           
             <div class="col-6">
               <label class="form-label">Producto</label>
-                <?php   $g=$conn->query("select id,nombre from  prod_productos order by nombre asc");   ?>
+                <?php   $g=$conn->query("
+                select 
+                p.id,
+                p.nombre,
+                p.peso_prod, 
+                u.sigla,
+                e.abreviatura
+                from  prod_productos as p inner join prod_udm as u 
+                  on p.udm=u.id
+                inner join prod_envase as e 
+                  on e.id=p.envase
+                order by nombre asc"
+                 );   ?>
               <select name="producto" id="producto" class="form-select" required>
                 <?php  while($r=$g->fetch_assoc()){   ?>
-                  <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=htmlspecialchars($r['nombre'], ENT_QUOTES, 'UTF-8') ?></option>
+                  <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=htmlspecialchars($r['nombre'].' '.$r['abreviatura'].' '.$r['peso_prod'] .' '.$r['sigla'], ENT_QUOTES, 'UTF-8') ?></option>
                 <?php } ?>
               </select>
             </div>
@@ -258,7 +281,7 @@ $res=$conn->query($sql);
           </td>
           <!--------PESO ENVASE---------------------->
           <td>
-            <input type="number" min="0" class="form-control" onkeypress="return solonum(event)" name="pesoenv[]">
+            <input type="number" min="0" step="0.1" class="form-control" onkeypress="return solonum(event)" name="pesoenv[]">
 
           </td>
           

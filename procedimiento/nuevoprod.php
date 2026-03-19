@@ -3,7 +3,7 @@ require '../connection/conexion.php';
 header('Content-Type: application/json');
 
 $codprod =strtoupper($_POST['codigoprod']);
-$nombreprod =$_POST['nombreprod'];
+$nombreprod =strtoupper($_POST['nombreprod']);
 $cat =strtoupper($_POST['categoria']);
 $tipoprod = $_POST['tipoprod'];
 $pesoprod = $_POST['pesoprod'];
@@ -17,6 +17,8 @@ $udm = $_POST['udm'];
 $estado = 1;
 $faseado=1;
 
+
+
 $q = $conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
 $q->bind_param("i", $envase);
 $q->execute();
@@ -25,16 +27,19 @@ $res = $q->get_result()->fetch_assoc();
 $envase_txt = $res['abreviatura'] ?? '';
 
 
-$nombre_completo = strtoupper(trim(
-  $nombreprod . ' ' .
-  $pesoprod . 'KG ' .
-  $envase_txt
-));
+//-----BUSCA EL UDM------------------//
+$n = $conn->prepare("SELECT sigla FROM prod_udm WHERE id = ?");
+$n->bind_param("i", $udm);
+$n->execute();
+$ress = $n->get_result()->fetch_assoc();
+
+$unidadmed = $ress['sigla'] ?? '';
 
 
 
 
 $sql = "INSERT INTO prod_productos (
+codigo_prod,
   nombre, 
   cat_prod,
   tipo_prod,
@@ -45,16 +50,16 @@ $sql = "INSERT INTO prod_productos (
   und_pallet,
   producto_base,
   estado,
-  codigo_prod,
-
+  
   udm,
   fase
 ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
-  "ssiidiiisiiii",
-  $nombre_completo,
+  "sssiidiiisiii",
+  $codprod,
+  $nombreprod,
   $cat,
   $tipoprod,
   $envase,
@@ -64,7 +69,7 @@ $stmt->bind_param(
   $unds_pallet,
   $base,
   $estado,
-  $codprod,
+  
   
   $udm,
   $faseado

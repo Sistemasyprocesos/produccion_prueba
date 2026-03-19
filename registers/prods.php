@@ -57,7 +57,7 @@ p.estado,
 p.codigo_prod as codigo_prod,
 
 p.id as idprod,
-u.sigla,u.id,
+u.sigla,u.id as ud,
 p.estado as estado,
 t.abreviatura as tprod,
 t.cod as codtipoprod
@@ -92,7 +92,7 @@ order by p.nombre asc";
       <th>Producto</th>
       <th>Categoria</th>
       <th>Tipo</th>
-      <th>Peso (Kg)</th>
+      <th>Peso</th>
       <th>Envase</th>
       <th>Unds(CJ/SC)</th>
       <th>Tipo Embalaje</th>
@@ -114,7 +114,7 @@ order by p.nombre asc";
             <td><?=  $row["nprod"]?></td>
             <td><?= $row["cat_prod"]?></td>
             <td><?= $row["tprod"]?></td>
-            <td><?= $row["peso_prod"]?></td>
+            <td><?= $row["peso_prod"].' '.$row["sigla"]?></td>
             <td><?=$row["env"] ?></td>
             <td><?= $row["unds_cjsc"] ?></td>
             <td><?=$row["env"] ?></td>
@@ -134,7 +134,7 @@ order by p.nombre asc";
               data-unds_cjsc="<?= $row["unds_cjsc"] ?>"
               data-tipo_embalaje="<?= $row["tipo_embalaje"] ?>"
               data-und_pallet="<?= $row["und_pallet"] ?>"
-             
+             data-udm="<?=$row["ud"] ?>"
               data-producto_base="<?= $row["producto_base"] ?>"
               data-estado="<?= $row["estado"] ?>"
               ><i class="bi bi-pencil-square"></i></button>
@@ -352,7 +352,7 @@ order by p.nombre asc";
              <div class="col-2">
               <label class="form-label">UDM</label>
 
-              <select required class="form-select" name="udm" id="udm">
+              <select required class="form-select" name="um" id="um">
                 <?php 
                 $g=$conn->query("SELECT id,nombre,sigla FROM prod_udm  ORDER BY sigla");
                 while($row = $g->fetch_assoc()) { ?>
@@ -481,7 +481,7 @@ document.addEventListener("click", function(e) {
   const envase = button.getAttribute('data-envase');
 
   const unds_cjsc = button.getAttribute('data-unds_cjsc');
-  //const tipo_embalaje = button.getAttribute('data-tipo_embalaje');
+  const umd = button.getAttribute('data-udm');
   const und_pallet = button.getAttribute('data-und_pallet');
   const estado = button.getAttribute('data-estado');
 
@@ -495,12 +495,12 @@ document.addEventListener("click", function(e) {
  
   document.getElementById('estate').value = parseInt(estado) || "";
   document.getElementById('env').value=envase;
-
+ document.getElementById('um').value=umd;
   document.getElementById('und_pallet').value=und_pallet;
   document.getElementById('undscjsc').value=unds_cjsc;
 
 
-
+console.log("UDM:", umd);
 
 });
 
@@ -593,7 +593,6 @@ e.preventDefault();
 }
 
 </script>
-
 
 
 <!------------PAGINADOR--------------------->
