@@ -165,8 +165,13 @@ if ($pedido) {
                                     <option value="NOCHE">NOCHE</option>
                                 </select>
                             </td>
-                            <td><input type="number" class="form-control" min="0" name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]"></td>
+                            
+                            <td style="width:80px;"><input type="number" class="form-control" min="0" step="1" name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
+                                
+                            </td>
+                            
                             <td class="text-center align-middle"><?= $estimado ?></td>
+                            
                             <td>
                                 <input type="number" step="0.01" min="0"
                                     class="form-control form-control-sm"
@@ -211,9 +216,9 @@ $conn->close();
 
 <script>
 /* ======================
-   AGREGAR FILA — solo en la tabla del bloque donde se hizo clic
+      AGREGAR FILA — solo en la tabla del bloque donde se hizo clic
 ======================*/
-$(document).on('click', '.btnAgregarTurno', function () {
+$(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', function () {
 
     // 1. Encontrar el bloque padre de ESTE botón (no de todos)
     const $bloque   = $(this).closest('.fase-bloque');
@@ -236,7 +241,7 @@ $(document).on('click', '.btnAgregarTurno', function () {
                     <option value="NOCHE">NOCHE</option>
                 </select>
             </td>
-            <td><input type="number" class="form-control" min="0" name="hc[${secuencia}][${nextTurno}]"></td>
+            <td><input type="number" class="form-control" min="0" step="1" name="hc[${secuencia}][${nextTurno}]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)"></td>
             <td class="text-center align-middle">${std}</td>
             <td>
                 <input type="number" step="0.01" min="0"
@@ -260,11 +265,11 @@ $(document).on('click', '.btnAgregarTurno', function () {
 /* ======================
    ELIMINAR FILA + renumerar
 ======================*/
-$(document).on('click', '.btnEliminarFila', function () {
+$(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', function () {
     const $tbody = $(this).closest('tbody');
     $(this).closest('tr').remove();
 
-    // Renumerar turnos para que queden consecutivos
+        // Renumerar turnos para que queden consecutivos
     $tbody.find('tr').each(function (i) {
         $(this).find('.turno-num').text(i + 1);
     });

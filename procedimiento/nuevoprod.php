@@ -50,7 +50,6 @@ codigo_prod,
   und_pallet,
   producto_base,
   estado,
-  
   udm,
   fase
 ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";

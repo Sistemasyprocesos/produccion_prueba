@@ -95,7 +95,8 @@ $res=$conn->query($sql);
     <tr>
       <th>PRODUCTO PT</th>
       <th>ORDEN OP</th>
-      <th>Kg Standar</th>
+      <th>Produccion Estandar</th>
+      
       <th></th>
     </tr>
   </thead>
@@ -107,7 +108,7 @@ $res=$conn->query($sql);
 
       <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
 
-      <td><?= $f['kg'] ?></td>
+      <td><?= $f['kg'].' '.$f['umed'] ?></td>
     <td>
 
 <?php if($f['sec'] == 1){ ?>
@@ -366,6 +367,8 @@ $res=$conn->query($sql);
                 <th>Área de Producción</th>
                 <th>Actividad(es)</th>
                 <th>Envase</th>
+                <th>Peso Envase</th>
+                <th>UDM Env</th>
                 <th>KG Estándar</th>
                 <th>Personas Estándar</th>
               </tr>
@@ -558,7 +561,7 @@ document.addEventListener('click', function(e) {
   fetch('../procedimiento/get_fases_proceso.php?proceso_id=' + procesoId)
     .then(r => r.json())
     .then(data => {
-
+      window.catalogoActividades = data.actividades;
       document.getElementById('loadingEditar').style.display = 'none';
       document.getElementById('formEditar').style.display    = 'block';
       document.getElementById('edit_proceso_id').value       = procesoId;
@@ -614,11 +617,12 @@ tr.innerHTML = `
 <td>
 <select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
 ${data.tipos.map(t =>
-`<option value="${t.cod}" ${t.cod == fase.tipo ? 'selected' : ''}>
+`<option value="${t.cod}" ${t.cod == fase.tipo_fase ? 'selected' : ''}>
 ${t.abreviatura}
 </option>`).join('')}
 </select>
 </td>
+
 
 <td>
 <select name="area[${fase.secuencia}]" class="form-select form-select-sm">
@@ -642,6 +646,23 @@ ${data.envases.map(v =>
 ${v.nombre}
 </option>`).join('')}
 </select>
+</td>
+
+<td>
+  <input type="number" step="0.1" min="0"
+    name="pesoenv[${fase.secuencia}]"
+    value="${fase.peso_env ?? ''}"
+    class="form-control form-control-sm">
+</td>
+
+<td>
+  <select name="udmenv[${fase.secuencia}]" class="form-select form-select-sm">
+    ${data.udms.map(u =>
+      `<option value="${u.id}" ${u.sigla == fase.sigla ? 'selected' : ''}>
+        ${u.sigla}
+      </option>`
+    ).join('')}
+  </select>
 </td>
 
 <td>
@@ -722,12 +743,11 @@ document.addEventListener("click", function(e){
 
     let opciones = "";
 
-    if(window.catalogoActividades){
-      window.catalogoActividades.forEach(function(a){
-        opciones += `<option value="${a.id}">${a.actividades}</option>`;
-      });
-    }
-
+if(window.catalogoActividades){
+  window.catalogoActividades.forEach(function(a){
+    opciones += `<option value="${a.id}">${a.nombre}</option>`;
+  });
+}
     const nuevaActividad = document.createElement("div");
 
     nuevaActividad.className = "actividad-item input-group mb-1";

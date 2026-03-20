@@ -20,15 +20,16 @@ $sql="SELECT
     f.tipo_fase,
     f.area,
     f.envase,
-    
+    f.peso_env,
+    u.sigla,
     p.nombre AS producto,
     GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR ', ') AS actividades
 FROM prod_fases_prod f
 INNER JOIN prod_productos p ON p.id=f.producto
 INNER JOIN prod_act_prod a ON a.id=f.actividad
-
+inner join prod_udm as u on u.id=f.udm_env
 WHERE f.proceso_id=?
-GROUP BY f.secuencia,f.kg_std,f.personas_std,f.tipo_fase,f.area,f.envase,p.nombre
+GROUP BY f.secuencia,f.kg_std,f.personas_std,f.tipo_fase,f.area,f.envase,p.nombre,f.peso_env,u.sigla
 ORDER BY f.secuencia
 ";
 
@@ -77,11 +78,12 @@ FROM prod_act_prod
 ORDER BY nombre
 ")->fetch_all(MYSQLI_ASSOC);
 
-
+$udms = $conn->query("SELECT id, sigla FROM prod_udm ORDER BY sigla")->fetch_all(MYSQLI_ASSOC);
 echo json_encode([
     "fases"=>$fases,
     "tipos"=>$tipos,
     "areas"=>$areas,
    "envases"=>$envases,
+    "udms"        => $udms,  
     "actividades"=>$actividades
 ],JSON_UNESCAPED_UNICODE);
