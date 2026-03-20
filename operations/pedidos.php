@@ -41,7 +41,7 @@
               <select class="form-select" id="selectestado">
                 <option selected>TODAS</option>
                 <option value="1">ACTIVAS</option>
-                <option value="2">INACTIVAS</option>
+                <option value="2">COMPLETAS</option>
               </select>
             </div>
           </div>
@@ -87,7 +87,7 @@
                 inner join prod_clientes as c on c.id=p.id_cliente
                 inner join prod_productos as pr on pr.id=p.producto
                 inner join prod_estados as e on e.id=p.estado
-                inner join prod_udm as u on pr.udm=u.id
+                inner join prod_udm as u on p.und_medida=u.id
                 inner join prod_envase as ev on ev.id=pr.envase
                 
                 left join prod_avance_pedido a 
@@ -209,6 +209,8 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 
           <div class="row mb-3">
               <div class="col-6">
+
+                <!----CLIENTE-------->
                 <label class="form-label">Cliente</label>
                   <select class="form-select" name="clte" id="clte" required>
                       <?php $c=$conn->query("select id,razon_social,estado from prod_clientes where estado=1"); ?>
@@ -218,13 +220,29 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                       <?php }?>
                   </select>
                 </div>
+
+                <!---------PRODUCTO----------->
               <div class="col-6">
                   <label class="form-label">Producto</label>
                     <select name="prod" id="prod" class="form-select">
-                      <?php $c=$conn->query("select id,nombre,estado,fase from prod_productos where estado=1 and fase= 2"); ?>
+                      <?php $c=$conn->query("
+                      select
+                      p.id,
+                      p.nombre,
+                      p.estado,
+                      p.fase,
+                      p.peso_prod,
+                      u.sigla,
+                      e.abreviatura
+                      from prod_productos as p
+                        inner join prod_envase as e on e.id=p.envase
+                        inner join prod_udm as u on u.id=p.udm
+                        
+                        where p.estado=1 and p.fase= 2"); 
+                        ?>
                         <option></option>
                           <?php while($f=$c->fetch_assoc()){     ?>
-                        <option value="<?=$f['id'] ?>"><?=$f['nombre']  ?></option>
+                        <option value="<?=$f['id'] ?>"><?=$f['nombre'].' '.$f['abreviatura'].' '.$f['peso_prod'].' '.$f['sigla']  ?></option>
                       <?php }?>
                     </select>
                 </div>
@@ -246,6 +264,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                     <label class="form-label">Cantidad</label>
                       <input type="text" class="form-control" name="cant" id="cant" required>
                 </div>
+
                 <div class="col-2">
                     <label class="form-label">UM</label>
                       <select name="unds" id="unds" required class="form-select">

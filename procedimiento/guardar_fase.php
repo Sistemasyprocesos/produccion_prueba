@@ -14,7 +14,7 @@ $act        = $_POST['act'];
 $envase     = $_POST['envase'];
 $personas   =$_POST['personas'];
 $pesoenv    =$_POST['pesoenv'];
-$udmenv     =$_POST['udmenv'];
+$udmenv     =$_POST['udmenva'];
 
 $kgstd = isset($_POST['kgstd']) ? $_POST['kgstd'] : [];
 

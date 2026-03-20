@@ -108,7 +108,7 @@ $res=$conn->query($sql);
 
       <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
 
-      <td><?= $f['kg'].' '.$f['umed'] ?></td>
+      <td><?= $f['kg'].' KG' ?></td>
     <td>
 
 <?php if($f['sec'] == 1){ ?>
@@ -288,7 +288,7 @@ $res=$conn->query($sql);
           
           <!----------UDM ENVASE-------------------------->
           <td>
-            <select class="form-select" required name="udmenv[]">
+            <select class="form-select" required name="udmenva[]">
               <option selected>-seleccione--</option>
             <?php
               $h=$conn->query("select id,sigla from prod_udm order by sigla asc");

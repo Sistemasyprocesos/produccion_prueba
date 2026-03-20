@@ -29,6 +29,7 @@ $d = "SELECT
     c.razon_social,
     e.nombre as nombreenvase,
     f.secuencia,
+   
     GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR '/') as etapanombre,
     MAX(f.kg_std) as kg_std
 FROM prod_pedidos AS p 
@@ -45,6 +46,7 @@ GROUP BY f.secuencia,
          p.num_pedido,
          p.id_pedido,
          c.razon_social
+        
 ORDER BY f.secuencia";
 
 $ff = $conn->prepare($d);
@@ -140,7 +142,8 @@ if ($pedido) {
                         <th>Fecha</th>
                         <th>Jornada</th>
                         <th># Colab</th>
-                        <th class="text-center">Estimado (KG)</th>
+                        <th>UND</th>
+                        <th>Estimado (KG)</th>
                         <th>Real (KG)</th>
                         <th>Dif</th>
                         <th>Cump</th>
@@ -158,6 +161,7 @@ if ($pedido) {
                         <tr>
                             <td class="text-center align-middle turno-num"><?= $turno ?></td>
                             <td><input type="date" class="form-control" name="fecha[<?= $fase['secuencia'] ?>][<?= $turno ?>]"></td>
+                            <!------JORNADA-------------->
                             <td>
                                 <select class="form-select" name="jornada[<?= $fase['secuencia'] ?>][<?= $turno ?>]">
                                     <option value=""></option>
@@ -165,11 +169,14 @@ if ($pedido) {
                                     <option value="NOCHE">NOCHE</option>
                                 </select>
                             </td>
-                            
+                            <!-----COLAB------>
                             <td style="width:80px;"><input type="number" class="form-control" min="0" step="1" name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
                                 
                             </td>
-                            
+                            <!-------UNID---------------->
+
+                            <td><?=$fase['std'] ?></td>
+                            <!------ESTIMADO------------->
                             <td class="text-center align-middle"><?= $estimado ?></td>
                             
                             <td>
@@ -179,6 +186,7 @@ if ($pedido) {
                                     name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
                                     placeholder="0.00">
                             </td>
+
                             <td></td>
                             <td></td>
                          
