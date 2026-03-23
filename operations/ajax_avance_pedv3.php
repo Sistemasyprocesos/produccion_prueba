@@ -29,12 +29,15 @@ $d = "SELECT
     p.id_pedido,
     c.razon_social,
     e.nombre as nombreenvase,
+    e.abreviatura,
     f.peso_env as pen,
     f.secuencia,
      u_fase.sigla as udm, 
      u_prod.sigla,
+      u_prod.equivalente_kg as eq_kg,
+      u_fase.equivalente_kg as eq_kg_fase,
     GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR '/') as etapanombre,
-    MAX(f.kg_std) as kg_std
+    MAX(f.unds) as unds
 FROM prod_pedidos AS p 
 INNER JOIN prod_productos AS pr ON pr.id = p.producto 
 INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
@@ -57,7 +60,10 @@ GROUP BY
     pr.peso_prod,
     e.nombre,
     u_fase.sigla,
-    u_prod.sigla
+    u_prod.equivalente_kg,
+    u_prod.sigla,
+    e.abreviatura,
+    u_fase.equivalente_kg
         
 ORDER BY f.secuencia";
 
@@ -78,24 +84,40 @@ while ($row = $result->fetch_assoc()) {
     }
     $fases[] = [
         'secuencia' => $row['secuencia'],
-        'std'       => $row['kg_std'],
+        'std'       => $row['unds'],
         'peso_env'=>$row['pen'],
         'etapa'     => $row['etapanombre'],
         'udm'       => $row['udm'],
+        'sigenv'=>$row['abreviatura'],
+          'eq_kg_fase'=> $row['eq_kg_fase'] ?? 1,
     ];
 }
+
 
 if ($pedido) {
     $fecha_registro = $pedido['fecha_registro'];
     $fecha_entrega  = $pedido['fecha_entrega'];
-    $cantidad       = $pedido['cantidad'];
+    $cantidad       = $pedido['cantidad'] ?? 0;
     $num_pedido     = $pedido['num_pedido'];
     $cliente        = $pedido['razon_social'];
-    $envase=$pedido["nombreenvase"];
-    $prod=$pedido["productonombre"];
-    $pesoenva=$pedido["pen"];
-    $pesoprod=$pedido["peso_prod"];
-    $usigla=$pedido["sigla"];
+    $envase         = $pedido["nombreenvase"];
+    $prod           = $pedido["productonombre"];
+    $pesoenva       = $pedido["pen"];
+    $pesoprod       = $pedido["peso_prod"] ?? 0;
+    $usigla         = $pedido["sigla"];
+    $unds=$pedido["unds"];
+
+  
+    $equivalente = $pedido["eq_kg"] ?? 1;
+$eq_fase = $pedido["eq_kg_fase"] ?? 1;
+
+
+    if ($equivalente > 0) {
+        $kilos = $cantidad * ($pesoprod * $equivalente);
+       $obj = $unds * ($pesoenva * $eq_fase);
+    } else {
+        $kilos = 0;
+    }
 ?>
 
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
@@ -130,7 +152,7 @@ if ($pedido) {
         <div>
             <?=$cantidad.' ('.$envase.' '. $pesoprod.' '.$usigla.')' ?>
         </div>
-      
+      <div><?=number_format($kilos, 2).' kg'?> </div>
     </div>
     <!---------------->
     <div class="col-3">
@@ -150,7 +172,13 @@ if ($pedido) {
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
 
     <?php foreach ($fases as $fase): ?>
+
         <?php
+        $peso   = $fase['peso_env'];
+$unds   = $fase['std'];
+$eq     = $fase['eq_kg_fase'];
+
+$obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
             $turnosFase = ($fase['std'] > 0) ? ceil($cantidad / $fase['std']) : 0;
         ?>
 
@@ -165,7 +193,7 @@ if ($pedido) {
 
                 <div class="col-auto">
                     <h6 class="mt-2 mb-1">
-                                <span class="badge bg-primary me-2">Fase <?= $fase['secuencia'] ?></span>
+                                <span class="badge bg-primary me-2 fs-4">Fase <?= $fase['secuencia'] ?></span>
                                 <?= htmlspecialchars($fase['etapa']) ?>
                                 <small class="text-muted ms-2">(Std: <?= $fase['std'] ?> kg — <?= $turnosFase ?> turnos)</small>
                             </h6>
@@ -173,12 +201,15 @@ if ($pedido) {
 
                 <div class="col-auto">
                     <!-- CLASE en lugar de ID + datos de la fase en data-* -->
-                    <button type="button"
-                            class="btn btn-sm btn-success btnAgregarTurno"
-                            data-std="<?= $fase['std'] ?>"
-                            data-secuencia="<?= $fase['secuencia'] ?>">
-                        <i class="bi bi-plus-circle"></i> AÑADIR TURNO
-                    </button>
+                   <button type="button"
+        class="btn btn-sm btn-success btnAgregarTurno"
+        data-std="<?= $fase['std'] ?>"
+        data-secuencia="<?= $fase['secuencia'] ?>"
+        data-peso-env="<?= $fase['peso_env'] ?>"
+        data-sigenv="<?= htmlspecialchars($fase['sigenv']) ?>"
+        data-udm="<?= htmlspecialchars($fase['udm']) ?>">
+    <i class="bi bi-plus-circle"></i> AÑADIR TURNO
+</button>
                 </div>
             </div>
 
@@ -186,15 +217,17 @@ if ($pedido) {
             <table class="table table-bordered table-sm tablaAvance">
                 <thead class="table-dark">
                     <tr>
-                        <th class="text-center" style="width:80px;">Turno</th>
+                        <th class="text-center" style="width:70px;">Turno</th>
                         <th>Fecha</th>
                         <th>Jornada</th>
                         <th># Colab</th>
-                        <th>UND</th>
-                        <th>Estimado (KG)</th>
+                        <th>Presentacion</th>
+                        
+                        <th>Undidades Estandar</th>
+                        <th>Objetivo</th>
                         <th>Real (KG)</th>
                         <th>Dif</th>
-                        <th>Cump</th>
+                        <th>Cumplimiento</th>
                         
                     </tr>
                 </thead>
@@ -218,16 +251,24 @@ if ($pedido) {
                                     <option value="NOCHE">NOCHE</option>
                                 </select>
                             </td>
+                            
                             <!-----COLAB------>
                             <td style="width:80px;"><input type="number" class="form-control" min="0" step="1" name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
                                 
                             </td>
-                            <!-------UNID---------------->
+                            <!-------UNID ENVASE---------------->
 
-                            <td><?=$fase['std'].' '.$fase['udm'] ?></td>
+                            <td><?=$fase['sigenv'].' '. $fase['std'].' '.$fase['udm'] ?>
+                            </td>
+
                             <!------ESTIMADO------------->
-                            <td class="text-center align-middle"><?= $peso ?></td>
-                            
+                            <td class="text-center align-middle"><?= $peso?></td>
+                              <!-------obj---------------->
+
+                            <td style="width:auto;"><?= number_format($obj_fase,2).' KG' ?></td>
+                            </td>
+
+                            <!-------------------------->
                             <td>
                                 <input type="number" step="0.01" min="0"
                                     class="form-control form-control-sm"
@@ -277,26 +318,22 @@ $conn->close();
 ======================*/
 $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', function () {
 
-    // 1. Encontrar el bloque padre de ESTE botón (no de todos)
     const $bloque   = $(this).closest('.fase-bloque');
     const $tbody    = $bloque.find('.tablaAvance tbody');
     const secuencia = $(this).data('secuencia');
     const std       = $(this).data('std');
+    // ← Agregar estos dos data attributes al botón también (ver abajo)
+    const pesoEnv   = $(this).data('peso-env');
+    const sigenv    = $(this).data('sigenv');
+    const udm       = $(this).data('udm');
 
-    // 2. Número de filas actuales = número del próximo turno
     const nextTurno = $tbody.find('tr').length + 1;
 
-       const cantidad = <?= $cantidad ?>;
+    const cantidad = <?= $cantidad ?>;
+    const producidoAcum = (nextTurno - 1) * std;
+    const restante = cantidad - producidoAcum;
+    const estimado = Math.min(std, restante);
 
-// producido acumulado antes de este turno
-const producidoAcum = (nextTurno - 1) * std;
-
-// lo que falta producir
-const restante = cantidad - producidoAcum;
-
-// estimado del turno
-const estimado = Math.min(std, restante);
-    // 3. Construir fila
     const fila = `
         <tr>
             <td class="text-center align-middle turno-num">${nextTurno}</td>
@@ -308,20 +345,19 @@ const estimado = Math.min(std, restante);
                     <option value="NOCHE">NOCHE</option>
                 </select>
             </td>
-            <td><input type="number" class="form-control" min="0" step="1" name="hc[${secuencia}][${nextTurno}]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)"></td>
-            <td class="text-center align-middle">${std}</td>
-           
-  
-
-<td class="text-center align-middle">${estimado}</td>
-            
-           <td>
+            <td style="width:80px;">
+                <input type="number" class="form-control" min="0" step="1" 
+                    name="hc[${secuencia}][${nextTurno}]" 
+                    onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
+            </td>
+            <td>${sigenv} ${std} ${udm}</td>
+            <td class="text-center align-middle">${pesoEnv} KG</td>
+            <td>
                 <input type="number" step="0.01" min="0"
                     class="form-control form-control-sm"
                     name="real[${secuencia}][${nextTurno}]"
                     placeholder="0.00">
             </td>
-            
             <td></td>
             <td></td>
             <td>
@@ -334,7 +370,6 @@ const estimado = Math.min(std, restante);
 
     $tbody.append(fila);
 });
-
 /* ======================
    ELIMINAR FILA + renumerar
 ======================*/

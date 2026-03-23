@@ -28,7 +28,7 @@ $sql="SELECT
     t.total_fases,
     e.abreviatura as envase,
     p.peso_prod,
-    f.kg_std AS kg,
+    f.unds AS kg,
     f.proceso_id AS proce,
     u.sigla as umed,
     GROUP_CONCAT(a.abreviatura ORDER BY a.abreviatura SEPARATOR '+') AS act
@@ -63,7 +63,7 @@ GROUP BY
     p.nombre,
     f.proceso_id,
     f.secuencia,
-    f.kg_std,
+    f.unds,
     t.total_fases
 
 ORDER BY
@@ -205,11 +205,12 @@ $res=$conn->query($sql);
                 <th>Tipo de Fase</th>
                 <th>Area de Produccion</th>
                 <th>Actividad</th>
+                <th>Unidades</th>
                 <th>Envase</th>
                 <th>Peso Envase</th>
                 <th>UDM envase</th>
-                <th>KG standar</th>
-                <th>Personas Estandar</th>
+                
+                <th>HC std</th>
                 <th></th>
               </tr>
             </thead>
@@ -269,6 +270,13 @@ $res=$conn->query($sql);
   </div>
 </td>
           
+
+
+          <!---------UNIDADES----------->
+    <td>
+      <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
+    </td>
+
 <!---------envase----------->
           <td>
             <select class="form-select" required name="envase[]">
@@ -301,10 +309,6 @@ $res=$conn->query($sql);
 
 
 
-          <!---------kg stdr----------->
-    <td>
-      <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
-    </td>
           
           <!---------CANTIDAD DE PERSONAS ESTANDAR----------->
           <td>
@@ -366,10 +370,11 @@ $res=$conn->query($sql);
                 <th>Tipo de Fase</th>
                 <th>Área de Producción</th>
                 <th>Actividad(es)</th>
+                <th>Unidades</th>
                 <th>Envase</th>
                 <th>Peso Envase</th>
                 <th>UDM Env</th>
-                <th>KG Estándar</th>
+                
                 <th>Personas Estándar</th>
               </tr>
             </thead>
@@ -640,6 +645,15 @@ ${actividadesHTML}
 </td>
 
 <td>
+<input type="number" step="0.01" min="0"
+name="kgstd[${fase.secuencia}]"
+value="${fase.unds}"
+class="form-control form-control-sm">
+</td>
+
+
+
+<td>
 <select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
 ${data.envases.map(v =>
 `<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
@@ -665,12 +679,6 @@ ${v.nombre}
   </select>
 </td>
 
-<td>
-<input type="number" step="0.01" min="0"
-name="kgstd[${fase.secuencia}]"
-value="${fase.kg_std}"
-class="form-control form-control-sm">
-</td>
 
 <td>
 <input type="number" step="1" min="0"

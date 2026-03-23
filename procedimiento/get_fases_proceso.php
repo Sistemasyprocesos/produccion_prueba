@@ -15,7 +15,7 @@ if(!$proceso_id){
 
 $sql="SELECT
     f.secuencia,
-    f.kg_std,
+    f.unds,
     f.personas_std,
     f.tipo_fase,
     f.area,
@@ -29,7 +29,7 @@ INNER JOIN prod_productos p ON p.id=f.producto
 INNER JOIN prod_act_prod a ON a.id=f.actividad
 inner join prod_udm as u on u.id=f.udm_env
 WHERE f.proceso_id=?
-GROUP BY f.secuencia,f.kg_std,f.personas_std,f.tipo_fase,f.area,f.envase,p.nombre,f.peso_env,u.sigla
+GROUP BY f.secuencia,f.unds,f.personas_std,f.tipo_fase,f.area,f.envase,p.nombre,f.peso_env,u.sigla
 ORDER BY f.secuencia
 ";
 

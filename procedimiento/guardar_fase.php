@@ -45,7 +45,7 @@ try {
                     tipo_fase,
                     area,
                     actividad,
-                    kg_std,
+                    unds,
                     proceso_id,
                     envase,
                     personas_std,

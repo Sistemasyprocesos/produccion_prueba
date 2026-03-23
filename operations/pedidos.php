@@ -70,12 +70,14 @@
                 p.cantidad,
                 p.und_medida,
                 pr.peso_prod as peso,
-                u.sigla as um,
+                 u_prod.sigla AS sigla_producto,
+                u_ped.sigla  AS sigla_pedido,
                 p.num_pedido,
                 e.nom as estado,
                 c.razon_social as cliente,
                 pr.nombre as producto,
                 ev.abreviatura as envase,
+
                 COALESCE(SUM(a.kg_real),0) as producido,
 
                 ROUND(
@@ -87,9 +89,14 @@
                 inner join prod_clientes as c on c.id=p.id_cliente
                 inner join prod_productos as pr on pr.id=p.producto
                 inner join prod_estados as e on e.id=p.estado
-                inner join prod_udm as u on pr.udm=u.id
+               
                 inner join prod_envase as ev on ev.id=pr.envase
-                
+               
+                INNER JOIN prod_udm u_prod 
+    ON u_prod.id = pr.udm   -- producto
+
+INNER JOIN prod_udm u_ped 
+    ON u_ped.id = p.und_medida  -- pedido
                 left join prod_avance_pedido a 
                 on a.id_pedido = p.id_pedido
                 AND a.secuencia = (
@@ -116,8 +123,8 @@
                 </td>
                 <td><?=$g['cliente'] ?></td>
                 <td><?=$g['fecha_entrega'] ?></td>
-                <td><?=$g['cantidad'].' '.$g['um'] ?></td>
-                <td><?=$g['producto'].' '.$g['envase'].' '.$g['peso'].' '.$g['um'] ?></td>
+                <td><?=$g['cantidad'].' '.$g['sigla_pedido'] ?></td>
+                <td><?=$g['producto'].' '.$g['envase'].' '.$g['peso'].' '.$g['sigla_producto'] ?></td>
 
                 <?php  
                 if($g['estado'] == 'ACTIVO'){
@@ -354,7 +361,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 
 <!--------------------MODAL DETALLEv3----------------------->
 <div class="modal fade" id="modaldetallesv3" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #198754; color: white;">
         <h5 class="modal-title">Añadir produccion real</h5>
