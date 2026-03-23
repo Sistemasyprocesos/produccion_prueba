@@ -43,7 +43,7 @@ INNER JOIN prod_productos AS pr ON pr.id = p.producto
 INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
 INNER JOIN prod_clientes AS c ON c.id = p.id_cliente
 INNER JOIN prod_act_prod AS a ON a.id = f.actividad
-inner join prod_envase as e on e.id=pr.envase
+inner join prod_envase as e on e.id=f.envase
 INNER JOIN prod_udm u_prod ON u_prod.id = pr.udm
 INNER JOIN prod_udm u_fase ON u_fase.id = f.udm_env
 WHERE p.id_pedido = ?
@@ -258,11 +258,11 @@ $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
                             </td>
                             <!-------UNID ENVASE---------------->
 
-                            <td><?=$fase['sigenv'].' '. $fase['std'].' '.$fase['udm'] ?>
+                            <td><?=$fase['sigenv'].' '. $peso.' '.$fase['udm'] ?>
                             </td>
 
                             <!------ESTIMADO------------->
-                            <td class="text-center align-middle"><?= $peso?></td>
+                            <td class="text-center align-middle"><?=$fase['std'] ?></td>
                               <!-------obj---------------->
 
                             <td style="width:auto;"><?= number_format($obj_fase,2).' KG' ?></td>

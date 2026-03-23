@@ -37,7 +37,7 @@ try {
     // 3. Reinsertar una fila por cada actividad de cada fase
     $stmtIns = $conn->prepare("
         INSERT INTO prod_fases_prod
-            (proceso_id, producto, secuencia, tipo_fase, area, envase, peso_env, udm_env, kg_std, personas_std, actividad)
+            (proceso_id, producto, secuencia, tipo_fase, area, envase, peso_env, udm_env, unds, personas_std, actividad)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
