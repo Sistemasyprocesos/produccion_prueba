@@ -87,7 +87,7 @@
                 inner join prod_clientes as c on c.id=p.id_cliente
                 inner join prod_productos as pr on pr.id=p.producto
                 inner join prod_estados as e on e.id=p.estado
-                inner join prod_udm as u on p.und_medida=u.id
+                inner join prod_udm as u on pr.udm=u.id
                 inner join prod_envase as ev on ev.id=pr.envase
                 
                 left join prod_avance_pedido a 
@@ -276,6 +276,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                         <?php } ?>
                       </select>
                 </div>
+
             </div>
         </div>
       </div>
