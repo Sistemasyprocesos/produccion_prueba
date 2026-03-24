@@ -373,7 +373,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
-        <button class="btn btn-success btn-sm"  id="guardarAvancev2"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
+        <button class="btn btn-success btn-sm"  id="guardarAvancev3"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
       </div>
     </div>
   </div>
@@ -493,26 +493,26 @@ $(document).on("click", ".btnVerDetallev2", function(){
 
 <!----------AVANCE V3---------------->
 <script>
-$(document).on("click", ".btnVerDetallev3", function(){
+$(document).on("click", ".btnVerDetallev3", function () {
+    const id = $(this).data("iddet");
+    $("#avancepedidov3").html("Cargando...");
 
-  const id = $(this).data("iddet");
+    $.ajax({
+        url: "ajax_avance_pedv3.php",
+        type: "POST",
+        data: { id: id },
+        success: function (res) {
+            $("#avancepedidov3").html(res);
 
-  $("#avancepedidov3").html("Cargando...");
-
-  $.ajax({
-      url: "ajax_avance_pedv3.php",
-      type: "POST",
-      data: { id: id },
-
-    success: function(res){
-      $("#avancepedidov3").html(res);
-    },
-
-    error: function(){
-      $("#avancepedidov3").html("Error al cargar datos");
-    }
-  });
-
+            // ← ESTO ES LO QUE FALTABA: recalcular cada tabla al cargar
+            $("#avancepedidov3 .tablaAvance").each(function () {
+                recalcularTotales($(this));
+            });
+        },
+        error: function () {
+            $("#avancepedidov3").html("Error al cargar datos");
+        }
+    });
 });
 </script>
 
@@ -656,8 +656,42 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 
 });
 </script>
+<!------------GUARDAR AVANCE V3--------------------------------------->
+<script>
+$(document).on("click", "#guardarAvancev3", function () {
+    let datos = $("#formAvance").serialize();
+
+    $.ajax({
+        url: "guardar_avancev3.php",
+        type: "POST",
+        data: datos,
+        dataType: "json",
+        success: function (resp) {
+            if (resp.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Guardado',
+                    text: resp.guardados + ' turno(s) guardados correctamente'
+                }).then(() => {
+                    $('#modaldetallesv3').modal('hide');
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Guardado parcial',
+                    text: resp.guardados + ' guardados, ' + resp.errores + ' con error'
+                });
+            }
+        },
+        error: function () {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar' });
+        }
+    });
+});
 
 
+</script>
 
 <!--------------------------->
 <script>
