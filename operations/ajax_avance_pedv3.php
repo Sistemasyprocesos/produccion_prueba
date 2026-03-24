@@ -114,6 +114,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 
     if ($equivalente > 0) {
         $kilos = $cantidad * ($pesoprod * $equivalente);
+      
        $obj = $unds * ($pesoenva * $eq_fase);
     } else {
         $kilos = 0;
@@ -131,7 +132,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
         <div class="row">
             <b>Pedido:</b> 
         </div>    
-        <div class="row">
+        <div>
             <?= htmlspecialchars($prod).' '.$envase.' '. $pesoprod.' '.$usigla  ?>
         </div>
     </div>
@@ -175,10 +176,10 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 
         <?php
         $peso   = $fase['peso_env'];
-$unds   = $fase['std'];
-$eq     = $fase['eq_kg_fase'];
+        $unds   = $fase['std'];
+        $eq     = $fase['eq_kg_fase'];
 
-$obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
+        $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
             $turnosFase = ($fase['std'] > 0) ? ceil($cantidad / $fase['std']) : 0;
         ?>
 
@@ -207,7 +208,10 @@ $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
         data-secuencia="<?= $fase['secuencia'] ?>"
         data-peso-env="<?= $fase['peso_env'] ?>"
         data-sigenv="<?= htmlspecialchars($fase['sigenv']) ?>"
-        data-udm="<?= htmlspecialchars($fase['udm']) ?>">
+        data-udm="<?= htmlspecialchars($fase['udm']) ?>"
+        data-eq="<?= $fase['eq_kg_fase']?>"
+        >
+        
     <i class="bi bi-plus-circle"></i> AÑADIR TURNO
 </button>
                 </div>
@@ -221,7 +225,7 @@ $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
                         <th>Fecha</th>
                         <th>Jornada</th>
                         <th># Colab</th>
-                        <th>Presentacion</th>
+                      
                         
                         <th>Undidades Estandar</th>
                         <th>Objetivo</th>
@@ -237,7 +241,9 @@ $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
                             $producidoAcum = ($turno - 1) * $fase['std'];
                             $restante      = $cantidad - $producidoAcum;
                             $estimado      = min($fase['std'], $restante);
-                            $peso=$fase['peso_env'];
+                        
+                           $peso=$fase['peso_env'];
+                           
                             $valor         = $avance[$fase['secuencia']][$turno] ?? '';
                         ?>
                         <tr>
@@ -256,16 +262,13 @@ $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
                             <td style="width:80px;"><input type="number" class="form-control" min="0" step="1" name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]" onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
                                 
                             </td>
-                            <!-------UNID ENVASE---------------->
-
-                            <td><?=$fase['sigenv'].' '. $peso.' '.$fase['udm'] ?>
-                            </td>
+                         
 
                             <!------ESTIMADO------------->
-                            <td class="text-center align-middle"><?=$fase['std'] ?></td>
+                            <td class="text-center align-middle"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
                               <!-------obj---------------->
 
-                            <td style="width:auto;"><?= number_format($obj_fase,2).' KG' ?></td>
+                            <td style="width:auto;" class="text-center align-middle"><?= number_format($obj_fase,2).' KG' ?></td>
                             </td>
 
                             <!-------------------------->
@@ -334,6 +337,11 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
     const restante = cantidad - producidoAcum;
     const estimado = Math.min(std, restante);
 
+const eq = $(this).data('eq') || 1;   // ← línea nueva
+
+// luego corrige la línea del cálculo:
+const pesoestimado = std * pesoEnv * eq;   // ← quita el * suelto que tenías
+
     const fila = `
         <tr>
             <td class="text-center align-middle turno-num">${nextTurno}</td>
@@ -350,8 +358,11 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
                     name="hc[${secuencia}][${nextTurno}]" 
                     onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
             </td>
-            <td>${sigenv} ${std} ${udm}</td>
-            <td class="text-center align-middle">${pesoEnv} KG</td>
+            <td class="text-center align-middle">${std} ${sigenv} ${pesoEnv} ${udm}</td>
+          
+            <td class="text-center align-middle">${pesoestimado.toFixed(2)} KG</td>
+          
+          
             <td>
                 <input type="number" step="0.01" min="0"
                     class="form-control form-control-sm"
