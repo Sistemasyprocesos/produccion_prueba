@@ -218,7 +218,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
             </div>
 
             <!-- CLASE en lugar de ID -->
-            <table class="table table-bordered table-sm tablaAvance">
+            <table class="table table-bordered border-primary table-sm table-light table-hover table-striped tablaAvance">
                 <thead class="table-dark">
                     <tr>
                         <th class="text-center" style="width:70px;">Turno</th>
@@ -265,36 +265,44 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                          
 
                             <!------ESTIMADO------------->
-                            <td class="text-center align-middle"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
-                              <!-------obj---------------->
+                            <td class="text-center align-middle td-unds"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
 
-                            <td style="width:auto;" class="text-center align-middle"><?= number_format($obj_fase,2).' KG' ?></td>
+                              <!-------obj---------------->
+                            <td style="width:auto;" class="text-center align-middle  td-obj" data-obj="<?= $obj_fase ?>">
+                                <?= number_format($obj_fase,2).' KG' ?></td>
                             </td>
 
-                            <!-------------------------->
+                          <!-- Real -->
                             <td>
                                 <input type="number" step="0.01" min="0"
-                                    class="form-control form-control-sm"
+                                    class="form-control form-control-sm input-real"
                                     value="<?= htmlspecialchars($valor) ?>"
                                     name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
                                     placeholder="0.00">
                             </td>
 
-                            <td></td>
-                            <td></td>
+                            <!-- Dif -->
+                            <td class="text-center align-middle td-dif"></td>
+
+                            <!-- Cumplimiento -->
+                            <td class="text-center align-middle td-cumpl"></td>
                          
                         </tr>
                     <?php endfor; ?>
                 </tbody>
-                <tfoot class="table-info">
+                <tfoot class="table-secondary">
                     <tr>
-                        <td colspan="2"></td>
-                        <td><b>TOTAL</b></td>
-                        <td><b>total colab</b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                       
+                            <td colspan="4" class="text-center align-middle"><b>TOTAL PROCESO</b></td>  
+                        <!------SUMATORIA DE UNIDADES ESTANDAR---------->
+                            <td class="text-center align-middle total-unds"><b></b></td>           
+                        <!------SUMATORIA DE OBJETIVO---------->
+                            <td class="text-center align-middle total-obj"><b></b></td>     
+                        <!------SUMATORIA DE KG REAL---------->
+                            <td class="text-center align-middle total-real"><b></b></td>                   
+                        <!------SUMATORIA DE DIF---------->
+                            <td class="text-center align-middle total-dif"><b></b></td>                        
+                        <!------SUMATORIA DE CUNPLIMIENTO---------->
+                            <td class="text-center align-middle total-cumpl"><b></b></td>                       
                     </tr>
                 </tfoot>
             </table>
@@ -358,19 +366,16 @@ const pesoestimado = std * pesoEnv * eq;   // ← quita el * suelto que tenías
                     name="hc[${secuencia}][${nextTurno}]" 
                     onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
             </td>
-            <td class="text-center align-middle">${std} ${sigenv} ${pesoEnv} ${udm}</td>
-          
-            <td class="text-center align-middle">${pesoestimado.toFixed(2)} KG</td>
-          
-          
-            <td>
-                <input type="number" step="0.01" min="0"
-                    class="form-control form-control-sm"
-                    name="real[${secuencia}][${nextTurno}]"
-                    placeholder="0.00">
-            </td>
-            <td></td>
-            <td></td>
+          <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
+<td class="text-center align-middle td-obj" data-obj="${pesoestimado.toFixed(2)}">${pesoestimado.toFixed(2)} KG</td>
+<td>
+    <input type="number" step="0.01" min="0"
+        class="form-control form-control-sm input-real"
+        name="real[${secuencia}][${nextTurno}]"
+        placeholder="0.00">
+</td>
+<td class="text-center align-middle td-dif"></td>
+<td class="text-center align-middle td-cumpl"></td>
             <td>
                 <button type="button" class="btn btn-sm btn-danger btnEliminarFila">
                     <i class="bi bi-trash"></i>
@@ -380,6 +385,7 @@ const pesoestimado = std * pesoEnv * eq;   // ← quita el * suelto que tenías
     `;
 
     $tbody.append(fila);
+    recalcularTotales($bloque.find('.tablaAvance'));
 });
 /* ======================
    ELIMINAR FILA + renumerar
@@ -392,5 +398,51 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
     $tbody.find('tr').each(function (i) {
         $(this).find('.turno-num').text(i + 1);
     });
+    const $tabla = $tbody.closest('.tablaAvance');
+recalcularTotales($tabla);
 });
+
+
+
+
+
+/* ======================
+   RECALCULAR TOTALES DEL FOOTER
+======================*/
+function recalcularTotales($tabla) {
+    let totalObj  = 0;
+    let totalReal = 0;
+
+    $tabla.find('tbody tr').each(function () {
+        const obj  = parseFloat($(this).find('.td-obj').data('obj')) || 0;
+        const real = parseFloat($(this).find('.input-real').val()) || 0;
+        const dif  = real - obj;
+        const cumpl = obj > 0 ? ((real / obj) * 100).toFixed(1) + '%' : '-';
+
+        // Actualizar dif y cumplimiento por fila
+        $(this).find('.td-dif').text(dif.toFixed(2) + ' KG');
+        $(this).find('.td-cumpl').text(cumpl);
+
+        totalObj  += obj;
+        totalReal += real;
+    });
+
+    const totalDif   = totalReal - totalObj;
+    const totalCumpl = totalObj > 0 ? ((totalReal / totalObj) * 100).toFixed(1) + '%' : '-';
+
+    const $tfoot = $tabla.find('tfoot');
+    $tfoot.find('.total-obj').html('<b>' + totalObj.toFixed(2) + ' KG</b>');
+    $tfoot.find('.total-real').html('<b>' + totalReal.toFixed(2) + ' KG</b>');
+    $tfoot.find('.total-dif').html('<b>' + totalDif.toFixed(2) + ' KG</b>');
+    $tfoot.find('.total-cumpl').html('<b>' + totalCumpl + '</b>');
+}
+
+// Disparar al escribir en cualquier input real
+$(document).on('input', '.input-real', function () {
+    const $tabla = $(this).closest('.tablaAvance');
+    recalcularTotales($tabla);
+});
+
+// Disparar también al agregar o eliminar fila
+// (llamar recalcularTotales al final de ambos eventos ya existentes)
 </script>
