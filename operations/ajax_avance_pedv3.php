@@ -33,6 +33,7 @@ $d = "SELECT
     p.id_pedido,
     c.razon_social,
     e.nombre as nombreenvase,
+    w.nombre as wnombre,
     e.abreviatura,
     f.peso_env as pen,
     f.secuencia,
@@ -48,6 +49,8 @@ INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
 INNER JOIN prod_clientes AS c ON c.id = p.id_cliente
 INNER JOIN prod_act_prod AS a ON a.id = f.actividad
 inner join prod_envase as e on e.id=f.envase
+inner join prod_envase as w on w.id=pr.envase
+
 INNER JOIN prod_udm u_prod ON u_prod.id = pr.udm
 INNER JOIN prod_udm u_fase ON u_fase.id = f.udm_env
 WHERE p.id_pedido = ?
@@ -104,7 +107,7 @@ if ($pedido) {
     $cantidad       = $pedido['cantidad'] ?? 0;
     $num_pedido     = $pedido['num_pedido'];
     $cliente        = $pedido['razon_social'];
-    $envase         = $pedido["nombreenvase"];
+    $envase         = $pedido["wnombre"];
     $prod           = $pedido["productonombre"];
     $pesoenva       = $pedido["pen"];
     $pesoprod       = $pedido["peso_prod"] ?? 0;
@@ -299,6 +302,11 @@ $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
     name="real[<?=$fase['secuencia']?>][<?=$turno?>]"
     placeholder="0.00">
                             </td>
+
+<!---------ENVIAN------------------->
+<input type="hidden" name="peso[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['peso_env']?>">
+<input type="hidden" name="eq[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['eq_kg_fase']?>">
+
                         <!-----KG REALES------------->
                  <td class="text-center align-middle td-kg"></td>
 

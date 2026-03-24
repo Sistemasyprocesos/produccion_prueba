@@ -81,7 +81,7 @@
                 COALESCE(SUM(a.kg_real),0) as producido,
 
                 ROUND(
-                (COALESCE(SUM(a.kg_real),0) / p.cantidad) * 100
+                (COALESCE(SUM(a.kg_real),0) * u_prod.equivalente_kg/ p.cantidad) * 100
                 ,0) as cumplimiento
 
                 from prod_pedidos as p 
@@ -137,14 +137,14 @@ INNER JOIN prod_udm u_ped
                   <?php  }
                   ?>
                 <td>
-            <!---------BOTON DE DETALLES---------------------------->
+            <!---------BOTON DE DETALLES----------------------------
                   <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i>V1</button>
                 
-            <!---------BOTON DE DETALLES---------------------------->
+            <!---------BOTON DE DETALLES----------------------------
                   <button class="btn btn-success btn-sm btnVerDetallev2" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv2"><i class="bi bi-card-checklist"></i> V2</button>
-
+----->
                   <!----------------------------------------------->
-                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="bi bi-card-checklist"></i>V3</button>
+                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="bi bi-card-checklist"></i> Detalle</button>
 
                 <!---------BOTON EDITAR---------------------------->
                   <button class="btn btn-sm btn-primary btnEditar"
@@ -169,6 +169,8 @@ INNER JOIN prod_udm u_ped
                           aria-valuemin="0"
                           aria-valuemax="100">
                       <div class="progress-bar" style="width: <?= $g['cumplimiento'] ?>%"><?= $g['cumplimiento'] ?>%</div>
+
+                      <?= $g['cumplimiento']?>
                   </div>
                   </div>
                 </td>
