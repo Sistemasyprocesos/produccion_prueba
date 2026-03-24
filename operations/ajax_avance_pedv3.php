@@ -229,7 +229,8 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                         
                         <th>Undidades Estandar</th>
                         <th>Objetivo</th>
-                        <th>Real (KG)</th>
+                        <th>Unidades Producidas</th>
+                        <th>KG Reales</th>
                         <th>Dif</th>
                         <th>Cumplimiento</th>
                         
@@ -246,7 +247,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                            
                             $valor         = $avance[$fase['secuencia']][$turno] ?? '';
                         ?>
-                        <tr>
+                        <tr data-peso="<?= $fase['peso_env'] ?>" data-eq="<?= $fase['eq_kg_fase'] ?>">
                             <td class="text-center align-middle turno-num"><?= $turno ?></td>
                             <td><input type="date" class="form-control" name="fecha[<?= $fase['secuencia'] ?>][<?= $turno ?>]"></td>
                             <!------JORNADA-------------->
@@ -272,7 +273,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                                 <?= number_format($obj_fase,2).' KG' ?></td>
                             </td>
 
-                          <!-- Real -->
+                          <!--unidades Real -->
                             <td>
                                 <input type="number" step="0.01" min="0"
                                     class="form-control form-control-sm input-real"
@@ -280,12 +281,14 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                                     name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
                                     placeholder="0.00">
                             </td>
+                        <!-----KG REALES------------->
+                 <td class="text-center align-middle td-kg"></td>
 
-                            <!-- Dif -->
-                            <td class="text-center align-middle td-dif"></td>
+                <!-- Dif -->
+                <td class="text-center align-middle td-dif"></td>
 
-                            <!-- Cumplimiento -->
-                            <td class="text-center align-middle td-cumpl"></td>
+                <!-- Cumplimiento -->
+                <td class="text-center align-middle td-cumpl"></td>
                          
                         </tr>
                     <?php endfor; ?>
@@ -297,8 +300,11 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                             <td class="text-center align-middle total-unds"><b></b></td>           
                         <!------SUMATORIA DE OBJETIVO---------->
                             <td class="text-center align-middle total-obj"><b></b></td>     
-                        <!------SUMATORIA DE KG REAL---------->
-                            <td class="text-center align-middle total-real"><b></b></td>                   
+                      
+                            <td></td>
+  <!------SUMATORIA DE KG REAL---------->
+                            <td class="text-center align-middle total-real"><b></b></td>  
+                            
                         <!------SUMATORIA DE DIF---------->
                             <td class="text-center align-middle total-dif"><b></b></td>                        
                         <!------SUMATORIA DE CUNPLIMIENTO---------->
@@ -351,9 +357,11 @@ const eq = $(this).data('eq') || 1;   // ← línea nueva
 const pesoestimado = std * pesoEnv * eq;   // ← quita el * suelto que tenías
 
     const fila = `
-        <tr>
+        <tr data-peso="${pesoEnv}" data-eq="${eq}">
             <td class="text-center align-middle turno-num">${nextTurno}</td>
+            
             <td><input type="date" class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
+            
             <td>
                 <select class="form-select" name="jornada[${secuencia}][${nextTurno}]">
                     <option value=""></option>
@@ -361,21 +369,28 @@ const pesoestimado = std * pesoEnv * eq;   // ← quita el * suelto que tenías
                     <option value="NOCHE">NOCHE</option>
                 </select>
             </td>
+            
             <td style="width:80px;">
                 <input type="number" class="form-control" min="0" step="1" 
                     name="hc[${secuencia}][${nextTurno}]" 
                     onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
             </td>
+
+
           <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
-<td class="text-center align-middle td-obj" data-obj="${pesoestimado.toFixed(2)}">${pesoestimado.toFixed(2)} KG</td>
-<td>
-    <input type="number" step="0.01" min="0"
-        class="form-control form-control-sm input-real"
-        name="real[${secuencia}][${nextTurno}]"
-        placeholder="0.00">
-</td>
-<td class="text-center align-middle td-dif"></td>
-<td class="text-center align-middle td-cumpl"></td>
+
+          <td class="text-center align-middle td-obj" data-obj="${pesoestimado.toFixed(2)}">${pesoestimado.toFixed(2)} KG</td>
+
+          <td>
+                <input type="number" step="0.01" min="0"
+                class="form-control form-control-sm input-real"
+                name="real[${secuencia}][${nextTurno}]"
+                placeholder="0.00">
+        </td>
+
+   <td class="text-center align-middle td-kg"></td>
+    <td class="text-center align-middle td-dif"></td>
+    <td class="text-center align-middle td-cumpl"></td>
             <td>
                 <button type="button" class="btn btn-sm btn-danger btnEliminarFila">
                     <i class="bi bi-trash"></i>
@@ -412,29 +427,34 @@ recalcularTotales($tabla);
 function recalcularTotales($tabla) {
     let totalObj  = 0;
     let totalReal = 0;
+    let totalKg   = 0;
 
     $tabla.find('tbody tr').each(function () {
-        const obj  = parseFloat($(this).find('.td-obj').data('obj')) || 0;
-        const real = parseFloat($(this).find('.input-real').val()) || 0;
-        const dif  = real - obj;
-        const cumpl = obj > 0 ? ((real / obj) * 100).toFixed(1) + '%' : '-';
+        const obj     = parseFloat($(this).find('.td-obj').data('obj')) || 0;
+        const unds    = parseFloat($(this).find('.input-real').val()) || 0;
+        const peso    = parseFloat($(this).data('peso')) || 0;
+        const eq      = parseFloat($(this).data('eq')) || 1;
 
-        // Actualizar dif y cumplimiento por fila
+        const kg      = unds * peso * eq;
+        const dif     = kg - obj;
+        const cumpl   = obj > 0 ? ((kg / obj) * 100).toFixed(1) + '%' : '-';
+
+        $(this).find('.td-kg').text(kg.toFixed(2) + ' KG');
         $(this).find('.td-dif').text(dif.toFixed(2) + ' KG');
         $(this).find('.td-cumpl').text(cumpl);
 
         totalObj  += obj;
-        totalReal += real;
+        totalKg   += kg;
     });
 
-    const totalDif   = totalReal - totalObj;
-    const totalCumpl = totalObj > 0 ? ((totalReal / totalObj) * 100).toFixed(1) + '%' : '-';
+    const totalDif   = totalKg - totalObj;
+    const totalCumpl = totalObj > 0 ? ((totalKg / totalObj) * 100).toFixed(1) + '%' : '-';
 
     const $tfoot = $tabla.find('tfoot');
-    $tfoot.find('.total-obj').html('<b>' + totalObj.toFixed(2) + ' KG</b>');
-    $tfoot.find('.total-real').html('<b>' + totalReal.toFixed(2) + ' KG</b>');
-    $tfoot.find('.total-dif').html('<b>' + totalDif.toFixed(2) + ' KG</b>');
-    $tfoot.find('.total-cumpl').html('<b>' + totalCumpl + '</b>');
+    $tfoot.find('.total-obj').html('<b>'  + totalObj.toFixed(2)  + ' KG</b>');
+    $tfoot.find('.total-real').html('<b>' + totalKg.toFixed(2)   + ' KG</b>');
+    $tfoot.find('.total-dif').html('<b>'  + totalDif.toFixed(2)  + ' KG</b>');
+    $tfoot.find('.total-cumpl').html('<b>' + totalCumpl          + '</b>');
 }
 
 // Disparar al escribir en cualquier input real
