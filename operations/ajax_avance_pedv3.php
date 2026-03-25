@@ -187,6 +187,8 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
         $eq     = $fase['eq_kg_fase'];
 
         $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
+
+        //ACA DEFINE LA CANTIDAD DE FASES QUE TENDRA CADA COSA
             $turnosFase = ($fase['std'] > 0) ? ceil($cantidad / $fase['std']) : 0;
         ?>
 

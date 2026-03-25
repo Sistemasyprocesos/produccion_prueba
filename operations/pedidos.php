@@ -81,8 +81,8 @@
                 COALESCE(SUM(a.kg_real),0) as producido,
 
                 ROUND(
-                (COALESCE(SUM(a.kg_real),0) * u_prod.equivalente_kg/ p.cantidad) * 100
-                ,0) as cumplimiento
+                (COALESCE(SUM(a.kg_real),0) / p.cantidad) * 100
+                ,6) as cumplimiento
 
                 from prod_pedidos as p 
 
