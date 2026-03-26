@@ -278,13 +278,22 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                     <label class="form-label">UM</label>
                       <select name="unds" id="unds" required class="form-select">
                         <?php
-                        $r=$conn->query("select id,nombre,sigla from prod_udm order by sigla desc");
+                        $r=$conn->query("select id,nombre,sigla,equivalente_kg from prod_udm order by sigla desc");
                         while($s=$r->fetch_assoc()){
                         ?>
-                        <option value="<?=$s['id'] ?>"><?=$s['sigla'] ?></option>
+                        <option value="<?=$s['id'] ?> " data-eq="<?=$s['equivalente_kg'] ?>">
+                            <?=$s['sigla'] ?>
+                        </option>
                         <?php } ?>
                       </select>
                 </div>
+                <div class="col-3">
+                  <label class="form-label">Equivalente</label>
+                    <input type="text" readonly class="form-control" id="cant_equiv">
+                </div>
+
+
+
 
             </div>
         </div>
@@ -366,7 +375,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
   <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #198754; color: white;">
-        <h5 class="modal-title">Añadir produccion real</h5>
+        <h5 class="modal-title">Produccion Pedido</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
@@ -591,6 +600,30 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 });
 
 </script>
+
+
+<!------CALCULO AUTOMATICO DE UDM----------------------------------->
+<script>
+function calcularEquivalente() {
+
+    let cantidad = parseFloat($("#cant").val()) || 0;
+
+    let eq = parseFloat($("#unds option:selected").data("eq")) || 0;
+
+    let resultado = cantidad * eq;
+
+    $("#cant_equiv").val(
+        resultado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })+' KG'
+    );
+}
+
+// Evento cuando cambia cantidad
+$(document).on("input", "#cant", calcularEquivalente);
+
+// Evento cuando cambia unidad
+$(document).on("change", "#unds", calcularEquivalente);
+</script>
+
 
 
 <script>

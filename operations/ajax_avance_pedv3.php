@@ -1,4 +1,46 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.encabezado-pedido {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background-color: white;
+    border-bottom: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+    padding: 10px 0;
+    overflow: hidden;
+}
+
+/* Texto y elementos en transición */
+.encabezado-pedido * {
+    transition: font-size 0.3s ease, padding 0.3s ease;
+}
+
+/* Estado compacto — todo más pequeño pero visible */
+.encabezado-pedido.compacto {
+    padding: 3px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.encabezado-pedido.compacto .num-pedido {
+    font-size: 0.75rem;
+}
+
+.encabezado-pedido.compacto .detalle-pedido {
+    font-size: 0.70rem;
+}
+
+.encabezado-pedido.compacto .detalle-pedido b {
+    font-size: 0.72rem;
+}
+
+.encabezado-pedido.compacto .row {
+    margin-bottom: 0 !important;
+}
+</style>
+
+
 <?php
 include '../connection/conexion.php';
 $id = $_POST['id']; 
@@ -97,6 +139,7 @@ while ($row = $result->fetch_assoc()) {
         'udm'       => $row['udm'],
         'sigenv'=>$row['abreviatura'],
           'eq_kg_fase'=> $row['eq_kg_fase'] ?? 1,
+          'nomenvase'=> $row['nombreenvase']
     ];
 }
 
@@ -129,12 +172,15 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 ?>
 
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
+<div class="encabezado-pedido">
+
 <div class="row mb-3">
-    <div class="col-auto"><b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?></div>
+    <div class="col-auto"><b># Pedido:</b> 
+        <?= htmlspecialchars($num_pedido) ?>
+    </div>
 </div>
 
 <div class="row mb-3 text-center">
-
     <div class="col-3 border-end">
         <div class="row">
             <b>Pedido:</b> 
@@ -158,7 +204,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
             <b>Cantidad: </b>
         </div>
         <div>
-            <?=$cantidad.' ('.$envase.' '. $pesoprod.' '.$usigla.')' ?>
+            <?=$cantidad.' ('.$envase.'S '. $pesoprod.' '.$usigla.')' ?>
         </div>
       <div><?=number_format($kilos, 2).' kg'?> </div>
     </div>
@@ -174,7 +220,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 
 </div>
 
-
+</div>
 <!-- ===== FORMULARIO ===== -->
 <form id="formAvance">
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
@@ -203,7 +249,7 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                     <h6 class="mt-2 mb-1">
                                 <span class="badge bg-primary me-2 fs-4">Fase <?= $fase['secuencia'] ?></span>
                                 <?= htmlspecialchars($fase['etapa']) ?>
-                                <small class="text-muted ms-2">(Std: <?= $fase['std'] ?> kg — <?= $turnosFase ?> turnos)</small>
+                                <small class="text-muted ms-2">(Std: <?= $fase['std'].' '.$fase['nomenvase'].'S' ?>  — <?= $turnosFase ?> turnos)</small>
                             </h6>
                 </div>
 
@@ -248,10 +294,10 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                             $restante      = $cantidad - $producidoAcum;
                             $estimado      = min($fase['std'], $restante);
                             $peso=$fase['peso_env'];
-                          $val_kg      = $avance[$fase['secuencia']][$turno]['kg_real'] ?? '';
-$val_fecha   = $avance[$fase['secuencia']][$turno]['fecha']   ?? '';
-$val_jornada = $avance[$fase['secuencia']][$turno]['jornada'] ?? '';
-$val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
+                            $val_kg      = $avance[$fase['secuencia']][$turno]['kg_real'] ?? '';
+                            $val_fecha   = $avance[$fase['secuencia']][$turno]['fecha']   ?? '';
+                            $val_jornada = $avance[$fase['secuencia']][$turno]['jornada'] ?? '';
+                            $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
                         ?>
 
                         <tr data-peso="<?= $fase['peso_env'] ?>" data-eq="<?= $fase['eq_kg_fase'] ?>">
@@ -286,10 +332,10 @@ $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
                             </td>
                          
 
-                            <!------ESTIMADO------------->
+                            <!------UNIDADES ESTANDAR------------->
                             <td class="text-center align-middle td-unds"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
 
-                              <!-------obj---------------->
+                              <!-------OBJETIVO---------------->
                             <td style="width:auto;" class="text-center align-middle  td-obj" data-obj="<?= $obj_fase ?>">
                                 <?= number_format($obj_fase,2).' KG' ?></td>
                             </td>
@@ -464,8 +510,8 @@ function recalcularTotales($tabla) {
         const dif     = kg - obj;
         const cumpl   = obj > 0 ? ((kg / obj) * 100).toFixed(1) + '%' : '-';
 
-        $(this).find('.td-kg').text(kg.toFixed(2) + ' KG');
-        $(this).find('.td-dif').text(dif.toFixed(2) + ' KG');
+        $(this).find('.td-kg').text(kg.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
+        $(this).find('.td-dif').text(dif.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
         $(this).find('.td-cumpl').text(cumpl);
 
         totalObj  += obj;
@@ -479,9 +525,9 @@ function recalcularTotales($tabla) {
     const $tfoot = $tabla.find('tfoot');
 
     $tfoot.find('.total-unds').html('<b>' + totalUndsReal.toFixed(2) + '</b>'); // 👈 NUEVO
-    $tfoot.find('.total-obj').html('<b>'  + totalObj.toFixed(2)  + ' KG</b>');
-    $tfoot.find('.total-real').html('<b>' + totalKg.toFixed(2)   + ' KG</b>');
-    $tfoot.find('.total-dif').html('<b>'  + totalDif.toFixed(2)  + ' KG</b>');
+  $tfoot.find('.total-obj').html('<b>'  + totalObj.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
+$tfoot.find('.total-real').html('<b>' + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2 })   + ' KG</b>');
+$tfoot.find('.total-dif').html('<b>'  + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
     $tfoot.find('.total-cumpl').html('<b>' + totalCumpl          + '</b>');
 }
 
@@ -498,4 +544,26 @@ $(document).on('input', '.input-real', function () {
 $(".tablaAvance").each(function () {
     recalcularTotales($(this));
 });
+</script>
+
+<!--------ENCABEZADO------------------------>
+<script>
+document.addEventListener("shown.bs.modal", function () {
+
+    const modalBody = document.querySelector("#modaldetallesv3 .modal-body");
+    const encabezado = document.querySelector(".encabezado-pedido");
+
+    if (!modalBody || !encabezado) return;
+
+    modalBody.addEventListener("scroll", function () {
+
+        if (modalBody.scrollTop > 60) {
+            encabezado.classList.add("compacto");
+        } else {
+            encabezado.classList.remove("compacto");
+        }
+
+    });
+
+});r
 </script>
