@@ -188,8 +188,8 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 
         $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
 
-        //ACA DEFINE LA CANTIDAD DE FASES QUE TENDRA CADA COSA
-            $turnosFase = ($fase['std'] > 0) ? ceil($cantidad / $fase['std']) : 0;
+        //ACA DEFINE LA CANTIDAD DE TURNOS QUE TENDRA CADA FASE
+            $turnosFase = ($fase['std'] > 0) ? ceil($kilos / $obj_fase) : 0;
         ?>
 
         <!-- CONTENEDOR POR FASE: el botón busca su tabla dentro de este div -->
@@ -239,7 +239,6 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                         <th>KG Reales</th>
                         <th>Dif</th>
                         <th>Cumplimiento %</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -263,27 +262,27 @@ $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
                             
                             <td>
                               <!-- Fecha -->
-                    <input type="date" class="form-control"
-    name="fecha[<?=$fase['secuencia']?>][<?=$turno?>]"
-    value="<?= htmlspecialchars($val_fecha) ?>">
+                                <input type="date" class="form-control"
+                                name="fecha[<?=$fase['secuencia']?>][<?=$turno?>]"
+                                value="<?= htmlspecialchars($val_fecha) ?>">
                             </td>
 
                             <!------JORNADA-------------->
                             <td>
                               <!-- Jornada -->
-<select class="form-select" name="jornada[<?=$fase['secuencia']?>][<?=$turno?>]">
-    <option value=""></option>
-    <option value="DIA"   <?= $val_jornada==='DIA'   ? 'selected':'' ?>>DIA</option>
-    <option value="NOCHE" <?= $val_jornada==='NOCHE' ? 'selected':'' ?>>NOCHE</option>
-</select>
+                                <select class="form-select" name="jornada[<?=$fase['secuencia']?>][<?=$turno?>]">
+                                    <option value=""></option>
+                                    <option value="DIA"   <?= $val_jornada==='DIA'   ? 'selected':'' ?>>DIA</option>
+                                    <option value="NOCHE" <?= $val_jornada==='NOCHE' ? 'selected':'' ?>>NOCHE</option>
+                                </select>
                             </td>
                             
                             <!-----COLAB------>
                             <td style="width:80px;">
                                 <input type="number" class="form-control" min="0" step="1"
-    name="hc[<?=$fase['secuencia']?>][<?=$turno?>]"
-    value="<?= htmlspecialchars($val_hc) ?>"
-    onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
+                                name="hc[<?=$fase['secuencia']?>][<?=$turno?>]"
+                                value="<?= htmlspecialchars($val_hc) ?>"
+                                onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
                             </td>
                          
 
@@ -298,41 +297,44 @@ $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
                           <!--unidades Real -->
                             <td>
                              <!-- Unidades producidas -->
-<input type="number" step="0.01" min="0"
-    class="form-control form-control-sm input-real"
-    value="<?= htmlspecialchars($val_kg) ?>"
-    name="real[<?=$fase['secuencia']?>][<?=$turno?>]"
-    placeholder="0.00">
+                                <input type="number" step="0.01" min="0"
+                                    class="form-control form-control-sm input-real"
+                                    value="<?= htmlspecialchars($val_kg) ?>"
+                                    name="real[<?=$fase['secuencia']?>][<?=$turno?>]"
+                                    placeholder="0.00">
                             </td>
 
 <!---------ENVIAN------------------->
-<input type="hidden" name="peso[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['peso_env']?>">
-<input type="hidden" name="eq[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['eq_kg_fase']?>">
+                    <input type="hidden" name="peso[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['peso_env']?>">
+                    <input type="hidden" name="eq[<?=$fase['secuencia']?>][<?=$turno?>]" value="<?=$fase['eq_kg_fase']?>">
 
+
+                    <!------>
                         <!-----KG REALES------------->
-                 <td class="text-center align-middle td-kg"></td>
+                        <td class="text-center align-middle td-kg"></td>
 
                 <!-- Dif -->
-                <td class="text-center align-middle td-dif"></td>
+                        <td class="text-center align-middle td-dif"></td>
 
                 <!-- Cumplimiento -->
-                <td class="text-center align-middle td-cumpl"></td>
+                        <td class="text-center align-middle td-cumpl"></td>
                          
                         </tr>
                     <?php endfor; ?>
                 </tbody>
+
+
                 <tfoot class="table-primary table bordered">
                     <tr>
                             <td colspan="4" class="text-center align-middle"><b>TOTAL PROCESO</b></td>  
-                        <!------SUMATORIA DE UNIDADES ESTANDAR---------->
-                            <td class="text-center align-middle total-unds"><b></b></td>           
+                     <td></td>         
                         <!------SUMATORIA DE OBJETIVO---------->
                             <td class="text-center align-middle total-obj"><b></b></td>     
                       
-                            <td></td>
-  <!------SUMATORIA DE KG REAL---------->
-                            <td class="text-center align-middle total-real"><b></b></td>  
-                            
+                               <!------SUMATORIA DE UNIDADES ESTANDAR---------->
+                            <td class="text-center align-middle total-unds"><b></b></td>  
+                        <!------SUMATORIA DE KG REAL---------->
+                            <td class="text-center align-middle total-real"><b></b></td>    
                         <!------SUMATORIA DE DIF---------->
                             <td class="text-center align-middle total-dif"><b></b></td>                        
                         <!------SUMATORIA DE CUNPLIMIENTO---------->
@@ -440,11 +442,8 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
         $(this).find('.turno-num').text(i + 1);
     });
     const $tabla = $tbody.closest('.tablaAvance');
-recalcularTotales($tabla);
+    recalcularTotales($tabla);
 });
-
-
-
 
 
 /* ======================
@@ -452,8 +451,8 @@ recalcularTotales($tabla);
 ======================*/
 function recalcularTotales($tabla) {
     let totalObj  = 0;
-    let totalReal = 0;
     let totalKg   = 0;
+    let totalUndsReal = 0;
 
     $tabla.find('tbody tr').each(function () {
         const obj     = parseFloat($(this).find('.td-obj').data('obj')) || 0;
@@ -471,12 +470,15 @@ function recalcularTotales($tabla) {
 
         totalObj  += obj;
         totalKg   += kg;
+        totalUndsReal += unds;
     });
 
     const totalDif   = totalKg - totalObj;
     const totalCumpl = totalObj > 0 ? ((totalKg / totalObj) * 100).toFixed(1) + '%' : '-';
 
     const $tfoot = $tabla.find('tfoot');
+
+    $tfoot.find('.total-unds').html('<b>' + totalUndsReal.toFixed(2) + '</b>'); // 👈 NUEVO
     $tfoot.find('.total-obj').html('<b>'  + totalObj.toFixed(2)  + ' KG</b>');
     $tfoot.find('.total-real').html('<b>' + totalKg.toFixed(2)   + ' KG</b>');
     $tfoot.find('.total-dif').html('<b>'  + totalDif.toFixed(2)  + ' KG</b>');

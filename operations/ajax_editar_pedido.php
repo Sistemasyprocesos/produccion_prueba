@@ -20,7 +20,7 @@ $fases = $conn->query("
     f.secuencia,
   
     COALESCE(a.kg_real, '') as kg_real,
-    COALESCE(a.fecha_registro, '') as fecha_prod,
+    COALESCE(a.fecha_turno, '') as fecha_prod,
    
     a.id as id_avance
   FROM prod_fases_prod f
