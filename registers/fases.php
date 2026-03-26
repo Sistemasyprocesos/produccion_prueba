@@ -552,6 +552,8 @@ $(function(){
    ============================================= */
 document.addEventListener('click', function(e) {
   const btn = e.target.closest('.btnEditarProceso');
+
+
   if (!btn) return;
 
   const procesoId = btn.dataset.proceso;
@@ -562,6 +564,9 @@ document.addEventListener('click', function(e) {
   document.getElementById('tbodyEditar').innerHTML = '';
 
 
+
+
+
   // AJAX: cargar fases
   fetch('../procedimiento/get_fases_proceso.php?proceso_id=' + procesoId)
     .then(r => r.json())
@@ -570,9 +575,10 @@ document.addEventListener('click', function(e) {
       document.getElementById('loadingEditar').style.display = 'none';
       document.getElementById('formEditar').style.display    = 'block';
       document.getElementById('edit_proceso_id').value       = procesoId;
-
+const p = data.producto;
       if (data.fases && data.fases.length > 0) {
-        document.getElementById('edit_producto_nombre').value = data.fases[0].producto;
+       document.getElementById('edit_producto_nombre').value = 
+    p.nombre + ' ' + p.nombre_envase + ' ' + p.peso_prod + ' ' + p.sigla;
       }
 
       const tbody = document.getElementById('tbodyEditar');

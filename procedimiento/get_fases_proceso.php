@@ -34,6 +34,28 @@ ORDER BY f.secuencia
 ";
 
 $stmt=$conn->prepare($sql);
+// Consulta solo del producto (1 sola fila)
+$sqlProducto = "
+    SELECT 
+        p.nombre,
+        p.peso_prod,
+        u.sigla,
+        e.nombre AS nombre_envase
+    FROM prod_fases_prod f
+    INNER JOIN prod_productos p ON p.id = f.producto
+    INNER JOIN prod_udm u ON u.id = p.udm
+    INNER JOIN prod_envase e ON e.id = p.envase
+    WHERE f.proceso_id = ?
+    LIMIT 1
+";
+
+$stmtP = $conn->prepare($sqlProducto);
+$stmtP->bind_param("i", $proceso_id);
+$stmtP->execute();
+$producto = $stmtP->get_result()->fetch_assoc();
+
+
+
 
 if(!$stmt){
     echo json_encode(["error"=>$conn->error]);
@@ -80,10 +102,11 @@ ORDER BY nombre
 
 $udms = $conn->query("SELECT id, sigla FROM prod_udm ORDER BY sigla")->fetch_all(MYSQLI_ASSOC);
 echo json_encode([
-    "fases"=>$fases,
-    "tipos"=>$tipos,
-    "areas"=>$areas,
-   "envases"=>$envases,
-    "udms"        => $udms,  
-    "actividades"=>$actividades
+    "fases"         =>$fases,
+    "tipos"         =>$tipos,
+    "areas"         =>$areas,
+    "envases"       =>$envases,
+    "udms"          => $udms,  
+    "actividades"   =>$actividades,
+    "producto"      => $producto   // ← NUEVO
 ],JSON_UNESCAPED_UNICODE);
