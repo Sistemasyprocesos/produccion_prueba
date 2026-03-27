@@ -268,7 +268,7 @@ $turnosFase = ($obj_fase_base > 0) ? ceil($kilos / $obj_fase_base) : 0;
                         data-sigenv="<?= htmlspecialchars($fase['sigenv']) ?>"
                         data-udm="<?= htmlspecialchars($fase['udm']) ?>"
                         data-eq="<?= $fase['eq_kg_fase']?>"
-                        data-obj-total="<?= $obj_fase * $turnosFase ?>"
+                    data-obj-total="<?= $kilos ?>"
                         >
                     <i class="bi bi-plus-circle"></i>
                      AÑADIR TURNO
@@ -395,16 +395,16 @@ $cant_obj_prod=$obj_fase/$peso;
                             <td colspan="4" class="text-center align-middle"><b>TOTAL PROCESO</b></td>  
                      <td></td>         
                         <!------SUMATORIA DE OBJETIVO---------->
-                            <td class="text-center align-middle total-obj"><b></b></td>     
+                            <td class="text-center align-middle total-obj"></td>     
                       
                                <!------SUMATORIA DE UNIDADES ESTANDAR---------->
-                            <td class="text-center align-middle total-unds"><b></b></td>  
+                            <td class="text-center align-middle total-unds"></td>  
                         <!------SUMATORIA DE KG REAL---------->
-                            <td class="text-center align-middle total-real"><b></b></td>    
+                            <td class="text-center align-middle total-real"></td>    
                         <!------SUMATORIA DE DIF---------->
-                            <td class="text-center align-middle total-dif"><b></b></td>                        
+                            <td class="text-center align-middle total-dif"></td>                        
                         <!------SUMATORIA DE CUNPLIMIENTO---------->
-                            <td class="text-center align-middle total-cumpl"><b></b></td>                       
+                            <td class="text-center align-middle total-cumpl"></td>                       
                     </tr>
                 </tfoot>
             </table>
@@ -485,6 +485,7 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
                     name="hc[${secuencia}][${nextTurno}]"
                     onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
             </td>
+
             <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
           
             <td class="text-center align-middle">
@@ -493,13 +494,13 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
                     name="obj[${secuencia}][${nextTurno}]"
                 placeholder="Objetivo">
         </td>
-
+<td>
                 <input type="number" step="0.01" min="0"
                     class="form-control form-control-sm input-real"
                     name="real[${secuencia}][${nextTurno}]"
                     placeholder="0.00">
             </td>
-            <td></td>
+          
             <td class="text-center align-middle td-kg"></td>
             <td class="text-center align-middle td-dif"></td>
             <td class="text-center align-middle td-cumpl"></td>
@@ -534,36 +535,40 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
    RECALCULAR TOTALES DEL FOOTER
 ======================*/
 function recalcularTotales($tabla) {
-    let totalObj  = 0;
+
     let totalKg   = 0;
     let totalUndsReal = 0;
 
+    // 🔥 OBJETIVO FIJO
+    let totalObj = parseFloat($tabla.closest('.fase-bloque')
+        .find('.btnAgregarTurno')
+        .data('obj-total')) || 0;
+
     $tabla.find('tbody tr').each(function () {
+
         let obj = 0;
 
-// Si es TD (automático)
-if ($(this).find('.td-obj').length) {
-    obj = parseFloat($(this).find('.td-obj').data('obj')) || 0;
-}
+        if ($(this).find('.td-obj').length) {
+            obj = parseFloat($(this).find('.td-obj').data('obj')) || 0;
+        }
 
-// Si es input (manual)
-if ($(this).find('.input-obj').length) {
-    obj = parseFloat($(this).find('.input-obj').val()) || 0;
-}
-        const unds    = parseFloat($(this).find('.input-real').val()) || 0;
-        const peso    = parseFloat($(this).data('peso')) || 0;
-        const eq      = parseFloat($(this).data('eq')) || 1;
+        if ($(this).find('.input-obj').length) {
+            obj = parseFloat($(this).find('.input-obj').val()) || 0;
+        }
 
-        const kg      = unds * peso * eq;
-        const dif     = kg - obj;
-        const cumpl   = obj > 0 ? ((kg / obj) * 100).toFixed(1) + '%' : '-';
+        const unds = parseFloat($(this).find('.input-real').val()) || 0;
+        const peso = parseFloat($(this).data('peso')) || 0;
+        const eq   = parseFloat($(this).data('eq')) || 1;
+
+        const kg   = unds * peso * eq;
+        const dif  = kg - obj;
+        const cumpl = obj > 0 ? ((kg / obj) * 100).toFixed(1) + '%' : '-';
 
         $(this).find('.td-kg').text(kg.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
         $(this).find('.td-dif').text(dif.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
         $(this).find('.td-cumpl').text(cumpl);
 
-        totalObj  += obj;
-        totalKg   += kg;
+        totalKg += kg;
         totalUndsReal += unds;
     });
 
@@ -572,11 +577,11 @@ if ($(this).find('.input-obj').length) {
 
     const $tfoot = $tabla.find('tfoot');
 
-    $tfoot.find('.total-unds').html('<b>' + totalUndsReal.toFixed(2) + '</b>'); // 👈 NUEVO
-  $tfoot.find('.total-obj').html('<b>'  + totalObj.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
-$tfoot.find('.total-real').html('<b>' + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2 })   + ' KG</b>');
-$tfoot.find('.total-dif').html('<b>'  + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
-    $tfoot.find('.total-cumpl').html('<b>' + totalCumpl          + '</b>');
+    $tfoot.find('.total-unds').html('<b>' + totalUndsReal.toFixed(2) + '</b>');
+    $tfoot.find('.total-obj').html('<b>'  + totalObj.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
+    $tfoot.find('.total-real').html('<b>' + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2 })   + ' KG</b>');
+    $tfoot.find('.total-dif').html('<b>'  + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
+    $tfoot.find('.total-cumpl').html('<b>'+totalCumpl+'</b>');
 }
 
 // Disparar al escribir en cualquier input real
