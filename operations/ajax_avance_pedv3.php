@@ -232,10 +232,15 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
         $unds   = $fase['std'];
         $eq     = $fase['eq_kg_fase'];
 
-        $obj_fase = ($eq > 0) ? $unds * ($peso * $eq) : 0;
 
-        //ACA DEFINE LA CANTIDAD DE TURNOS QUE TENDRA CADA FASE
-            $turnosFase = ($fase['std'] > 0) ? ceil($kilos / $obj_fase) : 0;
+$obj_fase_base = ($eq > 0) ? $unds * ($peso * $eq) : 0;
+
+// Si es el último turno → calcular diferencia
+// Base por turno
+$obj_fase_base = ($eq > 0) ? $unds * ($peso * $eq) : 0;
+
+// Calcular cantidad de turnos
+$turnosFase = ($obj_fase_base > 0) ? ceil($kilos / $obj_fase_base) : 0;
         ?>
 
         <!-- CONTENEDOR POR FASE: el botón busca su tabla dentro de este div -->
@@ -290,6 +295,17 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                 <tbody>
                     <?php for ($turno = 1; $turno <= $turnosFase; $turno++): ?>
                         <?php
+
+// Si es el último turno → ajustar objetivo
+if ($turno == $turnosFase) {
+    $obj_fase = $kilos - ($obj_fase_base * ($turnosFase - 1));
+} else {
+    $obj_fase = $obj_fase_base;
+}
+
+// Evitar negativos
+$obj_fase = max($obj_fase, 0);
+
                             $producidoAcum = ($turno - 1) * $fase['std'];
                             $restante      = $cantidad - $producidoAcum;
                             $estimado      = min($fase['std'], $restante);
@@ -298,6 +314,10 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                             $val_fecha   = $avance[$fase['secuencia']][$turno]['fecha']   ?? '';
                             $val_jornada = $avance[$fase['secuencia']][$turno]['jornada'] ?? '';
                             $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
+
+$cant_obj_prod=$obj_fase/$peso;
+
+
                         ?>
 
                         <tr data-peso="<?= $fase['peso_env'] ?>" data-eq="<?= $fase['eq_kg_fase'] ?>">
@@ -336,9 +356,9 @@ $eq_fase = $pedido["eq_kg_fase"] ?? 1;
                             <td class="text-center align-middle td-unds"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
 
                               <!-------OBJETIVO---------------->
-                            <td style="width:auto;" class="text-center align-middle  td-obj" data-obj="<?= $obj_fase ?>">
-                                <?= number_format($obj_fase,2).' KG' ?></td>
-                            </td>
+                       <td class="text-center align-middle td-obj" data-obj="<?= $obj_fase ?>">
+    <?= number_format($obj_fase,2).' KG'.' ('.$cant_obj_prod.' '. $fase['sigenv'].')' ?>
+</td>
 
                           <!--unidades Real -->
                             <td>
@@ -405,6 +425,17 @@ $ff->close();
 $conn->close();
 ?>
 
+<!----------RECALCULO AL EDITAR EL OBJETIVO------------------------>
+<script>
+$(document).on('input', '.input-obj', function () {
+    const $tabla = $(this).closest('.tablaAvance');
+    recalcularTotales($tabla);
+});
+</script>
+
+
+
+
 <script>
 /* ======================
       AGREGAR FILA — solo en la tabla del bloque donde se hizo clic
@@ -455,13 +486,20 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
                     onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
             </td>
             <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
-            <td class="text-center align-middle td-obj" data-obj="${objFila.toFixed(2)}">${objFila.toFixed(2)} KG</td>
-            <td>
+          
+            <td class="text-center align-middle">
+                <input type="number" step="0.01" min="0"
+                    class="form-control form-control-sm input-obj"
+                    name="obj[${secuencia}][${nextTurno}]"
+                placeholder="Objetivo">
+        </td>
+
                 <input type="number" step="0.01" min="0"
                     class="form-control form-control-sm input-real"
                     name="real[${secuencia}][${nextTurno}]"
                     placeholder="0.00">
             </td>
+            <td></td>
             <td class="text-center align-middle td-kg"></td>
             <td class="text-center align-middle td-dif"></td>
             <td class="text-center align-middle td-cumpl"></td>
@@ -501,7 +539,17 @@ function recalcularTotales($tabla) {
     let totalUndsReal = 0;
 
     $tabla.find('tbody tr').each(function () {
-        const obj     = parseFloat($(this).find('.td-obj').data('obj')) || 0;
+        let obj = 0;
+
+// Si es TD (automático)
+if ($(this).find('.td-obj').length) {
+    obj = parseFloat($(this).find('.td-obj').data('obj')) || 0;
+}
+
+// Si es input (manual)
+if ($(this).find('.input-obj').length) {
+    obj = parseFloat($(this).find('.input-obj').val()) || 0;
+}
         const unds    = parseFloat($(this).find('.input-real').val()) || 0;
         const peso    = parseFloat($(this).data('peso')) || 0;
         const eq      = parseFloat($(this).data('eq')) || 1;
