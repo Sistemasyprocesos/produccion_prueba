@@ -309,13 +309,13 @@ $obj_fase = max($obj_fase, 0);
                             $producidoAcum = ($turno - 1) * $fase['std'];
                             $restante      = $cantidad - $producidoAcum;
                             $estimado      = min($fase['std'], $restante);
-                            $peso=$fase['peso_env'];
-                            $val_kg      = $avance[$fase['secuencia']][$turno]['kg_real'] ?? '';
-                            $val_fecha   = $avance[$fase['secuencia']][$turno]['fecha']   ?? '';
-                            $val_jornada = $avance[$fase['secuencia']][$turno]['jornada'] ?? '';
-                            $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
+                            $peso          =$fase['peso_env'];
+                            $val_kg        = $avance[$fase['secuencia']][$turno]['kg_real'] ?? '';
+                            $val_fecha     = $avance[$fase['secuencia']][$turno]['fecha']   ?? '';
+                            $val_jornada   = $avance[$fase['secuencia']][$turno]['jornada'] ?? '';
+                            $val_hc        = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
 
-$cant_obj_prod=$obj_fase/$peso;
+                            $cant_obj_prod= $obj_fase/ $peso;
 
 
                         ?>
@@ -356,9 +356,10 @@ $cant_obj_prod=$obj_fase/$peso;
                             <td class="text-center align-middle td-unds"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
 
                               <!-------OBJETIVO---------------->
-                       <td class="text-center align-middle td-obj" data-obj="<?= $obj_fase ?>">
-    <?= number_format($obj_fase,2).' KG'.' ('.$cant_obj_prod.' '. $fase['sigenv'].')' ?>
+                          <td class="text-center align-middle td-obj" data-obj="<?= $obj_fase ?>">
+    <?= number_format($obj_fase, 2).' KG ('.number_format($cant_obj_prod, 2).' '.$fase['sigenv'].')' ?>
 </td>
+
 
                           <!--unidades Real -->
                             <td>
@@ -565,7 +566,7 @@ function recalcularTotales($tabla) {
         const cumpl = obj > 0 ? ((kg / obj) * 100).toFixed(1) + '%' : '-';
 
         $(this).find('.td-kg').text(kg.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
-        $(this).find('.td-dif').text(dif.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' KG');
+       $(this).find('.td-dif').text(dif.toLocaleString('en-US', {minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' KG');
         $(this).find('.td-cumpl').text(cumpl);
 
         totalKg += kg;
@@ -578,9 +579,9 @@ function recalcularTotales($tabla) {
     const $tfoot = $tabla.find('tfoot');
 
     $tfoot.find('.total-unds').html('<b>' + totalUndsReal.toFixed(2) + '</b>');
-    $tfoot.find('.total-obj').html('<b>'  + totalObj.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
-    $tfoot.find('.total-real').html('<b>' + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2 })   + ' KG</b>');
-    $tfoot.find('.total-dif').html('<b>'  + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2 })  + ' KG</b>');
+    $tfoot.find('.total-obj').html('<b>'  + totalObj.toLocaleString('en-US', { minimumFractionDigits: 2,maximumFractionDigits: 2 })  + ' KG</b>');
+    $tfoot.find('.total-real').html('<b>' + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2,maximumFractionDigits: 2 })   + ' KG</b>');
+    $tfoot.find('.total-dif').html('<b>'  + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2,maximumFractionDigits: 2 })  + ' KG</b>');
     $tfoot.find('.total-cumpl').html('<b>'+totalCumpl+'</b>');
 }
 
