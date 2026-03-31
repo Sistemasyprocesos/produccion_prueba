@@ -1,68 +1,80 @@
 <?php
-include '../connection/conexion.php';
+require '../connection/conexion.php';
 
-$id_pedido = intval($_POST['id_pedido']);
+$id_pedido = $_POST['id_pedido'];
 
-$real    = $_POST['real']    ?? [];
-$fecha   = $_POST['fecha']   ?? [];
+$real    = $_POST['real'] ?? [];
+$fecha   = $_POST['fecha'] ?? [];
 $jornada = $_POST['jornada'] ?? [];
-$hc      = $_POST['hc']      ?? [];
-$peso_arr = $_POST['peso'] ?? [];
-$eq_arr   = $_POST['eq'] ?? [];
+$hc      = $_POST['hc'] ?? [];
+$peso    = $_POST['peso'] ?? [];
+$eq      = $_POST['eq'] ?? [];
+$obj = $_POST['obj'] ?? [];
 
 
-$sql = "INSERT INTO prod_avance_pedido 
-            (id_pedido, secuencia, turno, fecha_turno, turnodn, hc, unidades_reales,kg_real)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?)
-        ON DUPLICATE KEY UPDATE
-            fecha_turno   = VALUES(fecha_turno),
-            turnodn = VALUES(turnodn),
-            hc      = VALUES(hc),
-        unidades_reales = VALUES(unidades_reales),
-        kg_real = VALUES(kg_real)
-        ";
 
-$stmt = $conn->prepare($sql);
 $guardados = 0;
 $errores   = 0;
 
 foreach ($real as $secuencia => $turnos) {
-    foreach ($turnos as $turno => $kg) {
-$k = ($kg !== '') ? floatval($kg) : null;
-$peso = $peso_arr[$secuencia][$turno] ?? 0;
-$eq   = $eq_arr[$secuencia][$turno] ?? 1;
 
-$kg_real = ($k !== null) ? $k * $peso * $eq : null;
+    foreach ($turnos as $turno => $valor) {
 
+        $unidades = floatval($valor);
 
-        // Omitir filas completamente vacías
-        $f = $fecha[$secuencia][$turno]    ?? null;
-        $j = $jornada[$secuencia][$turno]  ?? null;
-        $h = !empty($hc[$secuencia][$turno]) ? intval($hc[$secuencia][$turno]) : null;
-        
+        // Ignorar filas vacías
+        if ($unidades <= 0) continue;
 
-        if ($k === null && empty($f)) continue;
+        $f = $fecha[$secuencia][$turno] ?? null;
+        $j = $jornada[$secuencia][$turno] ?? null;
+        $h = $hc[$secuencia][$turno] ?? 0;
 
-        $stmt->bind_param("iiissidd",
-            $id_pedido,
-            $secuencia,
-            $turno,
-            $f,
-            $j,
-            $h,
-            $k,
-            $kg_real
-        );
+        $p = $peso[$secuencia][$turno] ?? 0;
+        $e = $eq[$secuencia][$turno] ?? 1;
+        $obj_kg = $obj[$secuencia][$turno] ?? 0;
 
-        $stmt->execute() ? $guardados++ : $errores++;
+        $kg_real = $unidades * $p * $e;
+
+        try {
+
+            // 🔥 INSERT o UPDATE (evita duplicados)
+       $stmt = $conn->prepare("
+    INSERT INTO prod_avance_pedido
+    (id_pedido, secuencia, turno, unidades_reales, kg_real, obj_kg, fecha_turno, turnodn, hc)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+        unidades_reales = VALUES(unidades_reales),
+        kg_real = VALUES(kg_real),
+        obj_kg = VALUES(obj_kg),
+        fecha_turno = VALUES(fecha_turno),
+        turnodn = VALUES(turnodn),
+        hc = VALUES(hc)
+");
+
+          $stmt->bind_param(
+    "iiidddssi",
+    $id_pedido,
+    $secuencia,
+    $turno,
+    $unidades,
+    $kg_real,
+    $obj_kg,
+    $f,
+    $j,
+    $h
+);
+            $stmt->execute();
+
+            $guardados++;
+
+        } catch (Exception $e) {
+            $errores++;
+        }
     }
 }
 
-$stmt->close();
-$conn->close();
-
 echo json_encode([
-    'ok'        => $errores === 0,
-    'guardados' => $guardados,
-    'errores'   => $errores
+    "ok" => true,
+    "guardados" => $guardados,
+    "errores" => $errores
 ]);

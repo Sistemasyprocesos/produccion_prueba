@@ -47,7 +47,7 @@ $id = $_POST['id'];
 $avance = [];
 
 /*---------SE USA PARA PRECARGAR LOS INPUTS-----------*/
-$q = "SELECT turno, secuencia, unidades_reales, fecha_turno, turnodn, hc
+$q = "SELECT turno, secuencia, unidades_reales, fecha_turno, turnodn, hc,obj_kg
       FROM prod_avance_pedido
       WHERE id_pedido = ?";
 $stmt = $conn->prepare($q);
@@ -60,6 +60,7 @@ while ($r = $res->fetch_assoc()) {
         'fecha'   => $r['fecha_turno'],
         'jornada' => $r['turnodn'],
         'hc'      => $r['hc'],
+          'obj' => $r['obj_kg'] // 🔥 IMPORTANTE
     ];
 }
 /* ===============================
@@ -155,11 +156,11 @@ if ($pedido) {
     $pesoenva       = $pedido["pen"];
     $pesoprod       = $pedido["peso_prod"] ?? 0;
     $usigla         = $pedido["sigla"];
-    $unds=$pedido["unds"];
+    $unds           = $pedido["unds"];
 
   
     $equivalente = $pedido["eq_kg"] ?? 1;
-$eq_fase = $pedido["eq_kg_fase"] ?? 1;
+    $eq_fase = $pedido["eq_kg_fase"] ?? 1;
 
 
     if ($equivalente > 0) {
@@ -293,7 +294,15 @@ $turnosFase = ($obj_fase_base > 0) ? ceil($kilos / $obj_fase_base) : 0;
                     </tr>
                 </thead>
                 <tbody>
-                    <?php for ($turno = 1; $turno <= $turnosFase; $turno++): ?>
+                    <?php 
+                    
+                    $turnosGuardados = isset($avance[$fase['secuencia']]) 
+    ? max(array_keys($avance[$fase['secuencia']])) 
+    : 0;
+
+$maxTurnos = max($turnosFase, $turnosGuardados);
+
+                    for ($turno = 1; $turno <= $maxTurnos; $turno++): ?>
                         <?php
 
 // Si es el último turno → ajustar objetivo
@@ -356,10 +365,10 @@ $obj_fase = max($obj_fase, 0);
                             <td class="text-center align-middle td-unds"><?=$fase['std'].' '.$fase['sigenv'].' '. $peso.' '.$fase['udm']  ?></td>
 
                               <!-------OBJETIVO---------------->
-                          <td class="text-center align-middle td-obj" data-obj="<?= $obj_fase ?>">
+                     
+         <td class="text-center align-middle td-obj" data-obj="<?= $obj_fase ?>">
     <?= number_format($obj_fase, 2).' KG ('.number_format($cant_obj_prod, 2).' '.$fase['sigenv'].')' ?>
 </td>
-
 
                           <!--unidades Real -->
                             <td>
@@ -470,48 +479,59 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
 
     const pesoestimado = std * pesoEnv * eq; // estándar (solo para mostrar en Und. Estándar)
 
-    const fila = `
-        <tr data-peso="${pesoEnv}" data-eq="${eq}">
-            <td class="text-center align-middle turno-num">${nextTurno}</td>
-            <td><input type="date" class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
-            <td>
-                <select class="form-select" name="jornada[${secuencia}][${nextTurno}]">
-                    <option value=""></option>
-                    <option value="DIA">DIA</option>
-                    <option value="NOCHE">NOCHE</option>
-                </select>
-            </td>
-            <td style="width:80px;">
-                <input type="number" class="form-control" min="0" step="1"
-                    name="hc[${secuencia}][${nextTurno}]"
-                    onkeydown="return /[\\d]|Backspace|Delete|Arrow/.test(event.key)">
-            </td>
+   const fila = `
+<tr data-peso="${pesoEnv}" data-eq="${eq}">
+    <td class="text-center align-middle turno-num">${nextTurno}</td>
 
-            <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
-          
-            <td class="text-center align-middle">
-                <input type="number" step="0.01" min="0"
-                    class="form-control form-control-sm input-obj"
-                    name="obj[${secuencia}][${nextTurno}]"
-                placeholder="Objetivo">
-        </td>
-<td>
-                <input type="number" step="0.01" min="0"
-                    class="form-control form-control-sm input-real"
-                    name="real[${secuencia}][${nextTurno}]"
-                    placeholder="0.00">
-            </td>
-          
-            <td class="text-center align-middle td-kg"></td>
-            <td class="text-center align-middle td-dif"></td>
-            <td class="text-center align-middle td-cumpl"></td>
-            <td>
-                <button type="button" class="btn btn-sm btn-danger btnEliminarFila">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `;
+    <td><input type="date" class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
+
+    <td>
+        <select class="form-select" name="jornada[${secuencia}][${nextTurno}]">
+            <option value=""></option>
+            <option value="DIA">DIA</option>
+            <option value="NOCHE">NOCHE</option>
+        </select>
+    </td>
+
+    <td style="width:80px;">
+        <input type="number" class="form-control"
+            name="hc[${secuencia}][${nextTurno}]">
+    </td>
+
+    <td class="text-center align-middle td-unds">
+        ${std} ${sigenv} ${pesoEnv} ${udm}
+    </td>
+
+    <!-- 🔥 OBJETIVO -->
+    <td>
+        <input type="number" step="0.01" min="0"
+            class="form-control form-control-sm input-obj"
+            name="obj[${secuencia}][${nextTurno}]"
+            value="${objFila}">
+    </td>
+
+    <!-- 🔥 REAL -->
+    <td>
+        <input type="number" step="0.01" min="0"
+            class="form-control form-control-sm input-real"
+            name="real[${secuencia}][${nextTurno}]">
+    </td>
+
+    <!-- 🔥 ESTO FALTABA -->
+    <input type="hidden" name="peso[${secuencia}][${nextTurno}]" value="${pesoEnv}">
+    <input type="hidden" name="eq[${secuencia}][${nextTurno}]" value="${eq}">
+
+    <td class="text-center align-middle td-kg"></td>
+    <td class="text-center align-middle td-dif"></td>
+    <td class="text-center align-middle td-cumpl"></td>
+
+    <td>
+        <button type="button" class="btn btn-sm btn-danger btnEliminarFila">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+`;
 
     $tbody.append(fila);
     recalcularTotales($tabla);
