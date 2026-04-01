@@ -131,7 +131,9 @@ if ($pedido) {
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
 <div class="encabezado-pedido">
     <div class="row mb-3">
-        <div class="col-auto"><b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?></div>
+        <div class="col-auto" style="background-color: #0b82fac2; border: 1px solid #030405; border-radius: 5px;">
+            <b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?>
+        </div>
     </div>
     <div class="row mb-3 text-center">
         <div class="col-3 border-end">
@@ -271,8 +273,8 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
                        <td class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-    <?= number_format($obj_mostrar, 2).' KG ('.number_format($cant_obj_prod, 2).' '.$fase['sigenv'].')' ?>
-</td>
+                        <?= number_format($obj_mostrar, 2).' KG ('.number_format($cant_obj_prod, 2).' '.$fase['sigenv'].')' ?>
+                        </td>
 
                         <td>
                             <input type="number" step="0.01" min="0"
@@ -311,12 +313,13 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 </form>
 
 <?php
-} else {
-    echo '<div class="alert alert-warning">Producto no tiene fases definidas.</div>';
-}
-$stmt->close();
-$ff->close();
-$conn->close();
+} else 
+    {
+        echo '<div class="alert alert-warning">Producto no tiene fases definidas.</div>';
+    }
+        $stmt->close();
+        $ff->close();
+        $conn->close();
 ?>
 
 <!-- RECALCULO AL EDITAR EL OBJETIVO -->

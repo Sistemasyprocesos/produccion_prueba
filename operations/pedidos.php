@@ -81,8 +81,8 @@
                 COALESCE(SUM(a.kg_real),0) as producido,
 
                 ROUND(
-                (COALESCE(SUM(a.kg_real),0) / p.cantidad) * 100
-                ,6) as cumplimiento
+                (COALESCE(SUM(a.unidades_reales),2) / p.cantidad) * 100
+                ,2) as cumplimiento
 
                 from prod_pedidos as p 
 
@@ -93,10 +93,10 @@
                 inner join prod_envase as ev on ev.id=pr.envase
                
                 INNER JOIN prod_udm u_prod 
-    ON u_prod.id = pr.udm   -- producto
+                ON u_prod.id = pr.udm   -- producto
 
-INNER JOIN prod_udm u_ped 
-    ON u_ped.id = p.und_medida  -- pedido
+                INNER JOIN prod_udm u_ped 
+                ON u_ped.id = p.und_medida  -- pedido
                 left join prod_avance_pedido a 
                 on a.id_pedido = p.id_pedido
                 AND a.secuencia = (
@@ -161,6 +161,8 @@ INNER JOIN prod_udm u_ped
                 </td>
                 <td style=" width: 400px;">
                   <div class="d-flex align-items-center gap-2">
+
+
               <!-----------BARRA DE PROGRESO----------------------------->
                       <div class="progress flex-grow-1" role="progressbar"
                           aria-label="Cumplimiento de pedido"
@@ -170,7 +172,7 @@ INNER JOIN prod_udm u_ped
                           aria-valuemax="100">
                       <div class="progress-bar" style="width: <?= $g['cumplimiento'] ?>%"><?= $g['cumplimiento'] ?>%</div>
 
-                      <?= $g['cumplimiento']?>
+                    
                   </div>
                   </div>
                 </td>
