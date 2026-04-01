@@ -56,7 +56,7 @@ $ultima_fase = $r['ultima'];
 =================================== */
 
 $q2=$conn->prepare("
-SELECT SUM(kg_real) as total
+SELECT SUM(unidades_reales) as total
 FROM prod_avance_pedido
 WHERE id_pedido=? AND secuencia=?
 ");

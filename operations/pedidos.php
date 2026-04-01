@@ -70,7 +70,7 @@
                 p.cantidad,
                 p.und_medida,
                 pr.peso_prod as peso,
-                 u_prod.sigla AS sigla_producto,
+                u_prod.sigla AS sigla_producto,
                 u_ped.sigla  AS sigla_pedido,
                 p.num_pedido,
                 e.nom as estado,
@@ -78,25 +78,22 @@
                 pr.nombre as producto,
                 ev.abreviatura as envase,
 
-                COALESCE(SUM(a.kg_real),0) as producido,
+                COALESCE(SUM(a.unidades_reales),0) as producido,
 
-                ROUND(
-                (COALESCE(SUM(a.unidades_reales),2) / p.cantidad) * 100
-                ,2) as cumplimiento
+                ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100,2)
+                 as cumplimiento
 
                 from prod_pedidos as p 
-
                 inner join prod_clientes as c on c.id=p.id_cliente
                 inner join prod_productos as pr on pr.id=p.producto
                 inner join prod_estados as e on e.id=p.estado
-               
                 inner join prod_envase as ev on ev.id=pr.envase
-               
                 INNER JOIN prod_udm u_prod 
                 ON u_prod.id = pr.udm   -- producto
 
                 INNER JOIN prod_udm u_ped 
                 ON u_ped.id = p.und_medida  -- pedido
+
                 left join prod_avance_pedido a 
                 on a.id_pedido = p.id_pedido
                 AND a.secuencia = (

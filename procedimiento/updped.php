@@ -58,7 +58,7 @@ $ultima_fase = $r['ultima'];
    SUMAR PRODUCCION DE ULTIMA FASE
 =================================== */
 
-$q2=$conn->prepare("SELECT SUM(kg_real) as total
+$q2=$conn->prepare("SELECT SUM(unidades_reales) as total
         FROM prod_avance_pedido
         WHERE id_pedido=? AND secuencia=?
 ");
