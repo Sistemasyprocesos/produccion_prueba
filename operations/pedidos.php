@@ -112,7 +112,7 @@
           
             while($g=$f->fetch_assoc()){
               ?> 
-              <tr>
+              <tr data-estado="<?= $g['estado'] ?>">
                 <td>
                   <?=$g['num_pedido'] ?>
                     <button 
@@ -183,7 +183,7 @@
 
     <!----PAGINADOR------->
           <nav>
-              <?php include '../complemento/paginator.php' ?>
+            
               <ul class="pagination justify-content-center" id="pagination"></ul>
           </nav>
 
@@ -578,7 +578,7 @@ document.querySelectorAll(".progress-bar").forEach(function(barra){
 
   // Aplicar gradiente dinámico
   barra.style.background = `linear-gradient(90deg, 
-    hsl(${hue - 20}, 80%, 50%), 
+    hsl(${hue - 20}, 30%, 40%), 
     hsl(${hue}, 80%, 50%)
   )`;
 
@@ -619,11 +619,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let coincideEstado = true;
 
-      if(estado === "1"){
-  coincideEstado = row.innerHTML.includes("fa-circle-check");
+let estadoFila = row.dataset.estado;
+
+if(estado === "1"){
+  coincideEstado = (estadoFila === "ACTIVO");
 }
 else if(estado === "2"){
-  coincideEstado = row.innerHTML.includes("fa-circle-xmark");
+  coincideEstado = (estadoFila === "INACTIVO");
 }
 
       return coincideTexto && coincideEstado;
