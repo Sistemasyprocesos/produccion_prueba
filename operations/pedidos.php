@@ -10,6 +10,10 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+
+
 </head>
 
 <body>
@@ -112,11 +116,11 @@
                 <td>
                   <?=$g['num_pedido'] ?>
                     <button 
-                      class="btn btn-warning btn-sm btnVerPedido"
+                      class="btn btn-primary btn-sm btnVerPedido"
                       data-id="<?=$g['id_pedido']?>"
                       data-bs-toggle="modal"
                       data-bs-target="#modalver">
-                      <i class="bi bi-eye-fill"></i>
+                      <i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i>
                     </button>
                 </td>
                 <td><?=$g['cliente'] ?></td>
@@ -135,26 +139,21 @@
                   <?php  }
                   ?>
                 <td>
-            <!---------BOTON DE DETALLES----------------------------
-                  <button class="btn btn-success btn-sm btnVerDetalle" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetalles"><i class="bi bi-card-checklist"></i>V1</button>
-                
-            <!---------BOTON DE DETALLES----------------------------
-                  <button class="btn btn-success btn-sm btnVerDetallev2" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv2"><i class="bi bi-card-checklist"></i> V2</button>
------>
+     
                   <!----------------------------------------------->
-                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="bi bi-card-checklist"></i> Detalle</button>
+                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i> Detalle</button>
 
                 <!---------BOTON EDITAR---------------------------->
-                  <button class="btn btn-sm btn-primary btnEditar"
+                  <button class="btn btn-sm btn-warning btnEditar"
                     data-identi="<?=$g['id_pedido']?>"
                     data-bs-toggle="modal"
                     data-bs-target="#modaleditar">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="fa-solid fa-pen-to-square" style="color: rgb(255, 255, 255);"></i>
                   </button> 
 
             <!-----------BOTON ELIMINAR------------------------------->
                   <button class="btn btn-sm btn-danger btn-elim" data-identificacion="<?=$g['id_pedido']?>">
-                    <i class="bi bi-trash-fill"></i>
+                    <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
                   </button>
                 </td>
                 <td style=" width: 400px;">
@@ -326,50 +325,6 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 
 
 
-<!--------------------MODAL DETALLE----------------------->
-<div class="modal fade" id="modaldetalles" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color: #198754; color: white;">
-        <h5 class="modal-title">Detalle de cumplimiento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body" id="avanceped">
-        Cargando...
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
-        <button class="btn btn-success btn-sm"  id="guardarAvance"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<!--------------------MODAL DETALLEv2----------------------->
-<div class="modal fade" id="modaldetallesv2" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color: #198754; color: white;">
-        <h5 class="modal-title">Añadir produccion real</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body" id="avancepedido">
-        Cargando...
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
-        <button class="btn btn-success btn-sm"  id="guardarAvancev2"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <!--------------------MODAL DETALLEv3----------------------->
 <div class="modal fade" id="modaldetallesv3" tabindex="-1">
   <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
@@ -392,14 +347,12 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
 
 
 
-
-<!--------------------------------------------------->
 <!--------------MODAL EDITAR PEDIDO--------------------->
 <div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #0d6efd; color: white;">
-        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Editar pedido</h5>
+        <h5 class="modal-title"><i class="fa-solid fa-pen-to-square" style="color: rgb(255, 255, 255);"></i> Editar pedido</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="contenidoEditar">
@@ -410,10 +363,10 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" class="btn btn-primary" id="btnGuardarEdicion">
-          <i class="bi bi-floppy2-fill"></i> Guardar cambios
+         <i class="fa-solid fa-floppy-disk" style="color: rgb(255, 255, 255);"></i> Guardar cambios
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-          <i class="bi bi-x-circle"></i> Cancelar
+          <i class="fa-solid fa-circle-xmark" style="color: rgb(255, 255, 255);"></i> Cancelar
         </button>
       </div>
     </div>
@@ -450,56 +403,6 @@ $(document).on("click", ".btnVerPedido", function(){
 });
 </script>
 
-<!-------------------------------------------------->
-<!-----------AJAX PROGRESO PEDIDO--------------------------------------->
-<script>
-$(document).on("click", ".btnVerDetalle", function(){
-
-  const id = $(this).data("iddet");
-
-  $("#avanceped").html("Cargando...");
-
-  $.ajax({
-      url: "ajax_avance_ped.php",
-      type: "POST",
-      data: { id: id },
-
-    success: function(res){
-      $("#avanceped").html(res);
-    },
-
-    error: function(){
-      $("#avanceped").html("Error al cargar datos");
-    }
-  });
-
-});
-</script>
-
-<!----------AVANCE V2---------------->
-<script>
-$(document).on("click", ".btnVerDetallev2", function(){
-
-  const id = $(this).data("iddet");
-
-  $("#avancepedido").html("Cargando...");
-
-  $.ajax({
-      url: "ajax_avance_pedv2.php",
-      type: "POST",
-      data: { id: id },
-
-    success: function(res){
-      $("#avancepedido").html(res);
-    },
-
-    error: function(){
-      $("#avancepedido").html("Error al cargar datos");
-    }
-  });
-
-});
-</script>
 
 
 <!----------AVANCE V3---------------->
@@ -624,72 +527,6 @@ $(document).on("change", "#unds", calcularEquivalente);
 </script>
 
 
-
-<script>
-
-  $(document).on("click","#guardarAvance",function(){
-    let datos = $("#formAvance").serialize();
-
-    $.ajax({
-        url:"guardar_avance.php",
-        type:"POST",
-        data:datos,
-
-        success:function(resp){
-
-            Swal.fire({
-                icon:'success',
-                title:'Guardado',
-                text:'Producción registrada'
-            });
-        },
-        error:function(){
-            alert("Error al guardar");
-        }
-    });
-});
-</script>
-
-<!---------------------->
-<script>
-
-  $(document).on("click","#guardarAvancev2",function(){
-
-    let datos = $("#formAvance").serialize();
-
-    $.ajax({
-        url:"guardar_avancev2.php",
-        type:"POST",
-        data:datos,
-
-        success:function(resp){
-
-            Swal.fire({
-                icon:'success',
-                title:'Guardado',
-                text:'Producción registrada'
-            }).then(()=>{
-                
-                // cerrar modal
-                $('#modaldetallesv2').modal('hide');
-
-                // recargar página
-                location.reload();
-
-            });
-
-        },
-        error:function(){
-           Swal.fire({
-                icon:'error',
-                title:'Error',
-                text:'No se pudo guardar'
-            });
-        }
-    });
-
-});
-</script>
 <!------------GUARDAR AVANCE V3--------------------------------------->
 <script>
 $(document).on("click", "#guardarAvancev3", function () {
@@ -730,32 +567,29 @@ $(document).on("click", "#guardarAvancev3", function () {
 <!--------------------------->
 <script>
 document.querySelectorAll(".progress-bar").forEach(function(barra){
+
   let porcentaje = parseInt(barra.closest('.progress').dataset.porcentaje);
 
+  // Limitar entre 0 y 100
+  porcentaje = Math.max(0, Math.min(100, porcentaje));
 
-    barra.classList.remove(
-    "bg-danger",
-    "bg-warning",
-    "bg-info",
-    "bg-success"
-  );
+  // Calcular color (rojo → verde)
+  let hue = (porcentaje * 120) / 100;
 
-    if(porcentaje < 30){
-        barra.classList.add("bg-danger");
-    }
-    else if(porcentaje < 60){
-        barra.classList.add("bg-warning");
-    }
-    else if(porcentaje <= 99){
-        barra.classList.add("bg-info");
-    }
-    else{
-        barra.classList.add("bg-success");
-        barra.textContent = "PEDIDO COMPLETO";
-    }
+  // Aplicar gradiente dinámico
+  barra.style.background = `linear-gradient(90deg, 
+    hsl(${hue - 20}, 80%, 50%), 
+    hsl(${hue}, 80%, 50%)
+  )`;
+
+  // Texto
+  if(porcentaje >= 100){
+    barra.textContent = "PEDIDO COMPLETO";
+  } else {
+    barra.textContent = porcentaje + "%";
+  }
 
 });
-
 </script>
 
 <!--------------------------------->
@@ -786,11 +620,11 @@ document.addEventListener("DOMContentLoaded", function () {
       let coincideEstado = true;
 
       if(estado === "1"){
-        coincideEstado = row.innerHTML.includes("check-circle-fill");
-      }
-      else if(estado === "2"){
-        coincideEstado = row.innerHTML.includes("x-circle-fill");
-      }
+  coincideEstado = row.innerHTML.includes("fa-circle-check");
+}
+else if(estado === "2"){
+  coincideEstado = row.innerHTML.includes("fa-circle-xmark");
+}
 
       return coincideTexto && coincideEstado;
 

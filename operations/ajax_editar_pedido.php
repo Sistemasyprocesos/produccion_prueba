@@ -37,7 +37,7 @@ $fases = $conn->query("
   <!-- DATOS GENERALES DEL PEDIDO -->
   <div class="card mb-3 border-primary">
     <div class="card-header bg-primary text-white">
-      <i class="bi bi-info-circle"></i> Datos del pedido
+      <i class="fa-solid fa-circle-info" style="color: rgb(255, 255, 255);"></i> Datos del pedido
     </div>
     <div class="card-body">
       <div class="row mb-2">

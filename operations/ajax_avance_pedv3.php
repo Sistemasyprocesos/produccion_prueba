@@ -206,7 +206,7 @@ if ($pedido) {
                         data-udm="<?= htmlspecialchars($fase['udm']) ?>"
                         data-eq="<?= $fase['eq_kg_fase'] ?>"
                         data-obj-total="<?= $kilos ?>">
-                        <i class="bi bi-plus-circle"></i> AÑADIR TURNO
+                        <i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> AÑADIR TURNO
                     </button>
                 </div>
             </div>
