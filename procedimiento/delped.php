@@ -43,7 +43,7 @@ Swal.fire({
   icon: "warning",
   title: "No se puede eliminar",
   text: "Este pedido tiene producción registrada y no puede ser eliminado.",
-  confirmButtonColor: "#d33",
+  confirmButtonColor: "rgb(22, 25, 201)",
   confirmButtonText: "Entendido"
 }).then(() => {
   window.location.href = "../operations/pedidos.php";

@@ -28,11 +28,9 @@ foreach ($real as $secuencia => $turnos) {
         $f = $fecha[$secuencia][$turno] ?? null;
         $j = $jornada[$secuencia][$turno] ?? null;
         $h = $hc[$secuencia][$turno] ?? 0;
-
         $p = $peso[$secuencia][$turno] ?? 0;
         $e = $eq[$secuencia][$turno] ?? 1;
         $obj_kg = $obj[$secuencia][$turno] ?? 0;
-
         $kg_real = $unidades * $p * $e;
 
         try {
@@ -51,7 +49,7 @@ foreach ($real as $secuencia => $turnos) {
     hc
     )
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE
+    ON DUPLICATE KEY UPDATE 
         unidades_reales = VALUES(unidades_reales),
         kg_real = VALUES(kg_real),
         obj_kg = VALUES(obj_kg),

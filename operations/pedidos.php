@@ -8,6 +8,7 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
@@ -20,7 +21,7 @@
 
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1 class="mt-1"><i class="bi bi-journal-text"></i> Pedidos</h1>
+  <h1 class="mt-1"><i class="fa-solid fa-book-open" style="color: rgba(0, 0, 0, 0.51);"></i> Pedidos</h1>
     <div class="row justify-content-center">
       <!----------------------------->
       <!------------------------>
@@ -30,7 +31,7 @@
               <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar pedido (fecha,pedido,producto,cliente)...">
             </div>
             <div class="col-2">
-              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Nuevo Pedido</button>
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Nuevo Pedido</button>
             </div>
 
            
@@ -119,18 +120,18 @@
                     </button>
                 </td>
                 <td><?=$g['cliente'] ?></td>
-                <td><?=$g['fecha_entrega'] ?></td>
+                <td><?=date('d/m/Y', strtotime($g['fecha_entrega'])) ?></td>
                 <td><?=$g['cantidad'].' '.$g['sigla_pedido'] ?></td>
                 <td><?=$g['producto'].' '.$g['envase'].' '.$g['peso'].' '.$g['sigla_producto'] ?></td>
 
                 <?php  
                 if($g['estado'] == 'ACTIVO'){
                 ?>
-                <td class="text-success"><i class="bi bi-check-circle-fill"></i></td>
+                <td class="text-success"><i class="fa-solid fa-circle-check" style="color: rgb(118, 216, 52);"></i></td>
                   <?php  }
                     elseif($g['estado'] == 'INACTIVO'){
                   ?>
-                <td class="text-danger"><i class="bi bi-x-circle-fill"></i></td>
+                <td class="text-danger"><i class="fa-solid fa-circle-xmark" style="color: rgb(194, 9, 9);"></i></td>
                   <?php  }
                   ?>
                 <td>
@@ -161,13 +162,13 @@
 
 
               <!-----------BARRA DE PROGRESO----------------------------->
-                      <div class="progress flex-grow-1" role="progressbar"
+                      <div class="progress flex-grow-1 " role="progressbar"
                           aria-label="Cumplimiento de pedido"
                           aria-valuenow="<?= $g['cumplimiento'] ?>"
                           data-porcentaje="<?= $g['cumplimiento'] ?>"
                           aria-valuemin="0"
                           aria-valuemax="100">
-                      <div class="progress-bar" style="width: <?= $g['cumplimiento'] ?>%"><?= $g['cumplimiento'] ?>%</div>
+                      <div class="progress-bar" style="width: <?= $g['cumplimiento'] ?>% ;  min-width: fit-content;"><?= $g['cumplimiento'] ?>%</div>
 
                     
                   </div>
@@ -382,8 +383,8 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
         Cargando...
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
-        <button class="btn btn-success btn-sm"  id="guardarAvancev3"><i class="bi bi-floppy2-fill"></i>  Guardar</button>
+        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark" style="color: rgb(255, 255, 255);"></i> Cerrar</button>
+        <button class="btn btn-success btn-sm"  id="guardarAvancev3"><i class="fa-solid fa-circle-check" style="color: rgb(255, 255, 255);"></i>  Guardar</button>
       </div>
     </div>
   </div>
@@ -602,13 +603,12 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 
 
 <!------CALCULO AUTOMATICO DE UDM----------------------------------->
+
 <script>
 function calcularEquivalente() {
 
     let cantidad = parseFloat($("#cant").val()) || 0;
-
     let eq = parseFloat($("#unds option:selected").data("eq")) || 0;
-
     let resultado = cantidad * eq;
 
     $("#cant_equiv").val(
@@ -746,11 +746,12 @@ document.querySelectorAll(".progress-bar").forEach(function(barra){
     else if(porcentaje < 60){
         barra.classList.add("bg-warning");
     }
-    else if(porcentaje < 90){
+    else if(porcentaje <= 99){
         barra.classList.add("bg-info");
     }
     else{
         barra.classList.add("bg-success");
+        barra.textContent = "PEDIDO COMPLETO";
     }
 
 });

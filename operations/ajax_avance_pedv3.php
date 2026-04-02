@@ -111,7 +111,10 @@ while ($row = $result->fetch_assoc()) {
 
 if ($pedido) {
     $fecha_registro = $pedido['fecha_registro'];
-    $fecha_entrega  = $pedido['fecha_entrega'];
+    $fecha_entrega  = date('d/m/Y', strtotime($pedido['fecha_entrega']));
+
+
+
     $cantidad       = $pedido['cantidad'] ?? 0;
     $num_pedido     = $pedido['num_pedido'];
     $cliente        = $pedido['razon_social'];
@@ -129,12 +132,25 @@ if ($pedido) {
 ?>
 
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
-<div class="encabezado-pedido">
-    <div class="row mb-3">
-        <div class="col-auto" style="background-color: #0b82fac2; border: 1px solid #030405; border-radius: 5px;">
-            <b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?>
-        </div>
+<div class="row mb-3">
+    <div class="col-auto pedido-box">
+        <b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?>
     </div>
+</div>
+
+<style>
+.pedido-box {
+    background: #5593d2;
+    border-radius: 20px;
+    padding: 6px 15px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+</style>
+
+</style>
     <div class="row mb-3 text-center">
         <div class="col-3 border-end">
             <div class="row"><b>Pedido:</b></div>
