@@ -11,8 +11,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
+<style>
+/* Animación de entrada */
+.fila-animada {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: aparecer 0.4s ease forwards;
+}
+
+@keyframes aparecer {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación al desaparecer */
+.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
 
 
+
+</style>
 
 </head>
 
@@ -54,12 +77,12 @@
         <table class="table mt-2 table-sm" id="tblcolab">
           <thead class="table-dark">
             <tr>
-              <th>PEDIDO</th>
-              <th>CLIENTE</th>
-              <th>FECHA DE ENTREGA</th>
-              <th>CANTIDAD</th>
-              <th>PRODUCTO</th>
-              <th>ESTADO</th>
+              <th data-col="1">PEDIDO</th>
+              <th data-col="2">CLIENTE</th>
+              <th data-col="3">FECHA DE ENTREGA</th>
+              <th data-col="4">CANTIDAD</th>
+              <th data-col="5">PRODUCTO</th>
+              <th data-col="6">ESTADO</th>
               <th>ACCIONES</th>
               <th>% CUMPLIMIENTO</th>
             </tr>
@@ -636,14 +659,35 @@ else if(estado === "2"){
     update();
   }
 
-  function displayRows(){
+
+
+// ----------------CARGA LAS FILAS CON ANIMACION-----------------
+
+ function displayRows(){
+
+  // Animar salida
+  const filasActuales = tbody.querySelectorAll("tr");
+  filasActuales.forEach(f => f.classList.add("fade-out"));
+
+  setTimeout(() => {
+
     tbody.innerHTML = "";
 
     let start = (currentPage - 1) * rowsPerPage;
     let end = start + rowsPerPage;
 
-    filteredRows.slice(start, end).forEach(row => tbody.appendChild(row));
-  }
+    filteredRows.slice(start, end).forEach((row, index) => {
+      row.classList.remove("fade-out");
+      row.classList.add("fila-animada");
+
+      // delay progresivo 👇 (efecto cascada)
+      row.style.animationDelay = (index * 0.02) + "s";
+
+      tbody.appendChild(row);
+    });
+
+  }, 5); // tiempo de salida
+}
 
   function createPagination(){
 
@@ -698,6 +742,7 @@ else if(estado === "2"){
 
 });
 </script>
+
 <!---------------------------->
 </body>
 </html>
