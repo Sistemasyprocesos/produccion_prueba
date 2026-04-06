@@ -51,6 +51,7 @@ p.unds_cjsc,
 e.nombre as env,
 e.id as idenv,
 p.tipo_embalaje,
+en.nombre as tipo_embalaj,
 p.und_pallet,
 p.producto_base,
 p.estado,
@@ -62,10 +63,11 @@ p.estado as estado,
 t.abreviatura as tprod,
 t.cod as codtipoprod
 from prod_productos as p 
-inner join prod_envase as e on e.id=p.envase  
+inner join prod_envase as e on e.id=p.envase
+inner join prod_envase as en on en.id=p.tipo_embalaje  
 inner join prod_tipo_prod as t on t.cod=p.tipo_prod
 inner join prod_udm as u on p.udm=u.id
-order by p.nombre asc";
+order by p.codigo_prod asc";
 
 ?>
 
@@ -85,7 +87,7 @@ order by p.nombre asc";
 </div>
 </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-sm table-hover" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Codigo</th>
@@ -99,7 +101,7 @@ order by p.nombre asc";
       <th>Unds(Pallet)</th>     
       <th>Producto Base</th>
       <th>Acciones</th>
-      <th>Activar/Inactivar</th>
+     
     </tr>
   </thead>
   <tbody>
@@ -117,7 +119,7 @@ order by p.nombre asc";
             <td><?= $row["peso_prod"].' '.$row["sigla"]?></td>
             <td><?=$row["env"] ?></td>
             <td><?= $row["unds_cjsc"] ?></td>
-            <td><?=$row["env"] ?></td>
+            <td><?=$row["tipo_embalaj"] ?></td>
             <td><?= $row["und_pallet"]?></td>
             <td><?=$row["producto_base"] ?></td>
             <td>
@@ -143,8 +145,7 @@ order by p.nombre asc";
               <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["idprod"] ?>"><i class="bi bi-trash3" ></i></button>
             </td>
 
-              <td><button class="btn btn-sm btn-warning"><i class="bi bi-check-circle text-white"></i>
-</button></td>
+              
             </tr>
      <?php   }
     } else {
@@ -188,8 +189,15 @@ order by p.nombre asc";
 
           <div class="row mb-3">
             <div class="col-6">
-              <label class="form-label">Código</label>
-              <input type="text" name="codigoprod" maxlength="10" class="form-control">
+
+<?php 
+$k = $conn->query("SELECT MAX(codigo_prod) AS max_codigo FROM prod_productos");
+$row = $k->fetch_assoc();
+$max_codigo = $row['max_codigo'] ?? 0;
+?>
+
+<label class="form-label">Código</label>
+<input type="text" name="codigoprod" maxlength="10" value="<?php echo $max_codigo + 1; ?>" class="form-control">
             </div>
             <div class="col-6">
               <label class="form-label">Nombre del producto</label>
@@ -216,6 +224,17 @@ order by p.nombre asc";
           </div>
 
           <div class="row mb-3">
+             <div class="col-4"> 
+              <label class="form-label">Envase</label>
+              <select class="form-select" name="envase_prod" id="envase_prod">
+                <?php
+                $h=$conn->query("select id,nombre,abreviatura,estado from prod_envase where estado=1 order by abreviatura asc");
+                while($row = $h->fetch_assoc()) { ?>
+                  <option value="<?= $row["id"] ?>"><?= $row["nombre"].' ('.$row['abreviatura'].')' ?></option>
+                <?php } ?>
+              </select>
+            </div>
+
             <div class="col-4">
               <label class="form-label">Peso</label>
               <input type="text" class="form-control" onkeypress=soloNumeros(event) name="pesoprod" id="pesoprod">
@@ -232,16 +251,7 @@ order by p.nombre asc";
               </select>
             </div>
            
-            <div class="col-4"> 
-              <label class="form-label">Envase</label>
-              <select class="form-select" name="envase_prod" id="envase_prod">
-                <?php
-                $h=$conn->query("select id,nombre,abreviatura,estado from prod_envase where estado=1 order by abreviatura asc");
-                while($row = $h->fetch_assoc()) { ?>
-                  <option value="<?= $row["id"] ?>"><?= $row["nombre"].' ('.$row['abreviatura'].')' ?></option>
-                <?php } ?>
-              </select>
-            </div>
+           
           </div>
 
           <hr>
@@ -316,40 +326,44 @@ order by p.nombre asc";
           <div class="row mb-3">
             <div class="col-12">
               <label class="form-label">Código</label>
-              <input type="text" required class="form-control" id="cod" name="cod">
+              <input type="text" required class="form-control" id="cod" name="cod" readonly>
             </div>
           </div>
+<hr>
+<div class="row mb-3">
+<div class="col-4">
+              <label class="form-label">Nombre Actual</label>
+              <input type="text" required class="form-control" id="nombre" name="nombr" disabled readonly>
+           
+          </div>
+ <div class="col-8 d-flex align-items-end">
+                <small>El nombre es concatenado, debera indicar abajo solo el nombre del producto (azucar,moringa, etc...)*</small>
+            </div>  
+</div>
 
-          <!-- Nombre / Tipo -->
+  <!-- Categoría / PVP / Peso -->
           <div class="row mb-3">
-            <div class="col-6">
-              <label class="form-label">Nombre</label>
-              <input type="text" required class="form-control" id="nombre" name="nombre">
+            <div class="col-3">
+              <label class="form-label">Nombre producto</label>
+              <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nombre" required>
             </div>
-            <div class="col-6">
-              <label class="form-label">Tipo</label>
-           <select class="form-select" required id="tipo" name="tipo">
-                <?php
-                $h=$conn->query("SELECT cod, abreviatura FROM prod_tipo_prod WHERE estado=1 ORDER BY abreviatura");
-                while($row = $h->fetch_assoc()) { ?>
-                  <option value="<?= $row['cod'] ?>"><?= $row['abreviatura'] ?></option>
+            <div class="col-3">
+              <label class="form-label">Envase</label>
+              <select required class="form-select" name="env" id="env">
+                <?php 
+                $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
+                while($row = $g->fetch_assoc()) { ?>
+                  <option value="<?= $row['id'] ?>">
+                    <?= $row['nombre']." (".$row['abreviatura'].")" ?>
+                  </option>
                 <?php } ?>
               </select>
             </div>
-          </div>
-
-          <!-- Categoría / PVP / Peso -->
-          <div class="row mb-3">
-            <div class="col-4">
-              <label class="form-label">Categoría</label>
-              <input type="text" class="form-control" required name="cate" id="cate">
-            </div>
-            
-            <div class="col-2">
-              <label class="form-label">Peso (kg)</label>
+            <div class="col-3">
+              <label class="form-label">Peso</label>
               <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
             </div>
-             <div class="col-2">
+             <div class="col-3">
               <label class="form-label">UDM</label>
 
               <select required class="form-select" name="um" id="um">
@@ -362,33 +376,32 @@ order by p.nombre asc";
                 <?php } ?>
               </select>
             </div>
-           
           </div>
 
-          <hr>
 
-          <!-- Envase -->
+
+
+          <!-- Nombre / Tipo -->
           <div class="row mb-3">
+            
             <div class="col-4">
-              <label class="form-label">Envase</label>
-              <select required class="form-select" name="env" id="env">
-                <?php 
-                $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
-                while($row = $g->fetch_assoc()) { ?>
-                  <option value="<?= $row['id'] ?>">
-                    <?= $row['nombre']." (".$row['abreviatura'].")" ?>
-                  </option>
+              <label class="form-label">Tipo</label>
+           <select class="form-select" required id="tipo" name="tipo">
+                <?php
+                $h=$conn->query("SELECT cod, abreviatura FROM prod_tipo_prod WHERE estado=1 ORDER BY abreviatura");
+                while($row = $h->fetch_assoc()) { ?>
+                  <option value="<?= $row['cod'] ?>"><?= $row['abreviatura'] ?></option>
                 <?php } ?>
               </select>
             </div>
-           
             <div class="col-4">
-              <label class="form-label">UDM envase</label>
-              <select required class="form-select" name="udmenvase" id="udmenvase">
-                <option value="KG">KG</option>
-              </select>
+              <label class="form-label">Categoría</label>
+              <input type="text" class="form-control" required name="cate" id="cate">
             </div>
           </div>
+
+        
+         
 
           <hr>
 
@@ -398,11 +411,36 @@ order by p.nombre asc";
               <label class="form-label">Unidades x cj/sc</label>
               <input type="number" required min="0" onkeypress=soloNumeros(event) class="form-control" name="undscjsc" id="undscjsc">
             </div>
+
+<div class="col-4">
+<label class="form-label">Embalaje</label>
+<select class="form-select" name="tipo_emb" id="tipo_emb">
+ <?php 
+                $su=$conn->query("SELECT id,nombre FROM prod_envase  ORDER BY nombre");
+                while($gk = $su->fetch_assoc()) { ?>
+                  <option value="<?= $gk['id'] ?>">
+                    <?= $gk['nombre']?>
+                  </option>
+                <?php } ?>
+
+</select>
+</div>
+
+
             <div class="col-4">
               <label class="form-label">Unidades en pallet</label>
               <input type="number" required min="0" onkeypress=soloNumeros(event) class="form-control" name="und_pallet" id="und_pallet">
             </div>
-              <div class="col-4">
+
+
+
+             
+
+
+          </div>
+<hr>
+              <div class="row mb-3">
+                 <div class="col-4">
               <label class="form-label">Estado</label>
                 <select name="estate" required id="estate" class="form-select">
                   <?php $f=$conn->query("select id,nom from prod_estados order by nom desc");
@@ -412,9 +450,7 @@ order by p.nombre asc";
                   <?php } ?>
                 </select>
             </div>
-          </div>
-
-                 
+</div>   
 
 
         </div>
@@ -479,7 +515,7 @@ document.addEventListener("click", function(e) {
   const tipo = button.getAttribute('data-tipo');
   const peso= button.getAttribute('data-peso');
   const envase = button.getAttribute('data-envase');
-
+const embalaje = button.getAttribute('data-tipo_embalaje');
   const unds_cjsc = button.getAttribute('data-unds_cjsc');
   const umd = button.getAttribute('data-udm');
   const und_pallet = button.getAttribute('data-und_pallet');
@@ -492,7 +528,7 @@ document.addEventListener("click", function(e) {
   document.getElementById('cate').value = categoria;
   document.getElementById('tipo').value = tipo;
   document.getElementById('peso').value = peso;
- 
+  document.getElementById('tipo_emb').value = embalaje;
   document.getElementById('estate').value = parseInt(estado) || "";
   document.getElementById('env').value=envase;
  document.getElementById('um').value=umd;

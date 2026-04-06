@@ -104,7 +104,7 @@ $res=$conn->query($sql);
 
   <?php while ($f = $res->fetch_assoc()) { ?>
     <tr>
-      <td><?=htmlspecialchars($f['producto'].' '.$f['envase'].' '.$f['peso_prod'].' '.$f['umed'], ENT_QUOTES, 'UTF-8')  ?></td>
+      <td><?=$f['producto']?></td>
 
       <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
 
@@ -185,7 +185,7 @@ $res=$conn->query($sql);
                  );   ?>
               <select name="producto" id="producto" class="form-select" required>
                 <?php  while($r=$g->fetch_assoc()){   ?>
-                  <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=htmlspecialchars($r['nombre'].' '.$r['abreviatura'].' '.$r['peso_prod'] .' '.$r['sigla'], ENT_QUOTES, 'UTF-8') ?></option>
+                  <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=$r['nombre'] ?></option>
                 <?php } ?>
               </select>
             </div>
@@ -578,7 +578,7 @@ document.addEventListener('click', function(e) {
 const p = data.producto;
       if (data.fases && data.fases.length > 0) {
        document.getElementById('edit_producto_nombre').value = 
-    p.nombre + ' ' + p.nombre_envase + ' ' + p.peso_prod + ' ' + p.sigla;
+    p.nombre;
       }
 
       const tbody = document.getElementById('tbodyEditar');

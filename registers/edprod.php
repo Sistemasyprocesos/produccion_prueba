@@ -10,10 +10,33 @@ $cat = strtoupper($_POST['cate']) ?? null;
 $peso = $_POST['peso'] ?? null;
 $udm = $_POST['um'] ?? null;
 $env = $_POST['env'] ?? null;
-$udmenvase = $_POST['udmenvase'] ?? null;
+$tipo_emb = $_POST['tipo_emb'] ?? null;
 $undcjsc = $_POST['undscjsc'] ?? null;
 $undpallet = $_POST['und_pallet'] ?? null;
 $estado = $_POST['estate'] ?? null;
+
+
+//OBTENER ABREVIATURA DEL ENVASE
+$r=$conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
+$r->bind_param("i", $env);  
+$r->execute();
+$env_result = $r->get_result();
+$env_abreviatura = $env_result->fetch_assoc()['abreviatura'];
+
+
+
+//OBTENER ABREVIATURA DE UDM
+$j=$conn->prepare("SELECT sigla FROM prod_udm WHERE id = ?");
+$j->bind_param("i", $udm);  
+$j->execute();
+$udm_result = $j->get_result();
+$udm_sigla = $udm_result->fetch_assoc()['sigla'];
+
+
+
+
+
+$nuevonom=$nombre." ".$env_abreviatura." ".$peso." ".$udm_sigla;
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +70,7 @@ exit;
 }
 
 $er = $conn->prepare("UPDATE prod_productos SET 
+tipo_embalaje=?,
 codigo_prod=?,
 nombre=?,
 tipo_prod=?,
@@ -61,9 +85,10 @@ und_pallet=?,
 estado=?
 WHERE id=?");  
 
-$er->bind_param("ssisiiiiiii",
+$er->bind_param("iissisiiiiii",
+$tipo_emb,
 $codigo,
-$nombre,
+$nuevonom,
 $tipo,
 $cat,
 

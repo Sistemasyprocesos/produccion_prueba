@@ -35,12 +35,13 @@ $ress = $n->get_result()->fetch_assoc();
 
 $unidadmed = $ress['sigla'] ?? '';
 
-
+$nombreconcat=$nombreprod.' '.$envase_txt.' '.$pesoprod.' '.$unidadmed;
 
 
 $sql = "INSERT INTO prod_productos (
 codigo_prod,
   nombre, 
+  nombre_prod,
   cat_prod,
   tipo_prod,
   envase,
@@ -52,12 +53,13 @@ codigo_prod,
   estado,
   udm,
   fase
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
-  "sssiidiiisiii",
+  "ssssiidiiisiii",
   $codprod,
+  $nombreconcat,
   $nombreprod,
   $cat,
   $tipoprod,

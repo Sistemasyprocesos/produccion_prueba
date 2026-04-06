@@ -149,7 +149,7 @@
                 <td><?=$g['cliente'] ?></td>
                 <td><?=date('d/m/Y', strtotime($g['fecha_entrega'])) ?></td>
                 <td><?=$g['cantidad'].' '.$g['sigla_pedido'] ?></td>
-                <td><?=$g['producto'].' '.$g['envase'].' '.$g['peso'].' '.$g['sigla_producto'] ?></td>
+                <td><?=$g['producto']?></td>
 
                 <?php  
                 if($g['estado'] == 'ACTIVO'){
@@ -273,7 +273,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                         ?>
                         <option></option>
                           <?php while($f=$c->fetch_assoc()){     ?>
-                        <option value="<?=$f['id'] ?>"><?=$f['nombre'].' '.$f['abreviatura'].' '.$f['peso_prod'].' '.$f['sigla']  ?></option>
+                        <option value="<?=$f['id'] ?>"><?=$f['nombre']?></option>
                       <?php }?>
                     </select>
                 </div>
