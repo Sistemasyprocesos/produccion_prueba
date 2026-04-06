@@ -101,6 +101,7 @@
                 u_prod.sigla AS sigla_producto,
                 u_ped.sigla  AS sigla_pedido,
                 p.num_pedido,
+                u_prod.equivalente_kg as equi,
                 e.nom as estado,
                 c.razon_social as cliente,
                 pr.nombre as producto,
@@ -134,6 +135,8 @@
                 order by p.id_pedido desc");
           
             while($g=$f->fetch_assoc()){
+
+$pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
               ?> 
               <tr data-estado="<?= $g['estado'] ?>">
                 <td>
@@ -148,7 +151,7 @@
                 </td>
                 <td><?=$g['cliente'] ?></td>
                 <td><?=date('d/m/Y', strtotime($g['fecha_entrega'])) ?></td>
-                <td><?=$g['cantidad'].' '.$g['sigla_pedido'] ?></td>
+                <td><?=$g['cantidad'].' '.$g['sigla_pedido']. ' ('.$pedido.' KG)' ?></td>
                 <td><?=$g['producto']?></td>
 
                 <?php  
@@ -264,6 +267,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                       p.fase,
                       p.peso_prod,
                       u.sigla,
+                       u.equivalente_kg,  
                       e.abreviatura
                       from prod_productos as p
                         inner join prod_envase as e on e.id=p.envase
@@ -273,7 +277,12 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                         ?>
                         <option></option>
                           <?php while($f=$c->fetch_assoc()){     ?>
-                        <option value="<?=$f['id'] ?>"><?=$f['nombre']?></option>
+                        <option value="<?=$f['id'] ?>" 
+                        data-peso="<?=$f['peso_prod'] ?>"
+                          data-eq="<?=$f['equivalente_kg'] ?>"
+                        >
+    <?=$f['nombre']?>
+</option>
                       <?php }?>
                     </select>
                 </div>
@@ -289,28 +298,20 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                       <input type="date" class="form-control" required name="fentreg" id="fentreg">
                 </div>
             </div>
-
+<hr>
             <div class="row mb-3">
                 <div class="col-5">
-                    <label class="form-label">Cantidad</label>
+                    <label class="form-label">Cantidad (unidades)</label>
                       <input type="text" class="form-control" name="cant" id="cant" required>
                 </div>
 
                 <div class="col-2">
-                    <label class="form-label">UM</label>
-                      <select name="unds" id="unds" required class="form-select">
-                        <?php
-                        $r=$conn->query("select id,nombre,sigla,equivalente_kg from prod_udm order by sigla desc");
-                        while($s=$r->fetch_assoc()){
-                        ?>
-                        <option value="<?=$s['id'] ?> " data-eq="<?=$s['equivalente_kg'] ?>">
-                            <?=$s['sigla'] ?>
-                        </option>
-                        <?php } ?>
-                      </select>
+                    
+                      
+                      <input type="text" class="form-control" name="unds" id="unds" hidden value="4">
                 </div>
                 <div class="col-3">
-                  <label class="form-label">Equivalente</label>
+                  <label class="form-label">Equivalente (kg)</label>
                     <input type="text" readonly class="form-control" id="cant_equiv">
                 </div>
 
@@ -532,21 +533,22 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 
 <script>
 function calcularEquivalente() {
+    let cantidad  = parseFloat($("#cant").val()) || 0;
+    let peso      = parseFloat($("#prod option:selected").data("peso")) || 0;
+    let eq        = parseFloat($("#prod option:selected").data("eq")) || 0;
 
-    let cantidad = parseFloat($("#cant").val()) || 0;
-    let eq = parseFloat($("#unds option:selected").data("eq")) || 0;
-    let resultado = cantidad * eq;
+    // cantidad (UND) × peso por unidad × factor a KG
+    let resultado = cantidad * peso * eq;
 
     $("#cant_equiv").val(
-        resultado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })+' KG'
+        resultado > 0
+            ? resultado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' KG'
+            : ''
     );
 }
 
-// Evento cuando cambia cantidad
-$(document).on("input", "#cant", calcularEquivalente);
-
-// Evento cuando cambia unidad
-$(document).on("change", "#unds", calcularEquivalente);
+$(document).on("input",  "#cant", calcularEquivalente);
+$(document).on("change", "#prod", calcularEquivalente);
 </script>
 
 
