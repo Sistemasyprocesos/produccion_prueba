@@ -16,16 +16,14 @@ $p = $q->fetch_assoc();
 
 // Fases del producto con avance actual
 $fases = $conn->query("
-  SELECT 
+    SELECT 
     f.secuencia,
-  
     COALESCE(a.kg_real, '') as kg_real,
     COALESCE(a.fecha_turno, '') as fecha_prod,
-   
     a.id as id_avance
-  FROM prod_fases_prod f
-  LEFT JOIN prod_avance_pedido a 
-    ON a.id_pedido = $id AND a.secuencia = f.secuencia
+      FROM prod_fases_prod f
+      LEFT JOIN prod_avance_pedido a 
+      ON a.id_pedido = $id AND a.secuencia = f.secuencia
   WHERE f.producto = {$p['producto']}
   ORDER BY f.secuencia ASC
 ");
@@ -72,21 +70,18 @@ $fases = $conn->query("
             ?>
           </select>
         </div>
+
+  
         <div class="col-3">
-          <label class="form-label fw-semibold">Cantidad</label>
+          <label class="form-label fw-semibold">Cantidad (unidades)</label>
           <input type="text" name="cant" class="form-control" value="<?= $p['cantidad'] ?>" required>
         </div>
         <div class="col-3">
-          <label class="form-label fw-semibold">UM</label>
-          <select name="unds" class="form-select">
-            <?php
-            $um = $conn->query("SELECT id, sigla FROM prod_udm ORDER BY sigla DESC");
-            while($u = $um->fetch_assoc()){
-              $sel = ($u['id'] == $p['und_medida']) ? 'selected' : '';
-              echo "<option value='{$u['id']}' $sel>{$u['sigla']}</option>";
-            }
-            ?>
-          </select>
+        
+        <!----------UNIDAD DE MEDIDA ESTANDAR (UNIDAD)--------------->
+          <input type="hidden" name="unds" value="4">
+
+         
         </div>
       </div>
 

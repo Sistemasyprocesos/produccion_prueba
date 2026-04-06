@@ -90,7 +90,7 @@ $res=$conn->query($sql);
       </div>
     </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-bordered table-hover table-sm" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>PRODUCTO PT</th>

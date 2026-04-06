@@ -235,11 +235,7 @@ if ($pedido) {
 
                     for ($turno = 1; $turno <= $maxTurnos; $turno++):
                         // Objetivo calculado por turno
-                        if ($turno == $turnosFase) {
-                            $obj_fase = $kilos - ($obj_fase_base * ($turnosFase - 1));
-                        } else {
-                            $obj_fase = $obj_fase_base;
-                        }
+                      $obj_fase = $obj_fase_base;
                         $obj_fase = max($obj_fase, 0);
 
                         $peso        = $fase['peso_env'];
@@ -306,6 +302,21 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                         <td class="text-center align-middle td-kg"></td>
                         <td class="text-center align-middle td-dif"></td>
                         <td class="text-center align-middle td-cumpl"></td>
+
+<td>
+    <?php if ($turno > $turnosFase): ?>
+        <button type="button" 
+            class="btn btn-sm btn-danger btnEliminarFilaBD"
+            data-secuencia="<?= $fase['secuencia'] ?>"
+            data-turno="<?= $turno ?>"
+            data-pedido="<?= $id ?>">
+            <i class="bi bi-trash"></i>
+        </button>
+    <?php endif; ?>
+</td>
+
+
+
                     </tr>
 
                     <?php endfor; ?>
@@ -488,6 +499,52 @@ document.addEventListener("shown.bs.modal", function () {
     if (!modalBody || !encabezado) return;
     modalBody.addEventListener("scroll", function () {
         encabezado.classList.toggle("compacto", modalBody.scrollTop > 60);
+    });
+});
+</script>
+
+
+
+<!------------ELIMINA TURNO-------------------------------->
+<script>
+
+$(document).on('click', '.btnEliminarFilaBD', function () {
+    const $fila     = $(this).closest('tr');
+    const $tbody    = $fila.closest('tbody');
+    const $tabla    = $tbody.closest('.tablaAvance');
+    const secuencia = $(this).data('secuencia');
+    const turno     = $(this).data('turno');
+    const pedido    = $(this).data('pedido');
+
+    Swal.fire({
+        title: '¿Eliminar turno?',
+        text: 'Se eliminará el turno ' + turno + ' de la base de datos.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'eliminar_turno.php',
+                type: 'POST',
+                data: { id_pedido: pedido, secuencia: secuencia, turno: turno },
+                success: function (res) {
+                    $fila.remove();
+                    // Renumerar
+                    $tbody.find('tr').each(function (i) {
+                        $(this).find('.turno-num').text(i + 1);
+                    });
+                    recalcularTotales($tabla);
+                    Swal.fire('Eliminado', 'Turno eliminado correctamente.', 'success');
+                },
+                error: function () {
+                    Swal.fire('Error', 'No se pudo eliminar.', 'error');
+                }
+            });
+        }
     });
 });
 </script>

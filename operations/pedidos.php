@@ -109,7 +109,7 @@
 
                 COALESCE(SUM(a.unidades_reales),0) as producido,
 
-                ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100,2)
+                ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100 ,2)
                  as cumplimiento
 
                 from prod_pedidos as p 
@@ -322,8 +322,8 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
         </div>
       </div>
       <div class="modal-footer  justify-content-center">
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Guardar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
       </form>
       </div>
     </div>
