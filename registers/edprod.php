@@ -78,24 +78,20 @@ cat_prod=?,
 peso_prod=?,
 udm=?,
 envase=?,
-
 unds_cjsc=?,
-
 und_pallet=?,
 estado=?
 WHERE id=?");  
 
-$er->bind_param("iissisiiiiii",
+$er->bind_param("isssssiiiiii",
 $tipo_emb,
 $codigo,
 $nuevonom,
 $tipo,
 $cat,
-
 $peso,
 $udm,
 $env,
-
 $undcjsc,
 $undpallet,
 $estado,

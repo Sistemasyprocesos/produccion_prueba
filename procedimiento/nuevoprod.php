@@ -11,7 +11,6 @@ $envase = $_POST['envase_prod'];
 $undcjsc = $_POST['unds_cjsc'];
 $embalaje = $_POST['tipo_embalaje'];
 $unds_pallet = $_POST['unds_pallet'];
-
 $base = $_POST['prod_base'];
 $udm = $_POST['udm'];
 $estado = 1;
@@ -39,7 +38,7 @@ $nombreconcat=$nombreprod.' '.$envase_txt.' '.$pesoprod.' '.$unidadmed;
 
 
 $sql = "INSERT INTO prod_productos (
-codigo_prod,
+  codigo_prod,
   nombre, 
   nombre_prod,
   cat_prod,
@@ -70,8 +69,6 @@ $stmt->bind_param(
   $unds_pallet,
   $base,
   $estado,
-  
-  
   $udm,
   $faseado
 );

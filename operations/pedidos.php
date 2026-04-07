@@ -148,6 +148,8 @@ $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
                       data-bs-target="#modalver">
                       <i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i>
                     </button>
+
+                    <!-----------DATOS EN LA TABLA----------------------->
                 </td>
                 <td><?=$g['cliente'] ?></td>
                 <td><?=date('d/m/Y', strtotime($g['fecha_entrega'])) ?></td>

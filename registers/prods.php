@@ -190,14 +190,10 @@ order by p.codigo_prod asc";
           <div class="row mb-3">
             <div class="col-6">
 
-<?php 
-$k = $conn->query("SELECT MAX(codigo_prod) AS max_codigo FROM prod_productos");
-$row = $k->fetch_assoc();
-$max_codigo = $row['max_codigo'] ?? 0;
-?>
 
-<label class="form-label">Código</label>
-<input type="text" name="codigoprod" maxlength="10" value="<?php echo $max_codigo + 1; ?>" class="form-control">
+
+          <label class="form-label">Código</label>
+          <input type="text" name="codigoprod" maxlength="10" required class="form-control">
             </div>
             <div class="col-6">
               <label class="form-label">Nombre del producto</label>
@@ -320,13 +316,13 @@ $max_codigo = $row['max_codigo'] ?? 0;
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <input type="hidden" name="iden" id="iden">
-        <div class="modal-body" >
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 
           <!-- Código -->
           <div class="row mb-3">
             <div class="col-12">
               <label class="form-label">Código</label>
-              <input type="text" required class="form-control" id="cod" name="cod" readonly>
+              <input type="text" required class="form-control" id="cod" name="cod">
             </div>
           </div>
 <hr>
@@ -378,9 +374,6 @@ $max_codigo = $row['max_codigo'] ?? 0;
             </div>
           </div>
 
-
-
-
           <!-- Nombre / Tipo -->
           <div class="row mb-3">
             
@@ -400,8 +393,6 @@ $max_codigo = $row['max_codigo'] ?? 0;
             </div>
           </div>
 
-        
-         
 
           <hr>
 
@@ -425,17 +416,10 @@ $max_codigo = $row['max_codigo'] ?? 0;
 
 </select>
 </div>
-
-
             <div class="col-4">
               <label class="form-label">Unidades en pallet</label>
               <input type="number" required min="0" onkeypress=soloNumeros(event) class="form-control" name="und_pallet" id="und_pallet">
             </div>
-
-
-
-             
-
 
           </div>
 <hr>
