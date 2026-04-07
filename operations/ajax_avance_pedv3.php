@@ -518,12 +518,12 @@ $(document).on('click', '.btnEliminarFilaBD', function () {
 
     Swal.fire({
         title: '¿Eliminar turno?',
-        text: 'Se eliminará el turno ' + turno + ' de la base de datos.',
+        text: 'Se eliminará el turno ' + turno + ' de la planificacion, esta accion ya no se podra revertir',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Eliminar',
+        confirmButtonText: 'Si, Eliminar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {

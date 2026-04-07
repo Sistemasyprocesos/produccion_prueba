@@ -48,7 +48,7 @@
 
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1 class="mt-1"><i class="fa-solid fa-book-open" style="color: rgba(0, 0, 0, 0.51);"></i> Pedidos</h1>
+  <h1 class="mt-1"><i class="fa-solid fa-industry" style="color: rgb(0, 0, 0);"></i> Pedidos</h1>
     <div class="row justify-content-center">
       <!----------------------------->
       <!------------------------>
