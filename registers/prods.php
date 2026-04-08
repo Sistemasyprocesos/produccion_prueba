@@ -42,35 +42,35 @@
 
 
 $consulta="select 
-p.nombre as nprod,
-p.nombre_prod as nombre_prod,
-p.cat_prod,
-p.tipo_prod,
-p.envase,
-p.peso_prod,
-p.unds_cjsc,
-e.nombre as env,
-e.id as idenv,
-p.tipo_embalaje,
-en.nombre as tipo_embalaj,
-p.und_pallet,
-p.producto_base,
-p.estado,
-p.codigo_prod as codigo_prod,
-c.cat_nombre as cat_prod,
-c.id_cat as idcategoria,
-p.id as idprod,
-u.sigla,u.id as ud,
-p.estado as estado,
-t.abreviatura as tprod,
-t.cod as codtipoprod
-from prod_productos as p 
-inner join prod_envase as e on e.id=p.envase
-inner join prod_envase as en on en.id=p.tipo_embalaje  
-inner join prod_tipo_prod as t on t.cod=p.tipo_prod
-inner join prod_udm as u on p.udm=u.id
-inner join prod_categoria_prod as c on c.id_cat=p.cat_prod
-order by p.codigo_prod asc";
+      p.nombre as nprod,
+      p.nombre_prod as nombre_prod,
+      p.cat_prod,
+      p.tipo_prod,
+      p.envase,
+      p.peso_prod,
+      p.unds_cjsc,
+      e.nombre as env,
+      e.id as idenv,
+      p.tipo_embalaje,
+      en.nombre as tipo_embalaj,
+      p.und_pallet,
+      p.producto_base,
+      p.estado,
+      p.codigo_prod as codigo_prod,
+      c.cat_nombre as cat_prod,
+      c.id_cat as idcategoria,
+      p.id as idprod,
+      u.sigla,u.id as ud,
+      p.estado as estado,
+      t.abreviatura as tprod,
+      t.cod as codtipoprod
+      from prod_productos as p 
+          inner join prod_envase as e on e.id=p.envase
+          inner join prod_envase as en on en.id=p.tipo_embalaje  
+          inner join prod_tipo_prod as t on t.cod=p.tipo_prod
+          inner join prod_udm as u on p.udm=u.id
+          inner join prod_categoria_prod as c on c.id_cat=p.cat_prod
+      order by p.codigo_prod asc";
 
 ?>
 
@@ -81,14 +81,14 @@ order by p.codigo_prod asc";
     <!----------------------------->
 <!------------------------>
 <div class="container mt-2">
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Producto</button>
-</div>
-<div class="col-4">
-<input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar producto...">
-</div>
-</div>
+  <div class="row mb-3">
+    <div class="col-2">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Producto</button>
+    </div>
+    <div class="col-4">
+        <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar producto...">
+    </div>
+  </div>
 
 <table class="table mt-5 table-sm table-hover" id="tblcolab">
   <thead class="table-dark">
@@ -129,22 +129,23 @@ order by p.codigo_prod asc";
 
             <!-------BOTON EDITAR------------->
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
-              data-id="<?= $row["idprod"] ?>"
-              data-codigo="<?= $row["codigo_prod"] ?>"
-              data-nombre="<?= $row["nprod"] ?>"
-              data-categoria="<?= $row["cat_prod"] ?>"
-              data-tipo="<?= $row["codtipoprod"] ?>"
-              data-peso="<?= $row["peso_prod"] ?>"
-              data-envase="<?= $row["idenv"] ?>"
-              data-unds_cjsc="<?= $row["unds_cjsc"] ?>"
-              data-tipo_embalaje="<?= $row["tipo_embalaje"] ?>"
-              data-und_pallet="<?= $row["und_pallet"] ?>"
-             data-udm="<?=$row["ud"] ?>"
-              data-producto_base="<?= $row["producto_base"] ?>"
-              data-estado="<?= $row["estado"] ?>"
-              data-nombre_prod="<?= $row["nombre_prod"] ?>"
-              data-idcat="<?= $row["idcategoria"] ?>"
-              ><i class="bi bi-pencil-square"></i></button>
+                    data-id="<?= $row["idprod"] ?>"
+                    data-codigo="<?= $row["codigo_prod"] ?>"
+                    data-nombre="<?= $row["nprod"] ?>"
+                    data-categoria="<?= $row["cat_prod"] ?>"
+                    data-tipo="<?= $row["codtipoprod"] ?>"
+                    data-peso="<?= $row["peso_prod"] ?>"
+                    data-envase="<?= $row["idenv"] ?>"
+                    data-unds_cjsc="<?= $row["unds_cjsc"] ?>"
+                    data-tipo_embalaje="<?= $row["tipo_embalaje"] ?>"
+                    data-und_pallet="<?= $row["und_pallet"] ?>"
+                    data-udm="<?=$row["ud"] ?>"
+                    data-producto_base="<?= $row["producto_base"] ?>"
+                    data-estado="<?= $row["estado"] ?>"
+                    data-nombre_prod="<?= $row["nombre_prod"] ?>"
+                    data-idcat="<?= $row["idcategoria"] ?>"
+              ><i class="bi bi-pencil-square"></i>
+            </button>
 
               <!-------BOTON ELIMINAR------------->
               <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["idprod"] ?>"><i class="bi bi-trash3" ></i></button>
@@ -167,10 +168,10 @@ order by p.codigo_prod asc";
 
 
 
-<nav>
-<?php include '../complemento/paginator.php' ?>
-<ul class="pagination justify-content-center" id="pagination"></ul>
-</nav>
+  <nav>
+    <?php include '../complemento/paginator.php' ?>
+      <ul class="pagination justify-content-center" id="pagination"></ul>
+  </nav>
 
 </div>
   </div>
@@ -221,6 +222,10 @@ order by p.codigo_prod asc";
             <div class="col-4">
               <label class="form-label">Nueva Categoría</label>
               <input type="text" name="categoria" id="categoria" class="form-control">
+                    <div class="invalid-feedback">
+                        Esta categoría ya existe
+                    </div>
+           
             </div>
             <div class="col-4">
               <label class="form-label">Tipo</label>
@@ -301,7 +306,6 @@ order by p.codigo_prod asc";
                 <option value="no">No</option>
               </select>
             </div>
-
             
           </div>
 
@@ -324,105 +328,104 @@ order by p.codigo_prod asc";
 <div class="modal fade" id="modaleditar" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog  modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-
       <form action="edprod.php" method="POST">
 
         <div class="modal-header" style="background-color: #198754; color: white;">
           <h5 class="modal-title">Editar producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <input type="hidden" name="iden" id="iden">
         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 
           <!-- Código -->
-          <div class="row mb-3">
-            <div class="col-12">
+        <div class="row mb-3">
+          <div class="col-6">
               <label class="form-label">Código</label>
-              <input type="text" required class="form-control" id="cod" name="cod">
-            </div>
+                  <input type="text" required class="form-control" id="cod" name="cod">
           </div>
-<hr>
-<div class="row mb-3">
-<div class="col-4">
+          <div class="col-4">
               <label class="form-label">Nombre Actual</label>
-              <input type="text" required class="form-control" id="nombre" name="nombr" disabled readonly>
-           
+                  <input type="text" required class="form-control" id="nombre" name="nombr" disabled readonly>
           </div>
-
-</div>
+        </div>
+<hr>
 
 
   <!-- Categoría / PVP / Peso -->
           <div class="row mb-3">
             <div class="col-3">
               <label class="form-label">Nombre producto</label>
-              <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nuevonombreprod" required>
+                  <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nuevonombreprod" required>
             </div>
+
             <div class="col-3">
               <label class="form-label">Envase</label>
               <select required class="form-select" name="env" id="env">
                 <?php 
-                $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
-                while($row = $g->fetch_assoc()) { ?>
-                  <option value="<?= $row['id'] ?>">
-                    <?= $row['nombre']." (".$row['abreviatura'].")" ?>
-                  </option>
+                      $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
+                      while($row = $g->fetch_assoc()) { ?>
+                        <option value="<?= $row['id'] ?>">
+                            <?= $row['nombre']." (".$row['abreviatura'].")" ?>
+                        </option>
                 <?php } ?>
               </select>
             </div>
+
             <div class="col-3">
               <label class="form-label">Peso</label>
-              <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
+                  <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
             </div>
-             <div class="col-3">
-              <label class="form-label">UDM</label>
 
-              <select required class="form-select" name="um" id="um">
-                <?php 
-                $g=$conn->query("SELECT id,nombre,sigla FROM prod_udm  ORDER BY sigla");
-                while($row = $g->fetch_assoc()) { ?>
-                  <option value="<?= $row['id'] ?>">
-                    <?= $row['sigla']?>
-                  </option>
-                <?php } ?>
-              </select>
+            <div class="col-3">
+              <label class="form-label">UDM</label>
+                  <select required class="form-select" name="um" id="um">
+                      <?php 
+                          $g=$conn->query("SELECT id,nombre,sigla FROM prod_udm  ORDER BY sigla");
+                            while($row = $g->fetch_assoc()) { ?>
+                              <option value="<?= $row['id'] ?>">
+                                  <?= $row['sigla']?>
+                              </option>
+                        <?php } ?>
+                  </select>
             </div>
+          
           </div>
 
           <!--Tipo -->
-          <div class="row mb-3">
+        <div class="row mb-3">
             
             <div class="col-4">
               <label class="form-label">Tipo</label>
-           <select class="form-select" required id="tipo" name="tipo">
-                <?php
-                $h=$conn->query("SELECT cod, abreviatura FROM prod_tipo_prod WHERE estado=1 ORDER BY abreviatura");
-                while($row = $h->fetch_assoc()) { ?>
-                  <option value="<?= $row['cod'] ?>"><?= $row['abreviatura'] ?></option>
-                <?php } ?>
-              </select>
+                <select class="form-select" required id="tipo" name="tipo">
+                    <?php
+                      $h=$conn->query("SELECT cod, abreviatura FROM prod_tipo_prod WHERE estado=1 ORDER BY abreviatura");
+                        while($row = $h->fetch_assoc()) { ?>
+                      <option value="<?= $row['cod'] ?>"><?= $row['abreviatura'] ?></option>
+                    <?php } ?>
+                </select>
             </div>
       
-          <div class="col-4">
-              <label class="form-label">Categoria</label>
-              <select name="cate" id="cate" class="form-select">
-                <?php
-                $p=$conn->query("SELECT id_cat,cat_nombre FROM prod_categoria_prod WHERE cat_nombre IS NOT NULL ORDER BY cat_nombre ASC");
-                while($row = $p->fetch_assoc()) { ?>
-                  <option value="<?= $row["id_cat"] ?>"><?= $row["cat_nombre"] ?></option>
-                <?php } ?>
-              </select>
+            <div class="col-4">
+                <label class="form-label">Categoria</label>
+                  <select name="cate" id="cate" class="form-select">
+                    <?php
+                        $p=$conn->query("SELECT id_cat,cat_nombre FROM prod_categoria_prod WHERE cat_nombre IS NOT NULL ORDER BY cat_nombre ASC");
+                        while($row = $p->fetch_assoc()) { ?>
+                          <option value="<?= $row["id_cat"] ?>"><?= $row["cat_nombre"] ?></option>
+                      <?php } ?>
+                  </select>
             </div>
 
           <div class="col-4">
-            <label class="form-label">Nueva categoria</label>
-            <input type="text" class="form-control" name="nuevacate" id="nuevacate" placeholder="Ingrese nueva categoría">
+              <label class="form-label">Nueva categoria</label>
+                    <input type="text" class="form-control" name="nuevacate" id="nuevacate" placeholder="Ingrese nueva categoría">
+                        <div class="invalid-feedback">
+                            Esta categoría ya existe
+                        </div>
           </div>
 
-          </div>
-
-
-          <hr>
+        </div>
+  <hr>
 
 <!-- Unidades -->
           <div class="row mb-3">
@@ -468,8 +471,8 @@ order by p.codigo_prod asc";
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Guardar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
         </div>
       </form>
     </div>
@@ -527,13 +530,13 @@ document.addEventListener("click", function(e) {
   const tipo = button.getAttribute('data-tipo');
   const peso= button.getAttribute('data-peso');
   const envase = button.getAttribute('data-envase');
-const embalaje = button.getAttribute('data-tipo_embalaje');
+  const embalaje = button.getAttribute('data-tipo_embalaje');
   const unds_cjsc = button.getAttribute('data-unds_cjsc');
   const umd = button.getAttribute('data-udm');
   const und_pallet = button.getAttribute('data-und_pallet');
   const estado = button.getAttribute('data-estado');
   const nombre_prod = button.getAttribute('data-nombre_prod');
-const idcat = button.getAttribute('data-idcat');
+  const idcat = button.getAttribute('data-idcat');
 
 
 
@@ -547,13 +550,13 @@ const idcat = button.getAttribute('data-idcat');
   document.getElementById('tipo_emb').value = embalaje;
   document.getElementById('estate').value = parseInt(estado) || "";
   document.getElementById('env').value=envase;
- document.getElementById('um').value=umd;
- document.getElementById('nuevonombreprod').value=nombre_prod;
+  document.getElementById('um').value=umd;
+  document.getElementById('nuevonombreprod').value=nombre_prod;
   document.getElementById('und_pallet').value=und_pallet;
   document.getElementById('undscjsc').value=unds_cjsc;
-document.getElementById('cate').value=idcat;
+  document.getElementById('cate').value=idcat;
 
-console.log("UDM:", umd);
+
 
 });
 
@@ -599,7 +602,7 @@ document.getElementById('formguarda').addEventListener('submit', function(e) {
       // agregar fila a la tabla 
       document.querySelector('#tblcolab tbody').insertAdjacentHTML('afterbegin', `
         <tr>
-        <td>${data.codigo_prod}</td>
+          <td>${data.codigo_prod}</td>
           <td>${data.nombre_completo}</td>
           <td>${data.cat_prod}</td>
           <td>${data.tipo_prod}</td>
@@ -621,7 +624,6 @@ document.getElementById('formguarda').addEventListener('submit', function(e) {
               <i class="bi bi-trash3"></i>
             </button>
           </td>
-         
         </tr>
       `);
 
@@ -682,6 +684,72 @@ Swal.fire({
 </script>
 <?php endif; ?>
 
+
+
+<!---------------VERIFICA DISPONIBILIDAD DE LA CATEGORIA-------------------->
+<script>
+const inputCategoria = document.getElementById('nuevacate');
+
+inputCategoria.addEventListener('keyup', function () {
+
+    const valor = this.value.trim();
+
+    if (valor.length < 2) return; // evita spam
+
+    fetch('verificar_categoria.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'categoria=' + encodeURIComponent(valor)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+     
+if (data.existe) {
+    inputCategoria.classList.add('is-invalid');
+} else {
+    inputCategoria.classList.remove('is-invalid');
+}
+
+    });
+
+});
+</script>
+
+
+<!-----------SCRIPT DE NUEVA CATEGORIA----->
+
+<script>
+const inputNuevaCategoria = document.getElementById('categoria');
+
+inputNuevaCategoria.addEventListener('keyup', function () {
+
+    const valor = this.value.trim();
+
+    if (valor.length < 2) return; // evita muchas consultas
+
+    fetch('verificar_categoria.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'categoria=' + encodeURIComponent(valor)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+     
+if (data.existe) {
+    inputNuevaCategoria.classList.add('is-invalid');
+} else {
+    inputNuevaCategoria.classList.remove('is-invalid');
+}
+    });
+
+});
+</script>
 
 </body>
 </html>
