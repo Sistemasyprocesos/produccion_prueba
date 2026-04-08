@@ -3,9 +3,13 @@ require '../connection/conexion.php';
 
 $id = $_POST['iden'] ?? null;
 $codigo = strtoupper($_POST['cod'] )?? null;
-$nombre = strtoupper($_POST['nombre']) ?? null;
+$nombre = strtoupper($_POST['nuevonombreprod']) ?? null;
+
 $tipo = $_POST['tipo'] ?? null;
-$cat = strtoupper($_POST['cate']) ?? null;
+$cat = $_POST['cate'] ?? null;
+$nuevacate = strtoupper($_POST['nuevacate']) ?? null;
+
+
 
 $peso = $_POST['peso'] ?? null;
 $udm = $_POST['um'] ?? null;
@@ -67,6 +71,29 @@ Swal.fire({
 </html>
 <?php
 exit;
+}
+// SI INGRESA NUEVA CATEGORIA
+if (!empty($nuevacate)) {
+
+    // Verificar si ya existe
+    $check = $conn->prepare("SELECT id_cat FROM prod_categoria_prod WHERE cat_nombre = ?");
+    $check->bind_param("s", $nuevacate);
+    $check->execute();
+    $res = $check->get_result();
+
+    if ($res->num_rows > 0) {
+        // Ya existe → usar ese ID
+        $row = $res->fetch_assoc();
+        $cat = $row['id_cat'];
+    } else {
+        // No existe → insertar
+        $insert = $conn->prepare("INSERT INTO prod_categoria_prod (cat_nombre) VALUES (?)");
+        $insert->bind_param("s", $nuevacate);
+        $insert->execute();
+
+        // Obtener ID insertado
+        $cat = $insert->insert_id;
+    }
 }
 
 $er = $conn->prepare("UPDATE prod_productos SET 

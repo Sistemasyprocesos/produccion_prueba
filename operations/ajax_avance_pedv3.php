@@ -150,7 +150,7 @@ if ($pedido) {
 }
 </style>
 
-</style>
+
     <div class="row mb-3 text-center">
         <div class="col-3 border-end">
             <div class="row"><b>Pedido:</b></div>
@@ -209,9 +209,18 @@ if ($pedido) {
                         <i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> AÑADIR TURNO
                     </button>
                 </div>
+
+                <!---------------BARRA DE PROGRESO---------------------------->
+        <div class="col text-end">
+            <div class="progress mt-2">
+                <div class="progress-bar barra-cumplimiento" style="width: 0%">0%</div>
+            </div>
+        </div>
+<!-------------------------------------------------------------------->
+
             </div>
 
-            <table class="table table-bordered border-dark table-sm table-light table-hover table-striped tablaAvance">
+            <table class="table table-bordered border-dark table-sm table-light table-hover table-striped tablaAvance ">
                 <thead class="table-dark">
                     <tr>
                         <th class="text-center" style="width:70px;">Turno</th>
@@ -337,6 +346,11 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
     </tr>
 </tfoot>
             </table>
+
+
+
+
+
         </div><!-- /fase-bloque -->
 
     <?php endforeach; ?>
@@ -441,7 +455,6 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
     const $btn = $(this);
     const $fila = $btn.closest('tr');
     const $tbody = $fila.closest('tbody');
-
     const id_pedido = $btn.data('id');
     const secuencia = $btn.data('secuencia');
     const turno     = $btn.data('turno');
@@ -537,6 +550,11 @@ function recalcularTotales($tabla) {
     let totalUndsReal = 0;
     let totalObj      = parseFloat($tabla.closest('.fase-bloque').find('.btnAgregarTurno').data('obj-total')) || 0;
 
+
+
+
+
+    
     $tabla.find('tbody tr').each(function () {
       let obj = 0;
 
@@ -573,6 +591,30 @@ if ($inputObj.length) {
     $tfoot.find('.total-real').html('<b>'  + totalKg.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' KG</b>');
     $tfoot.find('.total-dif').html('<b>'   + totalDif.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' KG</b>');
     $tfoot.find('.total-cumpl').html('<b>' + totalCumpl + '</b>');
+
+
+
+    // 🔥 ACTUALIZAR BARRA DE PROGRESO
+const porcentajeNum = totalObj > 0 ? (totalKg / totalObj) * 100 : 0;
+const porcentaje = porcentajeNum.toFixed(1);
+
+// buscar la barra dentro de esta fase
+const $barra = $tabla.closest('.fase-bloque').find('.barra-cumplimiento');
+
+// actualizar visual
+$barra.css('width', porcentaje + '%');
+$barra.text(porcentaje + '%');
+
+// colores dinámicos (opcional pero recomendado)
+$barra.removeClass('bg-success bg-warning bg-danger');
+
+if (porcentajeNum >= 90) {
+    $barra.addClass('bg-success');
+} else if (porcentajeNum >= 50) {
+    $barra.addClass('bg-warning');
+} else {
+    $barra.addClass('bg-danger');
+}
 }
 
 $(document).on('input', '.input-real', function () {

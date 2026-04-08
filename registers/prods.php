@@ -43,7 +43,8 @@
 
 $consulta="select 
 p.nombre as nprod,
-p.cat_prod as cat_prod,
+p.nombre_prod as nombre_prod,
+p.cat_prod,
 p.tipo_prod,
 p.envase,
 p.peso_prod,
@@ -56,7 +57,8 @@ p.und_pallet,
 p.producto_base,
 p.estado,
 p.codigo_prod as codigo_prod,
-
+c.cat_nombre as cat_prod,
+c.id_cat as idcategoria,
 p.id as idprod,
 u.sigla,u.id as ud,
 p.estado as estado,
@@ -67,6 +69,7 @@ inner join prod_envase as e on e.id=p.envase
 inner join prod_envase as en on en.id=p.tipo_embalaje  
 inner join prod_tipo_prod as t on t.cod=p.tipo_prod
 inner join prod_udm as u on p.udm=u.id
+inner join prod_categoria_prod as c on c.id_cat=p.cat_prod
 order by p.codigo_prod asc";
 
 ?>
@@ -139,6 +142,8 @@ order by p.codigo_prod asc";
              data-udm="<?=$row["ud"] ?>"
               data-producto_base="<?= $row["producto_base"] ?>"
               data-estado="<?= $row["estado"] ?>"
+              data-nombre_prod="<?= $row["nombre_prod"] ?>"
+              data-idcat="<?= $row["idcategoria"] ?>"
               ><i class="bi bi-pencil-square"></i></button>
 
               <!-------BOTON ELIMINAR------------->
@@ -178,7 +183,7 @@ order by p.codigo_prod asc";
     <div class="modal-content">
 
      
-<form id="formguarda">
+<form action="../procedimiento/nuevoprod.php" method="POST">
         <div class="modal-header" style="background-color: #198754; color: white;">
           <h5 class="modal-title">Registro de nuevo producto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -202,8 +207,19 @@ order by p.codigo_prod asc";
           </div>
 
           <div class="row mb-3">
-            <div class="col-8">
+            <div class="col-4">
               <label class="form-label">Categoría</label>
+              <select class="form-select" name="categoriaselect">
+                  <option selected></option>
+                <?php  
+                  $x=$conn->query("SELECT id_cat,cat_nombre FROM prod_categoria_prod WHERE cat_nombre IS NOT NULL ORDER BY cat_nombre ASC");
+                  while($row = $x->fetch_assoc()) { ?>
+                    <option value="<?= $row["id_cat"] ?>"><?= $row["cat_nombre"] ?></option>
+                  <?php } ?>
+              </select>
+            </div>
+            <div class="col-4">
+              <label class="form-label">Nueva Categoría</label>
               <input type="text" name="categoria" id="categoria" class="form-control">
             </div>
             <div class="col-4">
@@ -332,16 +348,15 @@ order by p.codigo_prod asc";
               <input type="text" required class="form-control" id="nombre" name="nombr" disabled readonly>
            
           </div>
- <div class="col-8 d-flex align-items-end">
-                <small>El nombre es concatenado, debera indicar abajo solo el nombre del producto (azucar,moringa, etc...)*</small>
-            </div>  
+
 </div>
+
 
   <!-- Categoría / PVP / Peso -->
           <div class="row mb-3">
             <div class="col-3">
               <label class="form-label">Nombre producto</label>
-              <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nombre" required>
+              <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nuevonombreprod" required>
             </div>
             <div class="col-3">
               <label class="form-label">Envase</label>
@@ -374,7 +389,7 @@ order by p.codigo_prod asc";
             </div>
           </div>
 
-          <!-- Nombre / Tipo -->
+          <!--Tipo -->
           <div class="row mb-3">
             
             <div class="col-4">
@@ -387,10 +402,23 @@ order by p.codigo_prod asc";
                 <?php } ?>
               </select>
             </div>
-            <div class="col-4">
-              <label class="form-label">Categoría</label>
-              <input type="text" class="form-control" required name="cate" id="cate">
+      
+          <div class="col-4">
+              <label class="form-label">Categoria</label>
+              <select name="cate" id="cate" class="form-select">
+                <?php
+                $p=$conn->query("SELECT id_cat,cat_nombre FROM prod_categoria_prod WHERE cat_nombre IS NOT NULL ORDER BY cat_nombre ASC");
+                while($row = $p->fetch_assoc()) { ?>
+                  <option value="<?= $row["id_cat"] ?>"><?= $row["cat_nombre"] ?></option>
+                <?php } ?>
+              </select>
             </div>
+
+          <div class="col-4">
+            <label class="form-label">Nueva categoria</label>
+            <input type="text" class="form-control" name="nuevacate" id="nuevacate" placeholder="Ingrese nueva categoría">
+          </div>
+
           </div>
 
 
@@ -504,6 +532,10 @@ const embalaje = button.getAttribute('data-tipo_embalaje');
   const umd = button.getAttribute('data-udm');
   const und_pallet = button.getAttribute('data-und_pallet');
   const estado = button.getAttribute('data-estado');
+  const nombre_prod = button.getAttribute('data-nombre_prod');
+const idcat = button.getAttribute('data-idcat');
+
+
 
 // Pasar info a los inputs del modal
   document.getElementById('iden').value = id;//id de identificacion
@@ -516,9 +548,10 @@ const embalaje = button.getAttribute('data-tipo_embalaje');
   document.getElementById('estate').value = parseInt(estado) || "";
   document.getElementById('env').value=envase;
  document.getElementById('um').value=umd;
+ document.getElementById('nuevonombreprod').value=nombre_prod;
   document.getElementById('und_pallet').value=und_pallet;
   document.getElementById('undscjsc').value=unds_cjsc;
-
+document.getElementById('cate').value=idcat;
 
 console.log("UDM:", umd);
 
@@ -621,6 +654,34 @@ e.preventDefault();
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<?php if (isset($_GET['ok'])): ?>
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Producto guardado',
+  text: 'Se registró correctamente',
+  timer: 1500,
+  showConfirmButton: false
+}).then(() => {
+  window.history.replaceState(null, null, window.location.pathname);
+});
+</script>
+<?php endif; ?>
+
+<?php if (isset($_GET['error'])): ?>
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Error al guardar',
+  text: "<?= htmlspecialchars($_GET['error']) ?>"
+}).then(() => {
+  window.history.replaceState(null, null, window.location.pathname);
+});
+</script>
+<?php endif; ?>
+
 
 </body>
 </html>
