@@ -1,6 +1,133 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
+/* ── Tabla minimalista ── */
+.tablaAvance {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.82rem;
+    border: none !important;
+}
+.tablaAvance thead th {
+    background: transparent;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    border-bottom: 1.5px solid #e5e7eb;
+    padding: 8px 10px;
+}
+.tablaAvance tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.15s;
+}
+.tablaAvance tbody tr:hover {
+    background-color: #f9fafb;
+}
+.tablaAvance tbody tr.table-warning {
+    background-color: #fffbeb !important;
+}
+.tablaAvance tbody tr.table-warning:hover {
+    background-color: #fef3c7 !important;
+}
+.tablaAvance tbody td {
+    border: none;
+    padding: 7px 10px;
+    vertical-align: middle;
+    color: #374151;
+}
+.tablaAvance tfoot tr {
+    border-top: 1.5px solid #e5e7eb;
+    background: #f9fafb !important;
+}
+.tablaAvance tfoot td {
+    border: none;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    color: #374151;
+}
+
+/* ── Inputs dentro de la tabla ── */
+.tablaAvance .form-control,
+.tablaAvance .form-select {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    height: 32px;
+    background: white;
+    color: #374151;
+    box-shadow: none;
+     appearance: auto;
+    -webkit-appearance: auto;
+}
+.tablaAvance .form-control:focus,
+.tablaAvance .form-select:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(147,197,253,0.2);
+    outline: none;
+}
+
+/* ── Fase bloque ── */
+.fase-bloque {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Badge de fase ── */
+.fase-bloque .badge.bg-primary {
+    background: #eff6ff !important;
+    color: #1727cf !important;
+    font-size: 0.90rem !important;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 4px 10px;
+    border: 1px solid #24c379;
+}
+
+/* ── Botón añadir turno ── */
+.btnAgregarTurno {
+    font-size: 0.78rem; 
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+    font-weight: 500;
+}
+.btnAgregarTurno:hover {
+    background: #dcfce7;
+    border-color: #86efac;
+    color: #185f32;
+}
+
+/* ── Botón eliminar ── */
+.btnEliminarFila {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+}
+
+/* ── Progress bar ── */
+.progress {
+    height: 12px;
+    border-radius: 99px;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+.barra-cumplimiento {
+    border-radius: 99px;
+    transition: width 0.4s ease, background-color 0.4s ease;
+    font-size: 0;
+}
+
+
+
 .encabezado-pedido {
     position: sticky;
     top: 0;
@@ -22,6 +149,22 @@
 .encabezado-pedido.compacto .detalle-pedido { font-size: 0.70rem; }
 .encabezado-pedido.compacto .detalle-pedido b { font-size: 0.72rem; }
 .encabezado-pedido.compacto .row { margin-bottom: 0 !important; }
+
+
+.progress {
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.barra-cumplimiento {
+    transition: width 0.4s ease, background-color 0.4s ease;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    min-width: 36px;
+}
+
 </style>
 
 <?php
@@ -140,13 +283,14 @@ if ($pedido) {
 
 <style>
 .pedido-box {
-    background: #5593d2;
-    border-radius: 20px;
-    padding: 6px 15px;
-    color: white;
-    font-weight: bold;
-    letter-spacing: 1px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 5px 14px;
+    color: #1d4ed8;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
 }
 </style>
 
@@ -206,7 +350,7 @@ if ($pedido) {
                         data-udm="<?= htmlspecialchars($fase['udm']) ?>"
                         data-eq="<?= $fase['eq_kg_fase'] ?>"
                         data-obj-total="<?= $kilos ?>">
-                        <i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> AÑADIR TURNO
+                        <i class="fa-solid fa-square-plus" style="color: rgb(41, 132, 180);"></i> AÑADIR TURNO
                     </button>
                 </div>
 
@@ -220,8 +364,8 @@ if ($pedido) {
 
             </div>
 
-            <table class="table table-bordered border-dark table-sm table-light table-hover table-striped tablaAvance ">
-                <thead class="table-dark">
+            <table class=" tablaAvance ">
+                <thead >
                     <tr>
                         <th class="text-center" style="width:70px;">Turno</th>
                         <th>Fecha</th>
@@ -286,6 +430,7 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                             </select>
                         </td>
 
+            <!---------# COLABORADORES----------------->
                         <td style="width:80px;">
                             <input type="number" class="form-control" min="0" step="1"
                                 name="hc[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
@@ -293,17 +438,22 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                                 onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)">
                         </td>
 
+
+            <!---------# UNDS ESTANDAR----------------->
                         <td class="text-center align-middle td-unds">
                             <?= $fase['std'].' '.$fase['sigenv'].' '.$peso.' '.$fase['udm'] ?>
                         </td>
 
+            <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
                        <td class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-                        <?= number_format($obj_mostrar, 2).' KG ('.number_format($cant_obj_prod, 2).' '.$fase['sigenv'].')' ?>
+                        <?= number_format($obj_mostrar, 2).' KG ' ?>
                         </td>
 
+            
+            <!---------UNIDADES PRODUCIDAS----------------->
                         <td>
-                            <input type="number" step="0.01" min="0"
+                            <input type="number" step="0.01" min="0" 
                                 class="form-control form-control-sm input-real"
                                 value="<?= htmlspecialchars($val_kg) ?>"
                                 name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
@@ -313,10 +463,12 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                         <input type="hidden" name="peso[<?= $fase['secuencia'] ?>][<?= $turno ?>]" value="<?= $fase['peso_env'] ?>">
                         <input type="hidden" name="eq[<?= $fase['secuencia'] ?>][<?= $turno ?>]"   value="<?= $fase['eq_kg_fase'] ?>">
 
+            <!---------KG REALES, DIFERENCIA, CUMPLIMIENTO----------------->
                         <td class="text-center align-middle td-kg"></td>
                         <td class="text-center align-middle td-dif"></td>
                         <td class="text-center align-middle td-cumpl"></td>
                         
+            <!---------BOTON ELIMINAR----------------->
                         <td class="text-center align-middle">
                         <?php if ($turno == $turnosFase || $turno > $turnosFase): ?>
                             <button type="button" 
@@ -333,7 +485,7 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                     <?php endfor; ?>
                 </tbody>
 
-                <tfoot class="table-primary table-bordered">
+                <tfoot >
     <tr>
         <td colspan="4" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
         <td></td>
@@ -594,27 +746,37 @@ if ($inputObj.length) {
 
 
 
-    // 🔥 ACTUALIZAR BARRA DE PROGRESO
+// 🌈 ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
 const porcentajeNum = totalObj > 0 ? (totalKg / totalObj) * 100 : 0;
-const porcentaje = porcentajeNum.toFixed(1);
+const porcentaje = Math.min(porcentajeNum, 100).toFixed(1);
 
-// buscar la barra dentro de esta fase
 const $barra = $tabla.closest('.fase-bloque').find('.barra-cumplimiento');
 
-// actualizar visual
-$barra.css('width', porcentaje + '%');
-$barra.text(porcentaje + '%');
-
-// colores dinámicos (opcional pero recomendado)
-$barra.removeClass('bg-success bg-warning bg-danger');
-
-if (porcentajeNum >= 90) {
-    $barra.addClass('bg-success');
-} else if (porcentajeNum >= 50) {
-    $barra.addClass('bg-warning');
+// Calcular color interpolado rojo → amarillo → verde
+const t = Math.min(porcentajeNum / 100, 1); // 0 a 1
+let r, g, b;
+if (t < 0.5) {
+    // Rojo → Amarillo (0% a 50%)
+    r = 220;
+    g = Math.round(t * 2 * 180);
+    b = 0;
 } else {
-    $barra.addClass('bg-danger');
+    // Amarillo → Verde (50% a 100%)
+    r = Math.round((1 - (t - 0.5) * 2) * 180);
+    g = 160 + Math.round((t - 0.5) * 2 * 40);
+    b = 0;
 }
+
+const color = `rgb(${r}, ${g}, ${b})`;
+
+$barra
+    .removeClass('bg-success bg-warning bg-danger')
+    .css({
+        'width': porcentaje + '%',
+        'background-color': color,
+        'background-image': 'none'
+    })
+    .text(porcentaje + '%');
 }
 
 $(document).on('input', '.input-real', function () {
