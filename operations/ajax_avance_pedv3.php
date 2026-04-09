@@ -20,11 +20,12 @@
     padding: 8px 10px;
 }
 .tablaAvance tbody tr {
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid #d1d1d2;  /* ya la tienes */
+    transition: background 0.15s;
     transition: background 0.15s;
 }
 .tablaAvance tbody tr:hover {
-    background-color: #f9fafb;
+    background-color: #b6b6b64e;
 }
 .tablaAvance tbody tr.table-warning {
     background-color: #fffbeb !important;
@@ -36,7 +37,7 @@
     border: none;
     padding: 7px 10px;
     vertical-align: middle;
-    color: #374151;
+    color: #070b11;
 }
 .tablaAvance tfoot tr {
     border-top: 1.5px solid #e5e7eb;
@@ -254,7 +255,7 @@ while ($row = $result->fetch_assoc()) {
 
 if ($pedido) {
     $fecha_registro = $pedido['fecha_registro'];
-    $fecha_entrega  = date('d/m/Y', strtotime($pedido['fecha_entrega']));
+    $fecha_entrega  = date('Y/m/d', strtotime($pedido['fecha_entrega']));
 
 
 

@@ -152,7 +152,7 @@ $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
                     <!-----------DATOS EN LA TABLA----------------------->
                 </td>
                 <td><?=$g['cliente'] ?></td>
-                <td><?=date('d/m/Y', strtotime($g['fecha_entrega'])) ?></td>
+                <td><?=date('Y/m/d', strtotime($g['fecha_entrega'])) ?></td>
                 <td><?=$g['cantidad'].' '.$g['sigla_pedido']. ' ('.$pedido.' KG)' ?></td>
                 <td><?=$g['producto']?></td>
 

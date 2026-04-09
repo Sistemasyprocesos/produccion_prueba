@@ -210,7 +210,7 @@ $consulta="select
           <div class="row mb-3">
             <div class="col-4">
               <label class="form-label">Categoría</label>
-              <select class="form-select" name="categoriaselect">
+              <select class="form-select" required name="categoriaselect">
                   <option selected></option>
                 <?php  
                   $x=$conn->query("SELECT id_cat,cat_nombre FROM prod_categoria_prod WHERE cat_nombre IS NOT NULL ORDER BY cat_nombre ASC");
@@ -219,14 +219,14 @@ $consulta="select
                   <?php } ?>
               </select>
             </div>
-            <div class="col-4">
-              <label class="form-label">Nueva Categoría</label>
-              <input type="text" name="categoria" id="categoria" class="form-control">
+           
+             
+              <input type="hidden" name="categoria" id="categoria" class="form-control">
                     <div class="invalid-feedback">
                         Esta categoría ya existe
                     </div>
            
-            </div>
+          
             <div class="col-4">
               <label class="form-label">Tipo</label>
               <select class="form-select" name="tipoprod" id="tipoprod">
@@ -416,13 +416,13 @@ $consulta="select
                   </select>
             </div>
 
-          <div class="col-4">
-              <label class="form-label">Nueva categoria</label>
-                    <input type="text" class="form-control" name="nuevacate" id="nuevacate" placeholder="Ingrese nueva categoría">
+          
+             
+                    <input type="hidden" class="form-control" name="nuevacate" id="nuevacate" placeholder="Ingrese nueva categoría">
                         <div class="invalid-feedback">
                             Esta categoría ya existe
                         </div>
-          </div>
+        
 
         </div>
   <hr>

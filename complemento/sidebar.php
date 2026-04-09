@@ -2,7 +2,7 @@
 <?php
 require_once __DIR__ . '/../complemento/config.php';
 ?>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <nav class="navbar navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="<?= BASE_URL ?>index.php">
@@ -27,13 +27,17 @@ require_once __DIR__ . '/../complemento/config.php';
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Configuracion </a>
               <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/clts.php"><i class="bi bi-people"></i> Clientes</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/prods.php"><i class="bi bi-box"></i> Productos</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/act.php"><i class="bi bi-list-task"></i> Actividades de Produccion</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/area.php"><i class="bi bi-list-task"></i> Areas de produccion</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/env.php"><i class="bi bi-bag"></i> Envases</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/udm.php"><i class="bi bi-speedometer2"></i> Unidades de Medida</a></li>
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/fases.php"><i class="bi bi-layout-wtf"></i> Fases de Produccion</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/clts.php"><i class="fa-solid fa-user-tie" style="color: rgb(243, 234, 234);"></i> Clientes</a></li>
+                
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/prods.php"><i class="fa-solid fa-box-open" style="color: rgb(243, 234, 234);"></i> Productos</a></li>
+                
+                  <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/categorias.php"><i class="fa-solid fa-table-list" style="color: rgb(243, 234, 234);"></i> Categorias</a></li>
+                
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/act.php"><i class="fa-solid fa-list" style="color: rgb(243, 234, 234);"></i> Actividades de Produccion</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/area.php"><i class="fa-solid fa-location-dot" style="color: rgb(243, 234, 234);"></i> Areas de produccion</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/env.php"><i class="fa-solid fa-bag-shopping" style="color: rgb(243, 234, 234);"></i> Envases</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/udm.php"><i class="fa-solid fa-scale-unbalanced" style="color: rgb(243, 234, 234);"></i> Unidades de Medida</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/fases.php"><i class="fa-solid fa-diagram-project" style="color: rgb(243, 234, 234);"></i> Fases de Produccion</a></li>
               </ul>
           </li>
 
