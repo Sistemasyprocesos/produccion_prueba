@@ -20,18 +20,28 @@ foreach ($real as $secuencia => $turnos) {
 
     foreach ($turnos as $turno => $valor) {
 
-        $unidades = floatval($valor);
+     $unidades = floatval($valor);
+$f_check = $fecha[$secuencia][$turno] ?? '';
+$j_check = $jornada[$secuencia][$turno] ?? '';
+$h_check = $hc[$secuencia][$turno] ?? '';
+$obj_check = $obj[$secuencia][$turno] ?? 0;
 
-        // Ignorar filas vacías
-        if ($unidades <= 0) continue;
+if (
+    $unidades <= 0 &&
+    empty($f_check) &&
+    empty($j_check) &&
+    intval($h_check) <= 0 &&
+    floatval($obj_check) <= 0
+) continue;
 
-        $f = $fecha[$secuencia][$turno] ?? null;
-        $j = $jornada[$secuencia][$turno] ?? null;
-        $h = $hc[$secuencia][$turno] ?? 0;
-        $p = $peso[$secuencia][$turno] ?? 0;
-        $e = $eq[$secuencia][$turno] ?? 1;
-        $obj_kg = $obj[$secuencia][$turno] ?? 0;
-        $kg_real = $unidades * $p * $e;
+
+$f = !empty($fecha[$secuencia][$turno]) ? $fecha[$secuencia][$turno] : null;
+$j = !empty($jornada[$secuencia][$turno]) ? $jornada[$secuencia][$turno] : null;
+$h = intval($hc[$secuencia][$turno] ?? 0);
+$p = floatval($peso[$secuencia][$turno] ?? 0);
+$e = floatval($eq[$secuencia][$turno] ?? 1);
+$obj_kg = floatval($obj[$secuencia][$turno] ?? 0);
+$kg_real = $unidades * $p * $e;
 
         try {
 

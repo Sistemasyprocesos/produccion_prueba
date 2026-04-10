@@ -1,6 +1,12 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
+
+.total-obj {
+    display: none;
+}
+
+
 /* ── Tabla minimalista ── */
 .tablaAvance {
     border-collapse: collapse;
@@ -488,7 +494,7 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 
                 <tfoot >
     <tr>
-        <td colspan="4" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
+        <td colspan="5" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
         <td></td>
         <td class="text-center align-middle total-obj"></td>
         <td class="text-center align-middle total-unds"></td>
