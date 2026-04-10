@@ -453,9 +453,20 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 
             <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
-                       <td class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-                        <?= number_format($obj_mostrar, 2).' KG ' ?>
-                        </td>
+                     <td>
+<?php if ($turno > $turnosFase || ($val_obj !== null && $val_obj !== '')): ?>
+    <!-- ✅ INPUT EDITABLE -->
+    <input type="number" step="0.01" min="0"
+        class="form-control form-control-sm input-obj"
+        name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
+        value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
+<?php else: ?>
+    <!-- ✅ TEXTO NORMAL -->
+    <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
+        <?= number_format($obj_mostrar, 2).' KG' ?>
+    </div>
+<?php endif; ?>
+</td>
 
             
             <!---------UNIDADES PRODUCIDAS----------------->
