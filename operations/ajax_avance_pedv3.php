@@ -453,20 +453,9 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 
             <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
-                     <td>
-<?php if ($turno > $turnosFase || ($val_obj !== null && $val_obj !== '')): ?>
-    <!-- ✅ INPUT EDITABLE -->
-    <input type="number" step="0.01" min="0"
-        class="form-control form-control-sm input-obj"
-        name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
-        value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
-<?php else: ?>
-    <!-- ✅ TEXTO NORMAL -->
-    <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-        <?= number_format($obj_mostrar, 2).' KG' ?>
-    </div>
-<?php endif; ?>
-</td>
+                       <td class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
+                        <?= number_format($obj_mostrar, 2).' KG ' ?>
+                        </td>
 
             
             <!---------UNIDADES PRODUCIDAS----------------->
@@ -764,7 +753,7 @@ if ($inputObj.length) {
 
 
 
-// 🌈 ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
+//ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
 const porcentajeNum = totalObj > 0 ? (totalKg / totalObj) * 100 : 0;
 const porcentaje = Math.min(porcentajeNum, 100).toFixed(1);
 
@@ -817,3 +806,52 @@ document.addEventListener("shown.bs.modal", function () {
     });
 });
 </script>
+
+
+<!---------SCRIPT DE VALIDACION DE LA FECHA-------------->
+
+<script>
+
+    /***Bloquear escritura manual COMPLETAMENTE    */
+$(document).on('keydown paste', 'input[type="date"]', function (e) {
+    e.preventDefault();
+});
+
+
+/***Forzar uso del picker (calendario) */
+$(document).on('focus', 'input[type="date"]', function () {
+    this.showPicker && this.showPicker();
+});
+
+
+$(document).on('change', 'input[type="date"]', function () {
+    const $input    = $(this);
+    const $tbody    = $input.closest('tbody');
+    const $filas    = $tbody.find('tr');
+    const $fila     = $input.closest('tr');
+    const idx       = $filas.index($fila);
+
+    const fechaActual = $input.val();
+    if (!fechaActual) return;
+
+    //VALIDAR CONTRA EL ANTERIOR
+    if (idx > 0) {
+        const fechaAnterior = $filas.eq(idx - 1).find('input[type="date"]').val();
+        if (fechaAnterior && fechaActual < fechaAnterior) {
+            $input.val('');
+            Swal.fire('Fecha inválida', 'No puede ser menor al turno anterior', 'warning');
+            return;
+        }
+    }
+
+    //ACTUALIZAR SIGUIENTES
+    $filas.slice(idx + 1).each(function () {
+        const $sig = $(this).find('input[type="date"]');
+        $sig.attr('min', fechaActual);
+
+        if ($sig.val() && $sig.val() < fechaActual) {
+            $sig.val('');
+        }
+    });
+});
+    </script>
