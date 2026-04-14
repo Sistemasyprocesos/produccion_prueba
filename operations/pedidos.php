@@ -627,7 +627,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const table = document.getElementById("tblcolab");
   const tbody = table.querySelector("tbody");
   const allRows = Array.from(tbody.querySelectorAll("tr"));
-
   const pagination = document.getElementById("pagination");
   const buscador = document.getElementById("Buscador");
   const selectEstado = document.getElementById("selectestado");
@@ -643,10 +642,8 @@ document.addEventListener("DOMContentLoaded", function () {
     filteredRows = allRows.filter(row => {
 
       let coincideTexto = row.textContent.toLowerCase().includes(texto);
-
       let coincideEstado = true;
-
-let estadoFila = row.dataset.estado;
+      let estadoFila = row.dataset.estado;
 
 if(estado === "1"){
   coincideEstado = (estadoFila === "ACTIVO");
@@ -684,7 +681,7 @@ else if(estado === "2"){
       row.classList.remove("fade-out");
       row.classList.add("fila-animada");
 
-      // delay progresivo 👇 (efecto cascada)
+      // delay progresivo (efecto cascada)
       row.style.animationDelay = (index * 0.02) + "s";
 
       tbody.appendChild(row);

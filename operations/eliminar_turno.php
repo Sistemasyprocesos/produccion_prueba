@@ -1,21 +1,22 @@
 <?php
 include '../connection/conexion.php';
 
-$id_pedido  = intval($_POST['id_pedido']);
-$secuencia  = intval($_POST['secuencia']);
-$turno      = intval($_POST['turno']);
+$id_pedido = intval($_POST['id_pedido']);
+$secuencia = intval($_POST['secuencia']);
+$turno     = intval($_POST['turno']);
 
+// 1. Eliminar avance real si existe
 $stmt = $conn->prepare("DELETE FROM prod_avance_pedido 
-                         WHERE id_pedido = ? AND secuencia = ? AND turno = ?");
+                         WHERE id_pedido=? AND secuencia=? AND turno=?");
 $stmt->bind_param("iii", $id_pedido, $secuencia, $turno);
+$stmt->execute();
 
-if ($stmt->execute()) {
-    echo json_encode(['ok' => true]);
-} else {
-    http_response_code(500);
-    echo json_encode(['ok' => false]);
-}
+// 2. Marcar turno como eliminado
+$stmt2 = $conn->prepare("
+    INSERT IGNORE INTO prod_avance_turnos_eliminados (id_pedido, secuencia, turno)
+    VALUES (?, ?, ?)
+");
+$stmt2->bind_param("iii", $id_pedido, $secuencia, $turno);
+$stmt2->execute();
 
-$stmt->close();
-$conn->close();
-?>
+echo json_encode(['ok' => true]);
