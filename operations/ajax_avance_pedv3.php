@@ -804,6 +804,8 @@ if ($inputObj.length) {
 
 //ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
 const porcentajeNum = totalObj > 0 ? (totalKg / totalObj) * 100 : 0;
+const porcentajeVisual = Math.min(porcentajeNum, 100);
+const porcentajeTexto = porcentajeNum.toFixed(1);
 const porcentaje = Math.min(porcentajeNum, 100).toFixed(1);
 
 const $barra = $tabla.closest('.fase-bloque').find('.barra-cumplimiento');
@@ -825,14 +827,17 @@ if (t < 0.5) {
 
 const color = `rgb(${r}, ${g}, ${b})`;
 
+
+// PERMITE VER EL PORCENTAJE REAL SI SE EXCEDE EL 100% (ej: 120% se muestra en barra completa pero con texto "120%")
+
 $barra
     .removeClass('bg-success bg-warning bg-danger')
     .css({
-        'width': porcentaje + '%',
+        'width': porcentajeVisual + '%',
         'background-color': color,
         'background-image': 'none'
     })
-    .text(porcentaje + '%');
+    .text(porcentajeTexto + '%');
 }
 
 $(document).on('input', '.input-real', function () {
