@@ -34,7 +34,24 @@
 }
 
 
+.listado-scroll {
+  max-height: 350px;   /* puedes ajustar */
+  overflow-y: auto;
+}
 
+/* Scroll más bonito (opcional) */
+.listado-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.listado-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.listado-scroll::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
 </style>
 
 </head>
@@ -74,37 +91,36 @@ $total_alertas = $alertas->num_rows;
 ?>
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1 class="mt-1"><i class="fa-solid fa-industry" style="color: rgb(0, 0, 0);"></i> Pedidos</h1>
-    <div class="row justify-content-center">
-      <!----------------------------->
-      <!------------------------>
-      <div class="container mt-1">
+  <h1 class="mt-1"><i class="fa-solid fa-arrow-down-wide-short" style="color: rgb(0, 0, 0);"></i> Pedidos</h1>
+  <div class="row mt-1 gx-0">
 
+  
+  <!-- IZQUIERDA -->
+<div class="col-md-2 pe-3 border-end">
 
-<div class="row mb-4">
-
-  <!-- KPI -->
-  <div class="col-md-3">
-    <div class="card shadow border-0 rounded-4 bg-danger text-white">
+    <!-- KPI -->
+    <div class="card shadow border-0 rounded-4 bg-danger text-white text-center mb-3">
       <div class="card-body">
-        <h6><i class="fa-solid fa-triangle-exclamation"></i> Pedidos próximos a vencer</h6>
+        <h6>
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Pedidos con entrega próxima a vencer
+        </h6>
         <h2><?= $total_alertas ?></h2>
-        <small>Pedidos con fecha de entrega proxima a vencer</small>
       </div>
     </div>
-  </div>
 
-  <!-- LISTADO -->
-  <div class="col-md-9">
+    <!-- LISTADO -->
     <div class="card shadow-sm rounded-4">
       <div class="card-header bg-light">
-        <strong>🚨 Órdenes próximas a vencer</strong>
+        <strong>
+          <i class="fa-solid fa-calendar-xmark"></i>
+          Órdenes próximas a vencer
+        </strong>
       </div>
 
-      <div class="card-body" style="max-height: 200px; overflow-y:auto;">
-        
+<div class="card-body p-2 listado-scroll">        
         <?php if($total_alertas == 0){ ?>
-          <div class="text-success">✔ No hay pedidos en riesgo</div>
+          <div class="text-success">✔ No hay pedidos con fecha de entrega próxima a vencer</div>
         <?php } ?>
 
         <?php while($a = $alertas->fetch_assoc()){ ?>
@@ -112,16 +128,16 @@ $total_alertas = $alertas->num_rows;
           <div class="mb-3 border-bottom pb-2">
 
             <div class="d-flex justify-content-between">
-              <strong>#<?= $a['num_pedido'] ?> - <?= $a['cliente'] ?></strong>
+              <small><?= $a['num_pedido'] ?> <br> <?= $a['cliente'] ?></small>
               <span class="text-danger">
                 <?= date('Y/m/d', strtotime($a['fecha_entrega'])) ?>
               </span>
             </div>
 
-           <div class="progress mt-2" style="height:8px;"
-     data-porcentaje="<?= $a['cumplimiento'] ?>">
+            <div class="progress mt-2" style="height:12px;"
+              data-porcentaje="<?= $a['cumplimiento'] ?>">
               <div class="progress-bar bg-danger"
-                   style="width: <?= min(100,$a['cumplimiento']) ?>%">
+                style="width: <?= min(100,$a['cumplimiento']) ?>%">
               </div>
             </div>
 
@@ -135,35 +151,63 @@ $total_alertas = $alertas->num_rows;
 
       </div>
     </div>
+
   </div>
 
-</div>
+  <!-- DIVISOR -->
 
 
+  <!-- DERECHA -->
+ <!-- DERECHA -->
+<div class="col-md-10 ps-3">
 
+    <!-- CONTROLES -->
+    <div class="row g-3 mb-4">
 
-          <div class="row mb-3">
-            <div class="col-4">
-              <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar pedido (fecha,pedido,producto,cliente)...">
-            </div>
-            <div class="col-2">
-              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Nuevo Pedido</button>
-            </div>
-
-           
-              <div class="col-2">
-              <label class="form-label">Estado del pedido:</label>
-              </div>
-              <div class=" col-2">
-              <select class="form-select" id="selectestado">
-                <option selected>TODAS</option>
-                <option value="1">ACTIVAS</option>
-                <option value="2">COMPLETAS</option>
-              </select>
-            </div>
+      <!-- BUSCADOR -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+          <div class="card-body">
+            <label class="form-label fw-semibold">
+              <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            </label>
+            <input type="text" id="Buscador" class="form-control"
+              placeholder="Fecha, pedido, producto, cliente...">
           </div>
+        </div>
+      </div>
 
-        <table class="table mt-2 table-sm" id="tblcolab">
+      <!-- NUEVO PEDIDO -->
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0 rounded-4 h-100 d-flex justify-content-center">
+          <div class="card-body text-center">
+            <button class="btn btn-success  rounded-3"
+              data-bs-toggle="modal" data-bs-target="#modalnuevo">
+              <i class="fa-solid fa-square-plus"></i>
+              Nuevo Pedido
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTRO -->
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+          <div class="card-body">
+            <label class="form-label fw-semibold">
+              <i class="fa-solid fa-filter"></i> Estado
+            </label>
+            <select class="form-select" id="selectestado">
+              <option selected>TODAS</option>
+              <option value="1">ACTIVAS</option>
+              <option value="2">COMPLETAS</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+        <table class="table mt-2 table-sm table-hover" id="tblcolab">
           <thead class="table-dark">
             <tr>
               <th data-col="1">PEDIDO</th>
@@ -273,7 +317,7 @@ $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
                     <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
                   </button>
                 </td>
-                <td style=" width: 400px;">
+                <td style=" width: 150px;">
                   <div class="d-flex align-items-center gap-2">
 
 
