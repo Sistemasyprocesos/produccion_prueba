@@ -45,7 +45,33 @@
   include '../connection/conexion.php';
 
 ?>
+<?php
+$alertas = $conn->query("
+SELECT 
+  p.id_pedido,
+  p.num_pedido,
+  c.razon_social AS cliente,
+  p.fecha_entrega,
+  ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100 ,2) as cumplimiento
 
+FROM prod_pedidos p
+INNER JOIN prod_clientes c ON c.id = p.id_cliente
+inner join prod_productos as pr on pr.id=p.producto
+LEFT JOIN prod_avance_pedido a ON a.id_pedido = p.id_pedido
+  AND a.secuencia = (
+                    SELECT MAX(secuencia)
+                    FROM prod_fases_prod
+                    WHERE producto = pr.id
+                )
+WHERE p.estado = 1
+AND DATEDIFF(p.fecha_entrega, CURDATE()) <= 3
+
+GROUP BY p.id_pedido
+ORDER BY p.fecha_entrega ASC
+");
+
+$total_alertas = $alertas->num_rows;
+?>
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
   <h1 class="mt-1"><i class="fa-solid fa-industry" style="color: rgb(0, 0, 0);"></i> Pedidos</h1>
@@ -53,6 +79,69 @@
       <!----------------------------->
       <!------------------------>
       <div class="container mt-1">
+
+
+<div class="row mb-4">
+
+  <!-- KPI -->
+  <div class="col-md-3">
+    <div class="card shadow border-0 rounded-4 bg-danger text-white">
+      <div class="card-body">
+        <h6><i class="fa-solid fa-triangle-exclamation"></i> Pedidos próximos a vencer</h6>
+        <h2><?= $total_alertas ?></h2>
+        <small>Pedidos con fecha de entrega proxima a vencer</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTADO -->
+  <div class="col-md-9">
+    <div class="card shadow-sm rounded-4">
+      <div class="card-header bg-light">
+        <strong>🚨 Órdenes próximas a vencer</strong>
+      </div>
+
+      <div class="card-body" style="max-height: 200px; overflow-y:auto;">
+        
+        <?php if($total_alertas == 0){ ?>
+          <div class="text-success">✔ No hay pedidos en riesgo</div>
+        <?php } ?>
+
+        <?php while($a = $alertas->fetch_assoc()){ ?>
+
+          <div class="mb-3 border-bottom pb-2">
+
+            <div class="d-flex justify-content-between">
+              <strong>#<?= $a['num_pedido'] ?> - <?= $a['cliente'] ?></strong>
+              <span class="text-danger">
+                <?= date('Y/m/d', strtotime($a['fecha_entrega'])) ?>
+              </span>
+            </div>
+
+           <div class="progress mt-2" style="height:8px;"
+     data-porcentaje="<?= $a['cumplimiento'] ?>">
+              <div class="progress-bar bg-danger"
+                   style="width: <?= min(100,$a['cumplimiento']) ?>%">
+              </div>
+            </div>
+
+            <small class="text-muted">
+              Avance: <?= $a['cumplimiento'] ?>%
+            </small>
+
+          </div>
+
+        <?php } ?>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
           <div class="row mb-3">
             <div class="col-4">
               <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar pedido (fecha,pedido,producto,cliente)...">
@@ -138,7 +227,7 @@
 
 $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
               ?> 
-              <tr data-estado="<?= $g['estado'] ?>">
+              <tr data-estado="<?= $g['estado'] ?>" class="<?= (strtotime($g['fecha_entrega']) - time()) < (3*86400) ? 'table-danger' : '' ?>">
                 <td>
                   <?=$g['num_pedido'] ?>
                     <button 
