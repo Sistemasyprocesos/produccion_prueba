@@ -96,12 +96,12 @@ $total_alertas = $alertas->num_rows;
 
   
   <!-- IZQUIERDA -->
-<div class="col-md-2 pe-3 border-end">
+<div class="col-md-3 col-lg-2 pe-1 border-end">
 
     <!-- KPI -->
     <div class="card shadow border-0 rounded-4 bg-danger text-white text-center mb-3">
-      <div class="card-body">
-        <h6>
+    <div class="card-body p-2">
+        <h6 class="mb-1">
           <i class="fa-solid fa-triangle-exclamation"></i>
           Pedidos con entrega próxima a vencer
         </h6>
@@ -125,7 +125,7 @@ $total_alertas = $alertas->num_rows;
 
         <?php while($a = $alertas->fetch_assoc()){ ?>
 
-          <div class="mb-3 border-bottom pb-2">
+          <div class="mb-2 pb-1 border-bottom">
 
             <div class="d-flex justify-content-between">
               <small><?= $a['num_pedido'] ?> <br> <?= $a['cliente'] ?></small>
@@ -134,7 +134,7 @@ $total_alertas = $alertas->num_rows;
               </span>
             </div>
 
-            <div class="progress mt-2" style="height:12px;"
+            <div class="progress mt-1" style="height:12px;"
               data-porcentaje="<?= $a['cumplimiento'] ?>">
               <div class="progress-bar bg-danger"
                 style="width: <?= min(100,$a['cumplimiento']) ?>%">
@@ -162,7 +162,7 @@ $total_alertas = $alertas->num_rows;
 <div class="col-md-10 ps-3">
 
     <!-- CONTROLES -->
-    <div class="row g-3 mb-4">
+    <div class="row g-2 mb-2">
 
       <!-- BUSCADOR -->
       <div class="col-md-6">
@@ -236,6 +236,7 @@ $total_alertas = $alertas->num_rows;
                 p.num_pedido,
                 u_prod.equivalente_kg as equi,
                 e.nom as estado,
+                p.est_ped as estadoped,
                 c.razon_social as cliente,
                 pr.nombre as producto,
                 ev.abreviatura as envase,
@@ -269,9 +270,9 @@ $total_alertas = $alertas->num_rows;
           
             while($g=$f->fetch_assoc()){
 
-$pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
+      $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
               ?> 
-              <tr data-estado="<?= $g['estado'] ?>" class="<?= (strtotime($g['fecha_entrega']) - time()) < (3*86400) ? 'table-danger' : '' ?>">
+             <tr data-estado="<?= $g['estado'] ?>" class="<?= ((strtotime($g['fecha_entrega']) - time()) < (3*86400) && $g['estado'] == 'ACTIVO') ? 'table-danger' : '' ?>">
                 <td>
                   <?=$g['num_pedido'] ?>
                     <button 
@@ -316,9 +317,16 @@ $pedido = number_format(($g['cantidad'] * $g['peso']) * $g['equi'], 2);
                   <button class="btn btn-sm btn-danger btn-elim" data-identificacion="<?=$g['id_pedido']?>">
                     <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
                   </button>
+
+                  <!-------------------------------------------------------------------->
+
+            <button class="btn btn-sm btn-danger btn-cerrar" data-ident="<?=$g['id_pedido']?>"><i class="fa-solid fa-rectangle-xmark" style="color: rgb(255, 255, 255);"></i></button>
+
+
                 </td>
                 <td style=" width: 150px;">
                   <div class="d-flex align-items-center gap-2">
+
 
 
               <!-----------BARRA DE PROGRESO----------------------------->
@@ -663,6 +671,34 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 
 </script>
 
+
+
+<script>
+  document.querySelectorAll('.btn-cerrar').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+      const id = this.getAttribute('data-ident');
+
+      Swal.fire({
+        title: "Cerrar pedido",
+        text: "Va a cerrar este pedido, esto ya no se podrá revertir. ¿Desea continuar?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Si, cerrar pedido",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirigir al PHP que elimina
+            window.location.href = "../procedimiento/closeped.php?id=" + id;
+      }
+    });
+
+  });
+});
+
+</script>
 
 <!------CALCULO AUTOMATICO DE UDM----------------------------------->
 

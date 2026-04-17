@@ -197,22 +197,6 @@ while ($r = $res->fetch_assoc()) {
     ];
 }
 
-
-// Cargar turnos eliminados
-$eliminados = [];
-$qe = "SELECT secuencia, turno 
-       FROM prod_avance_turnos_eliminados 
-       WHERE id_pedido = ?";
-$se = $conn->prepare($qe);
-$se->bind_param("i", $id);
-$se->execute();
-$re = $se->get_result();
-while ($e = $re->fetch_assoc()) {
-    $eliminados[$e['secuencia']][$e['turno']] = true;
-}
-
-
-
 /* ===============================
    CONSULTA → UNA FILA POR FASE
 ================================*/
@@ -387,7 +371,7 @@ if ($pedido) {
 
             </div>
 
-            <table class="tablaAvance">
+            <table class=" tablaAvance ">
                 <thead >
                     <tr>
                         <th class="text-center" style="width:70px;">Turno</th>
@@ -410,33 +394,7 @@ if ($pedido) {
                         : 0;
                     $maxTurnos = max($turnosFase, $turnosGuardados);
 
-             $turnosExistentes = [];
-
-// turnos calculados normales
-for ($i = 1; $i <= $turnosFase; $i++) {
-    $turnosExistentes[] = $i;
-}
-
-// turnos guardados en BD
-if (isset($avance[$fase['secuencia']])) {
-    foreach (array_keys($avance[$fase['secuencia']]) as $t) {
-        if (!in_array($t, $turnosExistentes)) {
-            $turnosExistentes[] = $t;
-        }
-    }
-}
-
-// ordenar
-sort($turnosExistentes);
-
-// recorrer SOLO los reales
-foreach ($turnosExistentes as $turno):
-
-   if (
-    isset($eliminados[$fase['secuencia']][$turno]) &&
-    !isset($avance[$fase['secuencia']][$turno])
-) continue;
-
+                    for ($turno = 1; $turno <= $maxTurnos; $turno++):
                         // Objetivo calculado por turno
                         if ($turno == $turnosFase) {
                             $obj_fase = $kilos - ($obj_fase_base * ($turnosFase - 1));
@@ -453,10 +411,10 @@ foreach ($turnosExistentes as $turno):
                         $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
 
                      // ✅ CORREGIDO: Solo filas extra usan obj_kg de BD
-                    $obj_mostrar   = ($turno > $turnosFase && $val_obj !== null && $val_obj !== '')
+$obj_mostrar   = ($turno > $turnosFase && $val_obj !== null && $val_obj !== '')
                     ? (float)$val_obj
                     : $obj_fase;
-                    $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
+$cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                     ?>
 
                     <tr class="<?= ($turno > $turnosFase) ? 'table-warning' : '' ?>"
@@ -495,9 +453,20 @@ foreach ($turnosExistentes as $turno):
 
             <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
-                       <td class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-                        <?= number_format($obj_mostrar, 2).' KG ' ?>
-                        </td>
+                     <td>
+<?php if ($turno > $turnosFase || ($val_obj !== null && $val_obj !== '')): ?>
+    <!-- ✅ INPUT EDITABLE -->
+    <input type="number" step="0.01" min="0"
+        class="form-control form-control-sm input-obj"
+        name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
+        value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
+<?php else: ?>
+    <!-- ✅ TEXTO NORMAL -->
+    <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
+        <?= number_format($obj_mostrar, 2).' KG' ?>
+    </div>
+<?php endif; ?>
+</td>
 
             
             <!---------UNIDADES PRODUCIDAS----------------->
@@ -531,21 +500,21 @@ foreach ($turnosExistentes as $turno):
                         </td>
                     </tr>
 
-                   <?php endforeach; ?>
+                    <?php endfor; ?>
                 </tbody>
 
                 <tfoot >
-                    <tr>
-                        <td colspan="5" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
-                        <td></td>
-                        <td class="text-center align-middle total-obj"></td>
-                        <td class="text-center align-middle total-unds"></td>
-                        <td class="text-center align-middle total-real"></td>
-                        <td class="text-center align-middle total-dif"></td>
-                        <td class="text-center align-middle total-cumpl"></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
+    <tr>
+        <td colspan="5" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
+        <td></td>
+        <td class="text-center align-middle total-obj"></td>
+        <td class="text-center align-middle total-unds"></td>
+        <td class="text-center align-middle total-real"></td>
+        <td class="text-center align-middle total-dif"></td>
+        <td class="text-center align-middle total-cumpl"></td>
+        <td></td>
+    </tr>
+</tfoot>
             </table>
 
 
@@ -590,14 +559,7 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
     const udm      = $(this).data('udm');
     const eq       = $(this).data('eq') || 1;
     const objTotal = parseFloat($(this).data('obj-total')) || 0;
-let maxTurno = 0;
-
-$tbody.find('.turno-num').each(function () {
-    const t = parseInt($(this).text()) || 0;
-    if (t > maxTurno) maxTurno = t;
-});
-
-const nextTurno = maxTurno + 1;
+    const nextTurno = $tbody.find('tr').length + 1;
 
     let kgAcumulado = 0;
     $tbody.find('tr').each(function () {
@@ -684,7 +646,7 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
         // ✅ Si es una fila nueva (sin guardar en BD)
         if (!turno) {
             $fila.remove();
-           // renumerar($tbody);
+            renumerar($tbody);
             recalcularTotales($tbody.closest('.tablaAvance'));
 
             Swal.fire({
@@ -713,7 +675,7 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
 
                     if (r.ok) {
                         $fila.remove();
-                       // renumerar($tbody);
+                        renumerar($tbody);
                         recalcularTotales($tbody.closest('.tablaAvance'));
 
                         Swal.fire({
@@ -802,10 +764,8 @@ if ($inputObj.length) {
 
 
 
-//ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
+// 🌈 ACTUALIZAR BARRA DE PROGRESO CON DEGRADADO ROJO → VERDE
 const porcentajeNum = totalObj > 0 ? (totalKg / totalObj) * 100 : 0;
-const porcentajeVisual = Math.min(porcentajeNum, 100);
-const porcentajeTexto = porcentajeNum.toFixed(1);
 const porcentaje = Math.min(porcentajeNum, 100).toFixed(1);
 
 const $barra = $tabla.closest('.fase-bloque').find('.barra-cumplimiento');
@@ -827,17 +787,14 @@ if (t < 0.5) {
 
 const color = `rgb(${r}, ${g}, ${b})`;
 
-
-// PERMITE VER EL PORCENTAJE REAL SI SE EXCEDE EL 100% (ej: 120% se muestra en barra completa pero con texto "120%")
-
 $barra
     .removeClass('bg-success bg-warning bg-danger')
     .css({
-        'width': porcentajeVisual + '%',
+        'width': porcentaje + '%',
         'background-color': color,
         'background-image': 'none'
     })
-    .text(porcentajeTexto + '%');
+    .text(porcentaje + '%');
 }
 
 $(document).on('input', '.input-real', function () {
@@ -860,52 +817,3 @@ document.addEventListener("shown.bs.modal", function () {
     });
 });
 </script>
-
-
-<!---------SCRIPT DE VALIDACION DE LA FECHA-------------->
-
-<script>
-
-    /***Bloquear escritura manual COMPLETAMENTE    */
-$(document).on('keydown paste', 'input[type="date"]', function (e) {
-    e.preventDefault();
-});
-
-
-/***Forzar uso del picker (calendario) */
-$(document).on('focus', 'input[type="date"]', function () {
-    this.showPicker && this.showPicker();
-});
-
-
-$(document).on('change', 'input[type="date"]', function () {
-    const $input    = $(this);
-    const $tbody    = $input.closest('tbody');
-    const $filas    = $tbody.find('tr');
-    const $fila     = $input.closest('tr');
-    const idx       = $filas.index($fila);
-
-    const fechaActual = $input.val();
-    if (!fechaActual) return;
-
-    //VALIDAR CONTRA EL ANTERIOR
-    if (idx > 0) {
-        const fechaAnterior = $filas.eq(idx - 1).find('input[type="date"]').val();
-        if (fechaAnterior && fechaActual < fechaAnterior) {
-            $input.val('');
-            Swal.fire('Fecha inválida', 'No puede ser menor al turno anterior', 'warning');
-            return;
-        }
-    }
-
-    //ACTUALIZAR SIGUIENTES
-    $filas.slice(idx + 1).each(function () {
-        const $sig = $(this).find('input[type="date"]');
-        $sig.attr('min', fechaActual);
-
-        if ($sig.val() && $sig.val() < fechaActual) {
-            $sig.val('');
-        }
-    });
-});
-    </script>

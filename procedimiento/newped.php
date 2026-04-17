@@ -54,7 +54,7 @@ try {
        2. GENERAR NUMERO PEDIDO REAL
     ===================================== */
     $num_pedido = "PED-$anio-" . str_pad($siguiente, 4, "0", STR_PAD_LEFT);
-
+$pedn=1;
     /* =====================================
        3. INSERTAR PEDIDO
     ===================================== */
@@ -67,13 +67,14 @@ try {
             producto,
             cantidad,
             und_medida,
-            estado
+            estado,
+            est_ped
         ) 
-        VALUES (?,?,?,?,?,?,?,?)
+        VALUES (?,?,?,?,?,?,?,?,?)
     ");
 
     $er->bind_param(
-        "isssiiii",
+        "isssiiiii",
         $clte,
         $num_pedido,
         $freg,
@@ -81,7 +82,8 @@ try {
         $prod,
         $cantidad,
         $unds,
-        $estado
+        $estado,
+        $pedn
     );
 
     $er->execute();
