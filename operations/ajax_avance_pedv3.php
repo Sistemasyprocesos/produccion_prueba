@@ -195,8 +195,23 @@ while ($r = $res->fetch_assoc()) {
         'hc'      => $r['hc'],
         'obj'     => $r['obj_kg']
     ];
-}
 
+   
+
+}
+ $turnosEliminados = [];
+
+$qDel = "SELECT secuencia, turno 
+         FROM prod_avance_turnos_eliminados
+         WHERE id_pedido = ?";
+$stmtDel = $conn->prepare($qDel);
+$stmtDel->bind_param("i", $id);
+$stmtDel->execute();
+$resDel = $stmtDel->get_result();
+
+while ($r = $resDel->fetch_assoc()) {
+    $turnosEliminados[$r['secuencia']][] = $r['turno'];
+}
 /* ===============================
    CONSULTA → UNA FILA POR FASE
 ================================*/
@@ -389,12 +404,41 @@ if ($pedido) {
                 </thead>
                 <tbody>
                     <?php
-                    $turnosGuardados = isset($avance[$fase['secuencia']])
-                        ? max(array_keys($avance[$fase['secuencia']]))
-                        : 0;
-                    $maxTurnos = max($turnosFase, $turnosGuardados);
+$turnosExistentes = [];
 
-                    for ($turno = 1; $turno <= $maxTurnos; $turno++):
+// turnos calculados normales
+for ($i = 1; $i <= $turnosFase; $i++) {
+
+    // 🚫 si está eliminado, NO lo agregues
+    if (isset($turnosEliminados[$fase['secuencia']]) &&
+        in_array($i, $turnosEliminados[$fase['secuencia']])) {
+        continue;
+    }
+
+    $turnosExistentes[] = $i;
+}
+
+// turnos guardados en BD
+if (isset($avance[$fase['secuencia']])) {
+ foreach (array_keys($avance[$fase['secuencia']]) as $t) {
+
+    if (isset($turnosEliminados[$fase['secuencia']]) &&
+        in_array($t, $turnosEliminados[$fase['secuencia']])) {
+        continue;
+    }
+
+    if (!in_array($t, $turnosExistentes)) {
+        $turnosExistentes[] = $t;
+    }
+}
+}
+
+// ordenar
+sort($turnosExistentes);
+
+// recorrer SOLO los reales
+foreach ($turnosExistentes as $turno):
+
                         // Objetivo calculado por turno
                         if ($turno == $turnosFase) {
                             $obj_fase = $kilos - ($obj_fase_base * ($turnosFase - 1));
@@ -415,7 +459,10 @@ $obj_mostrar   = ($turno > $turnosFase && $val_obj !== null && $val_obj !== '')
                     ? (float)$val_obj
                     : $obj_fase;
 $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
-                    ?>
+                  
+                  
+
+                  ?>
 
                     <tr class="<?= ($turno > $turnosFase) ? 'table-warning' : '' ?>"
                         data-peso="<?= $fase['peso_env'] ?>"
@@ -453,15 +500,13 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 
             <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
-                     <td>
-<?php if ($turno > $turnosFase || ($val_obj !== null && $val_obj !== '')): ?>
-    <!-- ✅ INPUT EDITABLE -->
+                    <td>
+<?php if ($turno > $turnosFase || $val_obj !== null): ?>
     <input type="number" step="0.01" min="0"
         class="form-control form-control-sm input-obj"
         name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
         value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
 <?php else: ?>
-    <!-- ✅ TEXTO NORMAL -->
     <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
         <?= number_format($obj_mostrar, 2).' KG' ?>
     </div>
@@ -500,7 +545,7 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                         </td>
                     </tr>
 
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                 </tbody>
 
                 <tfoot >
@@ -549,18 +594,29 @@ $(document).on('input', '.input-obj', function () {
    AGREGAR FILA
 ======================*/
 $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', function () {
-    const $bloque  = $(this).closest('.fase-bloque');
-    const $tbody   = $bloque.find('.tablaAvance tbody');
-    const $tabla   = $bloque.find('.tablaAvance');
-    const secuencia = $(this).data('secuencia');
-    const std      = $(this).data('std');
-    const pesoEnv  = $(this).data('peso-env');
-    const sigenv   = $(this).data('sigenv');
-    const udm      = $(this).data('udm');
-    const eq       = $(this).data('eq') || 1;
-    const objTotal = parseFloat($(this).data('obj-total')) || 0;
-    const nextTurno = $tbody.find('tr').length + 1;
 
+    const $bloque  = $(this).closest('.fase-bloque');
+    const $tbody   = $bloque.find('tbody');
+    const $tabla   = $bloque.find('.tablaAvance');
+
+    const secuencia = $(this).data('secuencia');
+    const std       = $(this).data('std');
+    const pesoEnv   = $(this).data('peso-env');
+    const sigenv    = $(this).data('sigenv');
+    const udm       = $(this).data('udm');
+    const eq        = $(this).data('eq') || 1;
+    const objTotal  = parseFloat($(this).data('obj-total')) || 0;
+
+    // 🔥 obtener turno real máximo (NO length)
+    let maxTurno = 0;
+    $tbody.find('.turno-num').each(function () {
+        const t = parseInt($(this).text()) || 0;
+        if (t > maxTurno) maxTurno = t;
+    });
+
+    const nextTurno = maxTurno + 1;
+
+    // calcular kg acumulado
     let kgAcumulado = 0;
     $tbody.find('tr').each(function () {
         const unds = parseFloat($(this).find('.input-real').val()) || 0;
@@ -573,7 +629,7 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
 
     const fila = `
 <tr data-peso="${pesoEnv}" data-eq="${eq}">
-    <td class="text-center align-middle turno-num">${nextTurno}</td>
+    <td class="text-center turno-num">${nextTurno}</td>
     <td><input type="date" class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
     <td>
         <select class="form-select" name="jornada[${secuencia}][${nextTurno}]">
@@ -582,40 +638,38 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
             <option value="NOCHE">NOCHE</option>
         </select>
     </td>
-    <td style="width:80px;">
-        <input type="number" min="0"  class="form-control" name="hc[${secuencia}][${nextTurno}]">
-    </td>
-    <td class="text-center align-middle td-unds">${std} ${sigenv} ${pesoEnv} ${udm}</td>
+    <td><input type="number" class="form-control" name="hc[${secuencia}][${nextTurno}]"></td>
+
+    <td class="text-center">${std} ${sigenv} ${pesoEnv} ${udm}</td>
+
     <td>
-        <input type="number" step="0.01" min="0"
-            class="form-control form-control-sm input-obj"
+        <input type="number" class="form-control form-control-sm input-obj"
             name="obj[${secuencia}][${nextTurno}]"
             value="${objFila}">
     </td>
+
     <td>
-        <input type="number" step="0.01" min="0"
-            class="form-control form-control-sm input-real"
+        <input type="number" class="form-control form-control-sm input-real"
             name="real[${secuencia}][${nextTurno}]">
     </td>
+
     <input type="hidden" name="peso[${secuencia}][${nextTurno}]" value="${pesoEnv}">
-    <input type="hidden" name="eq[${secuencia}][${nextTurno}]"   value="${eq}">
-    <td class="text-center align-middle td-kg"></td>
-    <td class="text-center align-middle td-dif"></td>
-    <td class="text-center align-middle td-cumpl"></td>
+    <input type="hidden" name="eq[${secuencia}][${nextTurno}]" value="${eq}">
+
+    <td class="td-kg text-center"></td>
+    <td class="td-dif text-center"></td>
+    <td class="td-cumpl text-center"></td>
+
     <td>
-        <button type="button" class="btn btn-sm btn-danger btnEliminarFila">
-            <i class="bi bi-trash"></i>
+        <button type="button" class="btn btn-danger btn-sm btnEliminarFila">
+            🗑
         </button>
     </td>
 </tr>`;
 
-
-
-// agregar nueva fila (que sí tendrá botón)
-$tbody.append(fila);
+    $tbody.append(fila);
     recalcularTotales($tabla);
 });
-
 
 /* ======================
    ELIMINAR FILA + renumerar
@@ -644,10 +698,11 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
         if (!result.isConfirmed) return;
 
         // ✅ Si es una fila nueva (sin guardar en BD)
-        if (!turno) {
-            $fila.remove();
-            renumerar($tbody);
-            recalcularTotales($tbody.closest('.tablaAvance'));
+     if (!turno) {
+    $fila.remove();
+    recalcularTotales($tbody.closest('.tablaAvance'));
+    return;
+
 
             Swal.fire({
                 icon: 'success',
