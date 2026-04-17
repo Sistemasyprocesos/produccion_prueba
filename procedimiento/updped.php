@@ -90,12 +90,24 @@ $cantidad_pedido = $r3['cantidad'];
 /* ===================================
    CAMBIAR ESTADO DEL PEDIDO
 =================================== */
+$l=$conn->query("select estado from prod_pedidos where id_pedido=$id")->fetch_assoc();
 
-    if($total_producido >= $cantidad_pedido){
-        $est=2;   // COMPLETADO
-    }else{
-        $est=1;   // ACTIVO
-    }
+
+
+
+   if ($l['estado'] == 2) {
+    // Nunca bajar de 2
+    $est = 2;
+
+} elseif ($total_producido >= $cantidad_pedido) {
+    // Si cumple producción → pasa a 2
+    $est = 2;
+
+} else {
+    // Caso contrario → 1
+    $est = 1;
+}
+
 
 $up=$conn->prepare("
     UPDATE prod_pedidos 

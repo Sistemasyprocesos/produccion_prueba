@@ -301,28 +301,28 @@ if ($pedido) {
 }
 </style>
 
-
+<div class="encabezado-pedido">
     <div class="row mb-3 text-center">
-        <div class="col-3 border-end">
+        <div class="col-3 border-end shadow">
             <div class="row"><b>Pedido:</b></div>
             <div><?= htmlspecialchars($prod).' '.$envase.' '.$pesoprod.' '.$usigla ?></div>
         </div>
-        <div class="col-3 border-end">
+        <div class="col-3 border-end shadow">
             <div class="row"><b>Cliente:</b></div>
             <div><?= htmlspecialchars($cliente) ?></div>
         </div>
-        <div class="col-3 border-end">
+        <div class="col-3 border-end shadow">
             <div class="row"><b>Cantidad:</b></div>
             <div><?= $cantidad.' ('.$envase.'S '.$pesoprod.' '.$usigla.')' ?></div>
             <div><?= number_format($kilos, 2).' kg' ?></div>
         </div>
-        <div class="col-3">
+        <div class="col-3 shadow">
             <div class="row"><b>Fecha Entrega:</b></div>
             <div><?= htmlspecialchars($fecha_entrega) ?></div>
         </div>
     </div>
 </div>
-
+</div>
 <!-- ===== FORMULARIO ===== -->
 <form id="formAvance">
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
@@ -349,7 +349,7 @@ if ($pedido) {
                 </div>
                 <div class="col-auto">
                     <button type="button"
-                        class="btn btn-sm btn-success btnAgregarTurno"
+                        class="btn btn-sm btn-success btnAgregarTurno shadow"
                         data-std="<?= $fase['std'] ?>"
                         data-secuencia="<?= $fase['secuencia'] ?>"
                         data-peso-env="<?= $fase['peso_env'] ?>"
@@ -371,7 +371,7 @@ if ($pedido) {
 
             </div>
 
-            <table class=" tablaAvance ">
+            <table class=" tablaAvance shadow-lg">
                 <thead >
                     <tr>
                         <th class="text-center" style="width:70px;">Turno</th>

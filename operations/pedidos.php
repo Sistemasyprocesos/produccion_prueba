@@ -69,6 +69,7 @@ SELECT
   p.num_pedido,
   c.razon_social AS cliente,
   p.fecha_entrega,
+  pr.nombre as nompro,
   ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100 ,2) as cumplimiento
 
 FROM prod_pedidos p
@@ -99,7 +100,25 @@ $total_alertas = $alertas->num_rows;
 <div class="col-md-3 col-lg-2 pe-1 border-end">
 
     <!-- KPI -->
-    <div class="card shadow border-0 rounded-4 bg-danger text-white text-center mb-3">
+<?php 
+if($total_alertas <= 0) {
+?>
+<!--------CUANDO NO HAY FALTANTES---------------->
+    <div class="card shadow-lg border-0 rounded-4 bg-success text-white text-center mb-3">
+    <div class="card-body p-2">
+        <h6 class="mb-1">
+         <i class="fa-solid fa-circle-check" style="color: rgb(255, 255, 255);"></i>
+          Pedidos con entrega próxima a vencer
+        </h6>
+        <h2><?= $total_alertas ?></h2>
+      </div>
+    </div>
+<?php
+
+} else {
+?>
+<!------CUANDO SI HAY FALTANTES--------->
+ <div class="card shadow border-0 rounded-4 bg-danger text-white text-center mb-3">
     <div class="card-body p-2">
         <h6 class="mb-1">
           <i class="fa-solid fa-triangle-exclamation"></i>
@@ -109,8 +128,11 @@ $total_alertas = $alertas->num_rows;
       </div>
     </div>
 
+<?php }?>
+
+
     <!-- LISTADO -->
-    <div class="card shadow-sm rounded-4">
+    <div class="card shadow rounded-4">
       <div class="card-header bg-light">
         <strong>
           <i class="fa-solid fa-calendar-xmark"></i>
@@ -128,7 +150,7 @@ $total_alertas = $alertas->num_rows;
           <div class="mb-2 pb-1 border-bottom">
 
             <div class="d-flex justify-content-between">
-              <small><?= $a['num_pedido'] ?> <br> <?= $a['cliente'] ?></small>
+              <small><?= $a['num_pedido'] ?> <br> <?= $a['nompro'] ?></small>
               <span class="text-danger">
                 <?= date('Y/m/d', strtotime($a['fecha_entrega'])) ?>
               </span>
@@ -166,7 +188,7 @@ $total_alertas = $alertas->num_rows;
 
       <!-- BUSCADOR -->
       <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow border-0 rounded-4 h-100">
           <div class="card-body">
             <label class="form-label fw-semibold">
               <i class="fa-solid fa-magnifying-glass"></i> Buscar
@@ -179,7 +201,7 @@ $total_alertas = $alertas->num_rows;
 
       <!-- NUEVO PEDIDO -->
       <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100 d-flex justify-content-center">
+        <div class="card shadow border-0 rounded-4 h-100 d-flex justify-content-center">
           <div class="card-body text-center">
             <button class="btn btn-success  rounded-3"
               data-bs-toggle="modal" data-bs-target="#modalnuevo">
@@ -192,7 +214,7 @@ $total_alertas = $alertas->num_rows;
 
       <!-- FILTRO -->
       <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow border-0 rounded-4 h-100">
           <div class="card-body">
             <label class="form-label fw-semibold">
               <i class="fa-solid fa-filter"></i> Estado
@@ -207,7 +229,7 @@ $total_alertas = $alertas->num_rows;
       </div>
 
     </div>
-        <table class="table mt-2 table-sm table-hover" id="tblcolab">
+        <table class="table mt-2 shadow table-sm table-hover" id="tblcolab">
           <thead class="table-dark">
             <tr>
               <th data-col="1">PEDIDO</th>
