@@ -15,8 +15,8 @@
     border: none !important;
 }
 .tablaAvance thead th {
-    background: transparent;
-    color: #6b7280;
+    background: #8c96a72e;
+    color: #030a17;
     font-weight: 500;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -31,13 +31,13 @@
     transition: background 0.15s;
 }
 .tablaAvance tbody tr:hover {
-    background-color: #b6b6b64e;
+    background-color: #b6b6b63d;
 }
 .tablaAvance tbody tr.table-warning {
-    background-color: #fffbeb !important;
+    background-color: #2ab8db4b !important;
 }
 .tablaAvance tbody tr.table-warning:hover {
-    background-color: #fef3c7 !important;
+    background-color: #2ab8dba5 !important;
 }
 .tablaAvance tbody td {
     border: none;
@@ -409,7 +409,7 @@ $turnosExistentes = [];
 // turnos calculados normales
 for ($i = 1; $i <= $turnosFase; $i++) {
 
-    // 🚫 si está eliminado, NO lo agregues
+    //  si está eliminado, NO lo agregues
     if (isset($turnosEliminados[$fase['secuencia']]) &&
         in_array($i, $turnosEliminados[$fase['secuencia']])) {
         continue;
