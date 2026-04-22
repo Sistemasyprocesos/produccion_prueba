@@ -90,7 +90,7 @@ $res=$conn->query($sql);
       </div>
     </div>
 
-<table class="table mt-5 table-bordered table-hover table-sm" id="tblcolab">
+<table class="table mt-5 table-bordered shadow table-hover table-sm" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>PRODUCTO PT</th>
@@ -102,38 +102,38 @@ $res=$conn->query($sql);
   </thead>
   <tbody><?php if ($res && $res->num_rows > 0) { ?>
 
-  <?php while ($f = $res->fetch_assoc()) { ?>
+  <?php 
+    while ($f = $res->fetch_assoc()) 
+      { ?>
     <tr>
-      <td><?=$f['producto']?></td>
+          <td><?=$f['producto']?></td>
+          <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
+          <td><?= $f['kg'].' KG' ?></td>
+          <td>
+            <?php if($f['sec'] == 1)
+              { ?>
+              <!-- EDITAR -->
+              <button 
+                class="btn btn-primary btn-sm btnEditarProceso"
+                data-proceso="<?=htmlspecialchars($f['proce'], ENT_QUOTES, 'UTF-8') ?>"
+                data-bs-toggle="modal"
+                data-bs-target="#modaleditar">
+                <i class="bi bi-pencil-square"></i>
+              </button>
 
-      <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
+              <!-- ELIMINAR -->
+              <button 
+                class="btn btn-danger btn-sm btnEliminarProceso"
+                data-proceso="<?=$f['proce']?>">
+                <i class="bi bi-trash3"></i>
+              </button>
 
-      <td><?= $f['kg'].' KG' ?></td>
-    <td>
-
-<?php if($f['sec'] == 1){ ?>
-
-  <!-- EDITAR -->
-  <button 
-    class="btn btn-primary btn-sm btnEditarProceso"
-    data-proceso="<?=htmlspecialchars($f['proce'], ENT_QUOTES, 'UTF-8') ?>"
-    data-bs-toggle="modal"
-    data-bs-target="#modaleditar">
-    <i class="bi bi-pencil-square"></i>
-  </button>
-
-  <!-- ELIMINAR -->
-  <button 
-    class="btn btn-danger btn-sm btnEliminarProceso"
-    data-proceso="<?=$f['proce']?>">
-    <i class="bi bi-trash3"></i>
-  </button>
-
-<?php } ?>
-
-</td>
+            <?php 
+              } ?>
+          </td>
     </tr>
-  <?php } ?>
+          <?php
+      } ?>
 
 <?php } else { ?>
   <tr>
@@ -166,11 +166,10 @@ $res=$conn->query($sql);
         <form id="formfases">
 
           <div class="row mb-3">
-            
-          
             <div class="col-6">
               <label class="form-label">Producto</label>
-                <?php   $g=$conn->query("
+                <?php  
+                 $g=$conn->query("
                 select 
                 p.id,
                 p.nombre,
@@ -189,14 +188,13 @@ $res=$conn->query($sql);
                 <?php } ?>
               </select>
             </div>
-        
           </div>
           <!----BOTON DE AGG FASE------->
           <div class="row mb-3">
-          <div class="col-6">
-            <button type="button" class="btn btn-primary btn-sm" id="btnAgregarFilaModal"><i class="bi bi-plus-circle-fill"></i> Agregar Fase</button>
+              <div class="col-6">
+                <button type="button" class="btn btn-primary btn-sm" id="btnAgregarFilaModal"><i class="bi bi-plus-circle-fill"></i> Agregar Fase</button>
+              </div>
           </div>
-</div>
           <!---------->
           <table class="table table-bordered" id="tablaDescuentosModal">
             <thead class="table-dark">
@@ -209,13 +207,12 @@ $res=$conn->query($sql);
                 <th>Envase</th>
                 <th>Peso Envase</th>
                 <th>UDM envase</th>
-                
                 <th>HC std</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+      <tr>
                 <!---SECUENCIA---->
                <td class="cuota">
                   <span class="num">1</span>
@@ -249,16 +246,15 @@ $res=$conn->query($sql);
                 
        <td>
   <div class="actividad-container">
-
     <div class="actividad-item input-group mb-2">
 <!-----ACTIVIDAD------------>
       <select name="act[0][]" required class="form-select actividad-select">
         <?php
-        $g=$conn->query("select id,nombre from prod_act_prod order by nombre asc");
-        while($r=$g->fetch_assoc()){
-        ?>
-          <option value="<?=$r['id']?>"><?=$r['nombre']?></option>
-        <?php } ?>
+          $g=$conn->query("select id,nombre from prod_act_prod order by nombre asc");
+            while($r=$g->fetch_assoc()){
+            ?>
+              <option value="<?=$r['id']?>"><?=$r['nombre']?></option>
+            <?php } ?>
       </select>
 
       <button type="button" class="btn btn-success btnAgregarActividad">
@@ -291,7 +287,6 @@ $res=$conn->query($sql);
           <!--------PESO ENVASE---------------------->
           <td>
             <input type="number" min="0" step="0.1" class="form-control" onkeypress="return solonum(event)" name="pesoenv[]">
-
           </td>
           
           <!----------UDM ENVASE-------------------------->
@@ -314,10 +309,10 @@ $res=$conn->query($sql);
           <td>
              <input type="number" min="0" step="1.0" onkeypress="return solonum(event)" required class="form-control" name="personas[]">
           </td>
-                <td><button type="button" class="btn btn-sm btn-danger eliminar-fila"><i class="bi bi-trash"></i></button></td>
-              </tr>
-            </tbody>
-          </table>
+          <td><button type="button" class="btn btn-sm btn-danger eliminar-fila"><i class="bi bi-trash"></i></button></td>
+      </tr>
+    </tbody>
+  </table>
 
           
 
@@ -600,11 +595,8 @@ fase.actividades.forEach(function(act, i){
     <select name="actividad[${fase.secuencia}][]" class="form-select form-select-sm">
 
       ${data.actividades.map(a => {
-
         const selected = (a.nombre == act.nombre) ? 'selected' : '';
-
         return `<option value="${a.id}" ${selected}>${a.nombre}</option>`;
-
       }).join('')}
 
     </select>
@@ -623,50 +615,52 @@ fase.actividades.forEach(function(act, i){
 });
 
 tr.innerHTML = `
-<td class="text-center fw-bold">${fase.secuencia}</td>
+  <td class="text-center fw-bold">
+    ${fase.secuencia}
+  </td>
 
-<td>
-<select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
-${data.tipos.map(t =>
-`<option value="${t.cod}" ${t.cod == fase.tipo_fase ? 'selected' : ''}>
-${t.abreviatura}
-</option>`).join('')}
-</select>
-</td>
-
-
-<td>
-<select name="area[${fase.secuencia}]" class="form-select form-select-sm">
-${data.areas.map(a =>
-`<option value="${a.id}" ${a.id == fase.area ? 'selected' : ''}>
-${a.nombre}
-</option>`).join('')}
-</select>
-</td>
-
-<td>
-<div class="actividad-container">
-${actividadesHTML}
-</div>
-</td>
-
-<td>
-<input type="number" step="0.01" min="0"
-name="kgstd[${fase.secuencia}]"
-value="${fase.unds}"
-class="form-control form-control-sm">
-</td>
+  <td>
+    <select name="tipo[${fase.secuencia}]" class="form-select form-select-sm">
+      ${data.tipos.map(t =>
+        `<option value="${t.cod}" ${t.cod == fase.tipo_fase ? 'selected' : ''}>
+          ${t.abreviatura}
+        </option>`).join('')}
+    </select>
+  </td>
 
 
+  <td>
+    <select name="area[${fase.secuencia}]" class="form-select form-select-sm">
+      ${data.areas.map(a =>
+        `<option value="${a.id}" ${a.id == fase.area ? 'selected' : ''}>
+      ${a.nombre}
+        </option>`).join('')}
+    </select>
+  </td>
 
-<td>
-<select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
-${data.envases.map(v =>
-`<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
-${v.nombre}
-</option>`).join('')}
-</select>
-</td>
+  <td>
+    <div class="actividad-container">
+      ${actividadesHTML}
+    </div>
+  </td>
+
+  <td>
+    <input type="number" step="0.01" min="0"
+    name="kgstd[${fase.secuencia}]"
+    value="${fase.unds}"
+    class="form-control form-control-sm">
+  </td>
+
+
+
+  <td>
+    <select name="envase[${fase.secuencia}]" class="form-select form-select-sm">
+      ${data.envases.map(v =>
+        `<option value="${v.id}" ${v.id == fase.envase ? 'selected' : ''}>
+      ${v.nombre}
+        </option>`).join('')}
+    </select>
+  </td>
 
 <td>
   <input type="number" step="0.1" min="0"
@@ -686,12 +680,12 @@ ${v.nombre}
 </td>
 
 
-<td>
-<input type="number" step="1" min="0"
-name="personas[${fase.secuencia}]"
-value="${fase.personas_std}"
-class="form-control form-control-sm">
-</td>
+  <td>
+    <input type="number" step="1" min="0"
+      name="personas[${fase.secuencia}]"
+      value="${fase.personas_std}"
+      class="form-control form-control-sm">
+  </td>
 `;
         tbody.appendChild(tr);
       });
@@ -748,13 +742,9 @@ document.addEventListener("click", function(e){
   if(e.target.closest(".btnAgregarActividadEditar")){
 
     const btn = e.target.closest(".btnAgregarActividadEditar");
-
     const fila = btn.closest("tr");
-
     const contenedor = fila.querySelector(".actividad-container");
-
     const secuencia = fila.querySelector("td").innerText.trim();
-
     let opciones = "";
 
 if(window.catalogoActividades){
@@ -765,12 +755,10 @@ if(window.catalogoActividades){
     const nuevaActividad = document.createElement("div");
 
     nuevaActividad.className = "actividad-item input-group mb-1";
-
     nuevaActividad.innerHTML = `
       <select name="actividad[${secuencia}][]" class="form-select form-select-sm">
         ${opciones}
       </select>
-
       <button type="button" class="btn btn-danger eliminarActividadEditar">
         <i class="bi bi-trash"></i>
       </button>
@@ -792,7 +780,6 @@ document.addEventListener("click", function(e){
   if(e.target.closest(".eliminarActividadEditar")){
 
     const btn = e.target.closest(".eliminarActividadEditar");
-
     const actividad = btn.closest(".actividad-item");
 
     actividad.remove();

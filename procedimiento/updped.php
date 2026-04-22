@@ -92,9 +92,6 @@ $cantidad_pedido = $r3['cantidad'];
 =================================== */
 $l=$conn->query("select estado from prod_pedidos where id_pedido=$id")->fetch_assoc();
 
-
-
-
    if ($l['estado'] == 2) {
     // Nunca bajar de 2
     $est = 2;
@@ -117,8 +114,6 @@ $up=$conn->prepare("
 
 $up->bind_param("ii",$est,$id);
 $up->execute();
-
-
 
 
 

@@ -29,17 +29,17 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
   
 
 <!------------------------>
-<div class="container mt-2">
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva area</button>
-</div>
-<div class="col-4">
-<input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar area...">
-</div>
-</div>
+  <div class="container mt-2">
+    <div class="row mb-3">
+      <div class="col-2">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva area</button>
+      </div>
+      <div class="col-4">
+        <input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar area...">
+      </div>
+    </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-sm shadow" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Nombre</th>
@@ -53,20 +53,25 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
     $result = $conn->query($consulta);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) { ?>
-            <tr>
+          <tr>
             <td><?=  $row["nombre"]?></td>
             <td><?=  $row["abreviatura"]?></td>
             
             <td>
               <!--------BOTON EDITAR---------->
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
-              data-cod="<?= $row["id"]?>"
-              data-nombre="<?= $row["nombre"]?>"  
-              data-abrev="<?= $row["abreviatura"]?>"
-              ><i class="bi bi-pencil-square"></i></button>
+                data-cod="<?= $row["id"]?>"
+                data-nombre="<?= $row["nombre"]?>"  
+                data-abrev="<?= $row["abreviatura"]?>"
+                ><i class="bi bi-pencil-square"></i>
+              </button>
               <!--------BOTON ELIMINAR---------->
-              <button class="btn btn-danger btn-sm btn-eliminar" data-eliminar="<?=$row['id'] ?>"><i class="bi bi-trash3"></i></button></td>
-            </tr>
+              <button class="btn btn-danger btn-sm btn-eliminar" 
+                data-eliminar="<?=$row['id'] ?>">
+                  <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+          </tr>
      <?php   }
     } else {
       ?>
@@ -174,7 +179,7 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
     var cod = button.getAttribute('data-cod');
     var nombre = button.getAttribute('data-nombre');
     var abrev = button.getAttribute('data-abrev');
-
+    
     var inputCod = modalEditar.querySelector('#idarea');
     var inputNombre = modalEditar.querySelector('#areanom');
     var inputAbrev = modalEditar.querySelector('#areaabrev');

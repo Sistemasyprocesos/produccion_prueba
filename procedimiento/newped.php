@@ -103,7 +103,7 @@ $pedn=1;
     <head>
         <meta charset="UTF-8">
         <title>Guardando...</title>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
 
@@ -134,7 +134,7 @@ $pedn=1;
     <head>
         <meta charset="UTF-8">
         <title>Error</title>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
 
@@ -149,7 +149,6 @@ $pedn=1;
             window.history.back();
             });
         </script>
-
     </body>
 </html>
 

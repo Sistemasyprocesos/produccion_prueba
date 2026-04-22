@@ -90,7 +90,7 @@ $consulta="select
     </div>
   </div>
 
-<table class="table mt-5 table-sm table-hover" id="tblcolab">
+<table class="table mt-5 table-sm table-hover shadow" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Codigo</th>

@@ -29,63 +29,64 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
   
 
 <!------------------------>
-<div class="container mt-2">
-<div class="row mb-3">
-<div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva categoria</button>
-</div>
-<div class="col-4">
-<input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar categoria...">
-</div>
-</div>
+    <div class="container mt-2">
+      <div class="row mb-3">
+        <div class="col-2">
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva categoria</button>
+        </div>
+        <div class="col-4">
+          <input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar categoria...">
+        </div>
+    </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
-  <thead class="table-dark">
-    <tr>
-      <th>Nombre</th>
-      
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+    <table class="table mt-5 table-sm shadow" id="tblcolab">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
     <?php
   
     $result = $conn->query($consulta);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) { ?>
-            <tr>
+          <tr>
             <td><?=  $row["cat_nombre"]?></td>
             
             
             <td>
               <!--------BOTON EDITAR---------->
-              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
-              data-cod="<?= $row["id_cat"]?>"
-              data-nombre="<?= $row["cat_nombre"]?>"  
-           
-              ><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
+                    data-cod="<?= $row["id_cat"]?>"
+                    data-nombre="<?= $row["cat_nombre"]?>"  
+                ><i class="bi bi-pencil-square"></i>
+              </button>
               <!--------BOTON ELIMINAR---------->
-              <button class="btn btn-danger btn-sm btn-eliminar" data-eliminar="<?=$row['id_cat'] ?>"><i class="bi bi-trash3"></i></button></td>
-            </tr>
+              <button class="btn btn-danger btn-sm btn-eliminar" 
+                data-eliminar="<?=$row['id_cat'] ?>">
+                  <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+          </tr>
      <?php   }
     } else {
       ?>
-        <tr><td colspan='5'>No hay registros</td></tr>
+        <tr><td colspan='2'>No hay registros</td></tr>
    <?php }
     ?>
   </tbody>
 </table>
 <!----PAGINADOR------->
 
+  <nav>
+    <?php include '../complemento/paginator.php' ?>
+    <ul class="pagination justify-content-center" id="pagination"></ul>
+  </nav>
 
-
-<nav>
-<?php include '../complemento/paginator.php' ?>
-<ul class="pagination justify-content-center" id="pagination"></ul>
-</nav>
-
-</div>
   </div>
+</div>
 </main>
 
 
@@ -138,7 +139,6 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
       <div class="modal-body">
           <div class="col-12 ">
  
-
       <form action="../procedimiento/editcat.php" method="POST">
         <input type="hidden" name="idcat" id="idcat">
       <div class="row mb-3">
@@ -167,11 +167,8 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
     var button = event.relatedTarget;
     var cod = button.getAttribute('data-cod');
     var nombre = button.getAttribute('data-nombre');
-
-
     var inputCod = modalEditar.querySelector('#idcat');
     var inputNombre = modalEditar.querySelector('#catnom');
-
 
     inputCod.value = cod;
     inputNombre.value = nombre;
@@ -204,12 +201,10 @@ document.addEventListener("click", function(e) {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
 
-            if (result.isConfirmed) {
-                
+            if (result.isConfirmed) {   
                 // 🔹 aquí haces la eliminación real
                 // ejemplo redirección:
                 window.location.href = "../procedimiento/catdel.php?codigo=" + codigo;
-
                 // o si usas AJAX también se puede
             }
         });

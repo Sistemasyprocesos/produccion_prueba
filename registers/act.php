@@ -50,7 +50,7 @@ $consulta = "
         </div>
     </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-sm shadow" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Nombre</th>
@@ -113,28 +113,31 @@ $consulta = "
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <div class="col-12 ">
+         <div class="col-12 ">
  
-
-      <form id="formNuevo">
+          <form id="formNuevo">
+            
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="form-label">Nombre</label>
+                  <input type="text" class="form-control" name="act_nom">
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Abreviatura</label>
+                  <input type="text" class="form-control" name="act_abreviatura">
+                </div>
+              </div>
+            </div>
+        </div>
         
-      <div class="row mb-3">
-        <div class="col-6">
-          <label class="form-label">Nombre</label>
-          <input type="text" class="form-control" name="act_nom">
-        </div>
-        <div class="col-6">
-          <label class="form-label">Abreviatura</label>
-          <input type="text" class="form-control" name="act_abreviatura">
-        </div>
-      </div>
-
-    </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-      </form>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">
+            Guardar
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -320,7 +323,6 @@ document.getElementById('formNuevo').addEventListener('submit', function(e) {
               <i class="bi bi-trash3"></i>
             </button>
           </td>
-         
         </tr>
       `);
 
@@ -372,18 +374,17 @@ document.getElementById('formEdit').addEventListener('submit', function (e) {
         showConfirmButton: false
       });
 
-     filaEditando.children[0].textContent = data.nombre;
-filaEditando.children[1].textContent = data.abreviatura;
+    filaEditando.children[0].textContent = data.nombre;
+    filaEditando.children[1].textContent = data.abreviatura;
 
 // opcional: si quieres mostrar ID del estado
-filaEditando.children[2].textContent =
-  document.querySelector(`#est option[value="${data.estado_id}"]`).textContent;
+    filaEditando.children[2].textContent =
+      document.querySelector(`#est option[value="${data.estado_id}"]`).textContent;
 
-const btnEditar = filaEditando.querySelector('.btn-primary');
-btnEditar.dataset.nombre = data.nombre;
-btnEditar.dataset.abrev  = data.abreviatura;
-btnEditar.dataset.est    = data.estado_id;
-
+    const btnEditar = filaEditando.querySelector('.btn-primary');
+    btnEditar.dataset.nombre = data.nombre;
+    btnEditar.dataset.abrev  = data.abreviatura;
+    btnEditar.dataset.est    = data.estado_id;
 
       bootstrap.Modal.getInstance(modaleditar).hide();
     }

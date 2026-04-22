@@ -1,10 +1,10 @@
 <?php
 require '../connection/conexion.php';
 
-$rzscl = strtoupper($_POST['razon_social']);
-$iden  = $_POST['iden'];
-$tc    = $_POST['tipo_cliente'];
-$dir   = strtoupper($_POST['direccion']);
+    $rzscl = strtoupper($_POST['razon_social']);
+    $iden  = $_POST['iden'];
+    $tc    = $_POST['tipo_cliente'];
+    $dir   = strtoupper($_POST['direccion']);
 
 $sql = "INSERT INTO prod_clientes (razon_social, identificacion, tipo, direccion,estado)
         VALUES (?,?, ?, ?, ?)";
@@ -16,11 +16,11 @@ if ($stmt->execute()) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Guardando...</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+      <title>Guardando...</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
 <body>
 
 <script>

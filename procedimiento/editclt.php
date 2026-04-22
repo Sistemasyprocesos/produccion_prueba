@@ -17,11 +17,11 @@ if ($stmt->execute()) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Guardando...</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+    <head>
+      <meta charset="UTF-8">
+          <title>Guardando...</title>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
 <body>
 
 <script>
@@ -43,11 +43,11 @@ exit;
     ?>
   <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Guardando...</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+    <head>
+      <meta charset="UTF-8">
+        <title>Guardando...</title>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
 <body>
 
 <script>

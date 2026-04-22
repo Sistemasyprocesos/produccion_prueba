@@ -37,7 +37,7 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
       </div>
 </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-sm shadow" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Nombre</th>

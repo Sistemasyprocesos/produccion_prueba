@@ -5,28 +5,28 @@ $id = $_GET['id'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Eliminar cliente</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+      <title>Eliminar cliente</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
 
-<?php
-if (!$id) {
-?>
-<script>
-Swal.fire({
-  icon: "error",
-  title: "Error",
-  text: "No se encontró el ID del cliente",
-  timer: 2000,
-  showConfirmButton: false
-}).then(() => {
-  window.location.href = "../registers/clts.php";
-});
-</script>
-</body>
+    <?php
+    if (!$id) {
+    ?>
+      <script>
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se encontró el ID del cliente",
+        timer: 2000,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "../registers/clts.php";
+      });
+      </script>
+  </body>
 </html>
 <?php
 exit;

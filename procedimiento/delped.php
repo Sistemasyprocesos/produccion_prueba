@@ -4,11 +4,11 @@ $id = $_GET['id'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Eliminar pedido</title>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+      <title>Eliminar pedido</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
 <body>
 <?php
 if (!$id) {

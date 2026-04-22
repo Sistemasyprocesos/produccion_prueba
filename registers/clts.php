@@ -44,7 +44,7 @@ order by c.razon_social asc";
 </div>
 </div>
 
-<table class="table mt-5 table-sm" id="tblcolab">
+<table class="table mt-5 table-sm shadow" id="tblcolab">
   <thead class="table-dark">
     <tr>
      <th>Razón Social</th>

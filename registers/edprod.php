@@ -1,25 +1,25 @@
 <?php
 require '../connection/conexion.php';
 
-$id =           $_POST['iden'] ?? null;
-$codigo =       strtoupper($_POST['cod'] )?? null;
-$nombre =       strtoupper($_POST['nuevonombreprod']) ?? null;
-$tipo =         $_POST['tipo'] ?? null;
-$cat =          $_POST['cate'] ?? null;
-$nuevacate =    strtoupper($_POST['nuevacate']) ?? null;
-$peso =         $_POST['peso'] ?? null;
-$udm =          $_POST['um'] ?? null;
-$env =          $_POST['env'] ?? null;
-$tipo_emb =     $_POST['tipo_emb'] ?? null;
-$undcjsc =      $_POST['undscjsc'] ?? null;
-$undpallet =    $_POST['und_pallet'] ?? null;
-$estado =       $_POST['estate'] ?? null;
+    $id =           $_POST['iden'] ?? null;
+    $codigo =       strtoupper($_POST['cod'] )?? null;
+    $nombre =       strtoupper($_POST['nuevonombreprod']) ?? null;
+    $tipo =         $_POST['tipo'] ?? null;
+    $cat =          $_POST['cate'] ?? null;
+    $nuevacate =    strtoupper($_POST['nuevacate']) ?? null;
+    $peso =         $_POST['peso'] ?? null;
+    $udm =          $_POST['um'] ?? null;
+    $env =          $_POST['env'] ?? null;
+    $tipo_emb =     $_POST['tipo_emb'] ?? null;
+    $undcjsc =      $_POST['undscjsc'] ?? null;
+    $undpallet =    $_POST['und_pallet'] ?? null;
+    $estado =       $_POST['estate'] ?? null;
 
 
 //OBTENER ABREVIATURA DEL ENVASE
 $r=$conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
     $r->bind_param("i", $env);  
-      $r->execute();
+    $r->execute();
   $env_result = $r->get_result();
   $env_abreviatura = $env_result->fetch_assoc()['abreviatura'];
 
@@ -28,7 +28,7 @@ $r=$conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
 //OBTENER ABREVIATURA DE UDM
 $j=$conn->prepare("SELECT sigla FROM prod_udm WHERE id = ?");
       $j->bind_param("i", $udm);  
-        $j->execute();
+      $j->execute();
     $udm_result = $j->get_result();
     $udm_sigla = $udm_result->fetch_assoc()['sigla'];
 

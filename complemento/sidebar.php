@@ -28,11 +28,8 @@ require_once __DIR__ . '/../complemento/config.php';
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Configuracion </a>
               <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/clts.php"><i class="fa-solid fa-user-tie" style="color: rgb(243, 234, 234);"></i> Clientes</a></li>
-                
                 <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/prods.php"><i class="fa-solid fa-box-open" style="color: rgb(243, 234, 234);"></i> Productos</a></li>
-                
-                  <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/categorias.php"><i class="fa-solid fa-table-list" style="color: rgb(243, 234, 234);"></i> Categorias</a></li>
-                
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/categorias.php"><i class="fa-solid fa-table-list" style="color: rgb(243, 234, 234);"></i> Categorias</a></li>
                 <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/act.php"><i class="fa-solid fa-list" style="color: rgb(243, 234, 234);"></i> Actividades de Produccion</a></li>
                 <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/area.php"><i class="fa-solid fa-location-dot" style="color: rgb(243, 234, 234);"></i> Areas de produccion</a></li>
                 <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/env.php"><i class="fa-solid fa-bag-shopping" style="color: rgb(243, 234, 234);"></i> Envases</a></li>
@@ -41,14 +38,13 @@ require_once __DIR__ . '/../complemento/config.php';
               </ul>
           </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Transaccion </a>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>operations/pedidos.php"><i class="bi bi-list-check"></i> Pedidos</a></li>
-                <li><a class="dropdown-item" href="../operations/op.php"><i class="bi bi-file-earmark-bar-graph"></i> Orden de producción</a></li>  
-              </ul>
-          </li>
-            
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Transaccion </a>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li><a class="dropdown-item" href="<?= BASE_URL ?>operations/pedidos.php"><i class="bi bi-list-check"></i> Pedidos</a></li>
+                    <li><a class="dropdown-item" href="../operations/op.php"><i class="bi bi-file-earmark-bar-graph"></i> Orden de producción</a></li>  
+                  </ul>
+              </li>
           </li>
 
           <li class="nav-item dropdown">

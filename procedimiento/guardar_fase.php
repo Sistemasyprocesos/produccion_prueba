@@ -6,21 +6,18 @@ if(!isset($_POST['producto'])){
     exit;
 }
 
-$producto   = $_POST['producto'];
-$secuencia  = $_POST['secuencia'];
-$tipo       = $_POST['tipo'];
-$area       = $_POST['area'];
-$act        = $_POST['act'];
-$envase     = $_POST['envase'];
-$personas   =$_POST['personas'];
-$pesoenv    =$_POST['pesoenv'];
-$udmenv     =$_POST['udmenva'];
-
-$kgstd = isset($_POST['kgstd']) ? $_POST['kgstd'] : [];
-
-$proceso_id = date('YmdHis') . '_' . uniqid();
-
-$conn->begin_transaction();
+    $producto   = $_POST['producto'];
+    $secuencia  = $_POST['secuencia'];
+    $tipo       = $_POST['tipo'];
+    $area       = $_POST['area'];
+    $act        = $_POST['act'];
+    $envase     = $_POST['envase'];
+    $personas   =$_POST['personas'];
+    $pesoenv    =$_POST['pesoenv'];
+    $udmenv     =$_POST['udmenva'];
+    $kgstd = isset($_POST['kgstd']) ? $_POST['kgstd'] : [];
+    $proceso_id = date('YmdHis') . '_' . uniqid();
+    $conn->begin_transaction();
 
 try {
 
