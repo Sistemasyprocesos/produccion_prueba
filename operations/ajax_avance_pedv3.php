@@ -347,6 +347,12 @@ if ($pedido) {
     var pedidoCerrado = <?= $cerrado ? 'true' : 'false' ?>;
 </script>
 
+
+
+
+
+
+
 <!-- ===== FORMULARIO ===== -->
 <form id="formAvance">
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
@@ -358,6 +364,14 @@ if ($pedido) {
         $eq            = $fase['eq_kg_fase'];
         $obj_fase_base = ($eq > 0) ? $unds * ($peso * $eq) : 0;
         $turnosFase    = ($obj_fase_base > 0) ? ceil($kilos / $obj_fase_base) : 0;
+
+// Calcula el máximo turno entre los existentes Y los eliminados de esta fase
+$maxTurnoEliminado = isset($turnosEliminados[$fase['secuencia']]) 
+    ? max($turnosEliminados[$fase['secuencia']]) 
+    : 0;
+$maxTurnoGlobal = max($turnosFase, $maxTurnoEliminado);
+
+
         ?>
         <hr>
         <div class="fase-bloque mb-4">
@@ -380,7 +394,9 @@ if ($pedido) {
                         data-sigenv="<?= htmlspecialchars($fase['sigenv']) ?>"
                         data-udm="<?= htmlspecialchars($fase['udm']) ?>"
                         data-eq="<?= $fase['eq_kg_fase'] ?>"
-                        data-obj-total="<?= $kilos ?>">
+                        data-obj-total="<?= $kilos ?>"
+                        data-max-turno="<?= $maxTurnoGlobal ?>"
+                        >
                         <i class="fa-solid fa-square-plus" style="color: rgb(41, 132, 180);"></i> AÑADIR TURNO
                     </button>
                 </div>
@@ -619,13 +635,17 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
     const objTotal  = parseFloat($(this).data('obj-total')) || 0;
 
     // 🔥 obtener turno real máximo (NO length)
-    let maxTurno = 0;
-    $tbody.find('.turno-num').each(function () {
-        const t = parseInt($(this).text()) || 0;
-        if (t > maxTurno) maxTurno = t;
-    });
+let maxTurno = 0;
+$tbody.find('.turno-num').each(function () {
+    const t = parseInt($(this).text()) || 0;
+    if (t > maxTurno) maxTurno = t;
+});
 
-    const nextTurno = maxTurno + 1;
+// ✅ también respetar el máximo global (incluye eliminados)
+const maxTurnoGlobal = parseInt($(this).data('max-turno')) || 0;
+const nextTurno = Math.max(maxTurno, maxTurnoGlobal) + 1;
+
+  
 
     // calcular kg acumulado
     let kgAcumulado = 0;
@@ -673,13 +693,17 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
 
     <td>
         <button type="button" class="btn btn-danger btn-sm btnEliminarFila">
-            🗑
+            <i class="bi bi-trash3-fill"></i>
         </button>
     </td>
 </tr>`;
+// Actualizar el máximo para la próxima fila que se agregue
+$(this).data('max-turno', nextTurno);
 
-    $tbody.append(fila);
-    recalcularTotales($tabla);
+$tbody.append(fila);
+recalcularTotales($tabla);
+
+  
 });
 
 
@@ -713,7 +737,7 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
 
         // ✅ Si es una fila nueva (sin guardar en BD)
      if (!turno) {
-    $fila.remove();
+    //$fila.remove();
     recalcularTotales($tbody.closest('.tablaAvance'));
     return;
 
@@ -744,7 +768,7 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
 
                     if (r.ok) {
                         $fila.remove();
-                        renumerar($tbody);
+                       //renumerar($tbody);
                         recalcularTotales($tbody.closest('.tablaAvance'));
 
                         Swal.fire({
