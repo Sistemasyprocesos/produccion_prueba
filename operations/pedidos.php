@@ -437,7 +437,6 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                       from prod_productos as p
                         inner join prod_envase as e on e.id=p.envase
                         inner join prod_udm as u on u.id=p.udm
-                        
                         where p.estado=1 and p.fase= 2"); 
                         ?>
                         <option></option>
@@ -446,8 +445,8 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                         data-peso="<?=$f['peso_prod'] ?>"
                           data-eq="<?=$f['equivalente_kg'] ?>"
                         >
-    <?=$f['nombre']?>
-</option>
+                          <?=$f['nombre']?>
+                        </option>
                       <?php }?>
                     </select>
                 </div>
@@ -463,29 +462,28 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                       <input type="date" class="form-control" required name="fentreg" id="fentreg">
                 </div>
             </div>
-<hr>
+          <hr>
             <div class="row mb-3">
+
                 <div class="col-5">
                     <label class="form-label">Cantidad (unidades)</label>
                       <input type="text" class="form-control" name="cant" id="cant" required>
                 </div>
 
                 <div class="col-2">
-                    
-                      
-                      <input type="text" class="form-control" name="unds" id="unds" hidden value="4">
+                     <input type="text" class="form-control" name="unds" id="unds" hidden value="4">
                 </div>
+
                 <div class="col-3">
                   <label class="form-label">Equivalente (kg)</label>
                     <input type="text" readonly class="form-control" id="cant_equiv">
                 </div>
 
-
-
-
             </div>
         </div>
       </div>
+
+
       <div class="modal-footer  justify-content-center">
         <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Guardar</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>

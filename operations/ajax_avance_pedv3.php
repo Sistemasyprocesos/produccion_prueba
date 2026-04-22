@@ -222,6 +222,7 @@ $d = "SELECT
     pr.nombre as productonombre,
     pr.peso_prod,
     p.num_pedido,
+    p.estado,
     p.id_pedido,
     c.razon_social,
     e.nombre as nombreenvase,
@@ -291,6 +292,8 @@ if ($pedido) {
     $unds           = $pedido['unds'];
     $equivalente    = $pedido['eq_kg'] ?? 1;
     $eq_fase        = $pedido['eq_kg_fase'] ?? 1;
+    $estado         = $pedido['estado']?? '';
+    $cerrado=($estado == 2);
 
     $kilos = ($equivalente > 0) ? $cantidad * ($pesoprod * $equivalente) : 0;
     $obj   = $unds * ($pesoenva * $eq_fase);
@@ -338,6 +341,12 @@ if ($pedido) {
     </div>
 </div>
 </div>
+
+<!-----Pasar $cerrado al HTML como variable JS y úsala ----->
+<script>
+    var pedidoCerrado = <?= $cerrado ? 'true' : 'false' ?>;
+</script>
+
 <!-- ===== FORMULARIO ===== -->
 <form id="formAvance">
     <input type="hidden" name="id_pedido" value="<?= $id ?>">
@@ -501,22 +510,24 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
             <!---------OBJETIVO----------------->
                         <!-- ✅ CORREGIDO: data-obj y texto usan $obj_mostrar (BD o calculado) -->
                     <td>
-<?php if ($turno > $turnosFase || $val_obj !== null): ?>
-    <input type="number" step="0.01" min="0"
-        class="form-control form-control-sm input-obj"
-        name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
-        value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
-<?php else: ?>
-    <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
-        <?= number_format($obj_mostrar, 2).' KG' ?>
-    </div>
-<?php endif; ?>
-</td>
+                            <?php if ($turno > $turnosFase || $val_obj !== null): ?>
+                                <input type="number" step="0.01" min="0"
+                                    
+                                    class="form-control form-control-sm input-obj"
+                                    name="obj[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
+                                    value="<?= number_format($obj_mostrar, 2, '.', '') ?>">
+                            <?php else: ?>
+                        <div class="text-center align-middle td-obj" data-obj="<?= $obj_mostrar ?>">
+                            <?= number_format($obj_mostrar, 2).' KG' ?>
+                        </div>
+                            <?php endif; ?>
+                    </td>
 
             
             <!---------UNIDADES PRODUCIDAS----------------->
                         <td>
                             <input type="number" step="0.01" min="0" 
+                                onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)"
                                 class="form-control form-control-sm input-real"
                                 value="<?= htmlspecialchars($val_kg) ?>"
                                 name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
@@ -670,6 +681,9 @@ $(document).off('click', '.btnAgregarTurno').on('click', '.btnAgregarTurno', fun
     $tbody.append(fila);
     recalcularTotales($tabla);
 });
+
+
+
 
 /* ======================
    ELIMINAR FILA + renumerar
@@ -859,6 +873,31 @@ $(document).on('input', '.input-real', function () {
 $('.tablaAvance').each(function () {
     recalcularTotales($(this));
 });
+
+
+
+// ── MODO SOLO LECTURA SI PEDIDO CERRADO ──────────────────────
+// Primero limpiar siempre cualquier estado anterior
+$('#formAvance input:not([type="hidden"]), #formAvance select').prop('disabled', false);
+$('.btnAgregarTurno').show();
+$('.btnEliminarFila').show();
+$('#formAvance .alert-pedido-cerrado').remove();
+
+// Luego aplicar restricciones solo si corresponde
+if (pedidoCerrado) {
+    $('#formAvance input:not([type="hidden"]), #formAvance select').prop('disabled', true);
+    $('.btnAgregarTurno').hide();
+    $('.btnEliminarFila').hide();
+    $('#formAvance').prepend(`
+        <div class="alert alert-warning alert-pedido-cerrado d-flex align-items-center mb-3" role="alert">
+            <i class="bi bi-lock-fill me-2 fs-5"></i>
+            <span>Este pedido está <strong>cerrado</strong>. Los datos son de solo lectura.</span>
+        </div>
+    `);
+}
+
+
+
 </script>
 
 <!-- ENCABEZADO COMPACTO AL SCROLL -->
