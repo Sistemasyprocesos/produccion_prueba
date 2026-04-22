@@ -543,7 +543,7 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
             <!---------UNIDADES PRODUCIDAS----------------->
                         <td>
                             <input type="number" step="0.01" min="0" 
-                                onkeydown="return /[\d]|Backspace|Delete|Arrow/.test(event.key)"
+                                onkeydown="return /[\d.,]|Backspace|Delete|Arrow/.test(event.key)"
                                 class="form-control form-control-sm input-real"
                                 value="<?= htmlspecialchars($val_kg) ?>"
                                 name="real[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
@@ -935,3 +935,54 @@ document.addEventListener("shown.bs.modal", function () {
     });
 });
 </script>
+
+
+
+
+<!---------SCRIPT DE VALIDACION DE LA FECHA-------------->
+
+<script>
+
+    /***Bloquear escritura manual COMPLETAMENTE    */
+$(document).on('keydown paste', 'input[type="date"]', function (e) {
+    e.preventDefault();
+});
+
+
+/***Forzar uso del picker (calendario) */
+$(document).on('focus', 'input[type="date"]', function () {
+    this.showPicker && this.showPicker();
+});
+
+
+$(document).on('change', 'input[type="date"]', function () {
+    const $input    = $(this);
+    const $tbody    = $input.closest('tbody');
+    const $filas    = $tbody.find('tr');
+    const $fila     = $input.closest('tr');
+    const idx       = $filas.index($fila);
+
+    const fechaActual = $input.val();
+    if (!fechaActual) return;
+
+    //VALIDAR CONTRA EL ANTERIOR
+    if (idx > 0) {
+        const fechaAnterior = $filas.eq(idx - 1).find('input[type="date"]').val();
+        if (fechaAnterior && fechaActual < fechaAnterior) {
+            $input.val('');
+            Swal.fire('Fecha inválida', 'No puede ser menor al turno anterior', 'warning');
+            return;
+        }
+    }
+
+    //ACTUALIZAR SIGUIENTES
+    $filas.slice(idx + 1).each(function () {
+        const $sig = $(this).find('input[type="date"]');
+        $sig.attr('min', fechaActual);
+
+        if ($sig.val() && $sig.val() < fechaActual) {
+            $sig.val('');
+        }
+    });
+});
+    </script>
