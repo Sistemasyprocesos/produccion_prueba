@@ -297,6 +297,7 @@ if($total_alertas <= 0) {
              <tr data-estado="<?= $g['estado'] ?>" class="<?= ((strtotime($g['fecha_entrega']) - time()) < (3*86400) && $g['estado'] == 'ACTIVO') ? 'table-danger' : '' ?>">
                 <td>
                   <?=$g['num_pedido'] ?>
+                  <!-----------
                     <button 
                       class="btn btn-primary btn-sm btnVerPedido"
                       data-id="<?=$g['id_pedido']?>"
@@ -304,7 +305,7 @@ if($total_alertas <= 0) {
                       data-bs-target="#modalver">
                       <i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i>
                     </button>
-
+--->
                     <!-----------DATOS EN LA TABLA----------------------->
                 </td>
                 <td><?=$g['cliente'] ?></td>
@@ -325,7 +326,7 @@ if($total_alertas <= 0) {
                 <td>
      
                   <!----------------------------------------------->
-                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i> Detalle</button>
+                  <button class="btn btn-success btn-sm btnVerDetallev3" data-iddet="<?=$g['id_pedido']?>" data-bs-toggle="modal"data-bs-target="#modaldetallesv3"><i class="fa-solid fa-eye" style="color: rgb(255, 255, 255);"></i></button>
 
                 <!---------BOTON EDITAR---------------------------->
                   <button class="btn btn-sm btn-warning btnEditar"
@@ -340,9 +341,14 @@ if($total_alertas <= 0) {
                     <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
                   </button>
 
-                  <!-------------------------------------------------------------------->
+                  <!---------------BOTON CERRAR PEDIDO----------------------------------------------------->
 
             <button class="btn btn-sm btn-danger btn-cerrar" data-ident="<?=$g['id_pedido']?>"><i class="fa-solid fa-rectangle-xmark" style="color: rgb(255, 255, 255);"></i></button>
+
+
+                  <!---------------BOTON ABRIR PEDIDO----------------------------------------------------->
+
+            <button class="btn btn-sm btn-info btn-reabrir" data-ident="<?=$g['id_pedido']?>"><i class="fa-sharp fa-regular fa-circle-play" style="color: rgb(255, 255, 255);"></i></button>
 
 
                 </td>
@@ -691,7 +697,7 @@ $(document).on("click", "#btnGuardarEdicion", function(){
 
 </script>
 
-
+<!----------CERRAR PEDIDO--------------->
 
 <script>
   document.querySelectorAll('.btn-cerrar').forEach(btn => {
@@ -712,6 +718,36 @@ $(document).on("click", "#btnGuardarEdicion", function(){
         if (result.isConfirmed) {
             // Redirigir al PHP que elimina
             window.location.href = "../procedimiento/closeped.php?id=" + id;
+      }
+    });
+
+  });
+});
+
+</script>
+
+
+<!-------------REABRIR PEDIDO----------------------->
+
+<script>
+  document.querySelectorAll('.btn-reabrir').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+      const id = this.getAttribute('data-ident');
+
+      Swal.fire({
+        title: "Reabrir pedido",
+        text: "Va a reabrir este pedido,  ¿Desea continuar?",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Si, reabrir pedido",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirigir al PHP que elimina
+            window.location.href = "../procedimiento/openped.php?id=" + id;
       }
     });
 
