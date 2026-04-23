@@ -20,11 +20,11 @@ foreach ($real as $secuencia => $turnos) {
 
     foreach ($turnos as $turno => $valor) {
 
-     $unidades = floatval($valor);
-$f_check = $fecha[$secuencia][$turno] ?? '';
-$j_check = $jornada[$secuencia][$turno] ?? '';
-$h_check = $hc[$secuencia][$turno] ?? '';
-$obj_check = $obj[$secuencia][$turno] ?? 0;
+        $unidades = floatval($valor);
+        $f_check = $fecha[$secuencia][$turno] ?? '';
+        $j_check = $jornada[$secuencia][$turno] ?? '';
+        $h_check = $hc[$secuencia][$turno] ?? '';
+        $obj_check = $obj[$secuencia][$turno] ?? 0;
 
 if (
     $unidades <= 0 &&
@@ -46,7 +46,7 @@ $kg_real = $unidades * $p * $e;
         try {
 
             // 🔥 INSERT o UPDATE (evita duplicados)
-       $stmt = $conn->prepare("
+$stmt = $conn->prepare("
     INSERT INTO prod_avance_pedido
     (id_pedido, 
     secuencia, 
@@ -91,8 +91,6 @@ $kg_real = $unidades * $p * $e;
 }
 
 
-
-
 /* ===================================
    OBTENER ULTIMA FASE DEL PRODUCTO
 =================================== */
@@ -107,11 +105,11 @@ $q=$conn->prepare("
         )
 ");
 
-$q->bind_param("i",$id_pedido);
-$q->execute();
-$r=$q->get_result()->fetch_assoc();
+        $q->bind_param("i",$id_pedido);
+        $q->execute();
+        $r=$q->get_result()->fetch_assoc();
 
-$ultima_fase = $r['ultima'];
+        $ultima_fase = $r['ultima'];
 
 
 /* ===================================
@@ -165,8 +163,6 @@ $up=$conn->prepare("
 
 $up->bind_param("ii",$est,$id_pedido);
 $up->execute();
-
-
 
 
 echo json_encode([

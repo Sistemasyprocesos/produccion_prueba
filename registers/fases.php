@@ -80,9 +80,9 @@ $res=$conn->query($sql);
 
   <div class="container mt-2">
     <div class="row mb-3">
-      <div class="col-2">
+      <div class="col-4">
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo">
-          <i class="bi bi-plus-square"></i> Agregar Fases de Producción
+          <i class="bi bi-plus-circle-fill"></i> Agregar Fases de Producción
         </button>
       </div>
       <div class="col-4">
@@ -96,7 +96,6 @@ $res=$conn->query($sql);
       <th>PRODUCTO PT</th>
       <th>ORDEN OP</th>
       <th>Produccion Estandar</th>
-      
       <th></th>
     </tr>
   </thead>
@@ -125,7 +124,7 @@ $res=$conn->query($sql);
               <button 
                 class="btn btn-danger btn-sm btnEliminarProceso"
                 data-proceso="<?=$f['proce']?>">
-                <i class="bi bi-trash3"></i>
+                <i class="bi bi-trash3-fill"></i>
               </button>
 
             <?php 
@@ -154,7 +153,7 @@ $res=$conn->query($sql);
 
 <!-- ================= MODAL NUEVO ================= -->
 <div class="modal fade" tabindex="-1" id="modalnuevo">
-  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
     <div class="modal-content">
 
       <div class="modal-header" style="background-color: #198754; color: white;">
@@ -170,18 +169,19 @@ $res=$conn->query($sql);
               <label class="form-label">Producto</label>
                 <?php  
                  $g=$conn->query("
-                select 
-                p.id,
-                p.nombre,
-                p.peso_prod, 
-                u.sigla,
-                e.abreviatura
-                from  prod_productos as p inner join prod_udm as u 
-                  on p.udm=u.id
-                inner join prod_envase as e 
-                  on e.id=p.envase
-                order by nombre asc"
-                 );   ?>
+                    select 
+                    p.id,
+                    p.nombre,
+                    p.peso_prod, 
+                    u.sigla,
+                    e.abreviatura
+                    from  prod_productos as p inner join prod_udm as u 
+                      on p.udm=u.id
+                    inner join prod_envase as e 
+                      on e.id=p.envase
+                    order by nombre asc"
+                    );   
+                 ?>
               <select name="producto" id="producto" class="form-select" required>
                 <?php  while($r=$g->fetch_assoc()){   ?>
                   <option value="<?=htmlspecialchars($r['id'], ENT_QUOTES, 'UTF-8') ?>"><?=$r['nombre'] ?></option>
@@ -196,7 +196,7 @@ $res=$conn->query($sql);
               </div>
           </div>
           <!---------->
-          <table class="table table-bordered" id="tablaDescuentosModal">
+          <table class="table table-bordered shadow" id="tablaDescuentosModal">
             <thead class="table-dark">
               <tr>
                 <th>Secuencia</th>
@@ -207,7 +207,7 @@ $res=$conn->query($sql);
                 <th>Envase</th>
                 <th>Peso Envase</th>
                 <th>UDM envase</th>
-                <th>HC std</th>
+                <th style='width: 90px;'>HC std</th>
                 <th></th>
               </tr>
             </thead>
@@ -256,18 +256,13 @@ $res=$conn->query($sql);
               <option value="<?=$r['id']?>"><?=$r['nombre']?></option>
             <?php } ?>
       </select>
-
       <button type="button" class="btn btn-success btnAgregarActividad">
-        <i class="bi bi-plus"></i>
+        <i class="bi bi-plus-circle-fill"></i>
       </button>
-
     </div>
-
   </div>
 </td>
           
-
-
           <!---------UNIDADES----------->
     <td>
       <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
@@ -301,29 +296,20 @@ $res=$conn->query($sql);
             <?php }   ?>
             </select>
           </td>
-
-
-
-          
           <!---------CANTIDAD DE PERSONAS ESTANDAR----------->
           <td>
              <input type="number" min="0" step="1.0" onkeypress="return solonum(event)" required class="form-control" name="personas[]">
           </td>
-          <td><button type="button" class="btn btn-sm btn-danger eliminar-fila"><i class="bi bi-trash"></i></button></td>
+          <td><button type="button" class="btn btn-sm btn-danger eliminar-fila"><i class="bi bi-trash3-fill"></i></button></td>
       </tr>
     </tbody>
   </table>
-
-          
-
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <div class="modal-footer justify-content-center">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
           </div>
-
         </form>
       </div>
-
     </div>
   </div>
 </div>
@@ -334,7 +320,7 @@ $res=$conn->query($sql);
 
 
 <div class="modal fade" tabindex="-1" id="modaleditar">
-  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
     <div class="modal-content">
 
       <div class="modal-header" style="background-color: #0d6efd; color: white;">
@@ -358,7 +344,7 @@ $res=$conn->query($sql);
             </div>
           </div>
 
-          <table class="table table-bordered table-sm" id="tablaEditar">
+          <table class="table table-bordered table-sm shadow" id="tablaEditar">
             <thead class="table-dark">
               <tr>
                 <th>Sec.</th>
@@ -377,7 +363,7 @@ $res=$conn->query($sql);
             </tbody>
           </table>
 
-          <div class="modal-footer">
+          <div class="modal-footer justify-content-center">
             <button type="submit" class="btn btn-primary">
               <i class="bi bi-save"></i> Guardar Cambios
             </button>
@@ -447,7 +433,7 @@ $(function(){
           </select>
 
           <button type="button" class="btn btn-success btnAgregarActividad">
-            <i class="bi bi-plus"></i>
+            <i class="bi bi-plus-circle-fill"></i>
           </button>
 
         </div>
@@ -478,7 +464,7 @@ $(function(){
         </select>
 
         <button type="button" class="btn btn-danger eliminarActividad">
-          <i class="bi bi-trash"></i>
+          <i class="bi bi-trash3-fill"></i>
         </button>
 
       </div>
@@ -603,10 +589,10 @@ fase.actividades.forEach(function(act, i){
 
     ${i === 0 
       ? `<button type="button" class="btn btn-success btnAgregarActividadEditar">
-           <i class="bi bi-plus"></i>
+             <i class="bi bi-plus-circle-fill"></i>
          </button>`
       : `<button type="button" class="btn btn-danger eliminarActividadEditar">
-           <i class="bi bi-trash"></i>
+         <i class="bi bi-trash3-fill"></i>
          </button>`
     }
 
@@ -760,7 +746,7 @@ if(window.catalogoActividades){
         ${opciones}
       </select>
       <button type="button" class="btn btn-danger eliminarActividadEditar">
-        <i class="bi bi-trash"></i>
+      <i class="bi bi-trash3-fill"></i>
       </button>
     `;
 

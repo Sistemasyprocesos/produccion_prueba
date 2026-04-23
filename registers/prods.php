@@ -83,7 +83,7 @@ $consulta="select
 <div class="container mt-2">
   <div class="row mb-3">
     <div class="col-2">
-      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Producto</button>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-circle-fill"></i> Agregar Producto</button>
     </div>
     <div class="col-4">
         <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar producto...">
@@ -195,11 +195,11 @@ $consulta="select
 
           <div class="row mb-3">
             <div class="col-6">
-
-
-
-          <label class="form-label">Código</label>
-          <input type="text" name="codigoprod" maxlength="10" required class="form-control">
+                <label class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigo_producto" name="codigo" required>
+                <div class="invalid-feedback">
+                  Este código ya está registrado
+                </div>
             </div>
             <div class="col-6">
               <label class="form-label">Nombre del producto</label>
@@ -311,9 +311,9 @@ $consulta="select
 
         </div> <!-- ✅ CIERRE modal-body -->
 
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <div class="modal-footer justify-content-center">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
         </div>
 
       </form>
@@ -342,6 +342,9 @@ $consulta="select
           <div class="col-6">
               <label class="form-label">Código</label>
                   <input type="text" required class="form-control" id="cod" name="cod">
+                  <div class="invalid-feedback">
+                  Este código ya está registrado
+                </div>
           </div>
           <div class="col-4">
               <label class="form-label">Nombre Actual</label>
@@ -470,7 +473,7 @@ $consulta="select
 
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer justify-content-center">
           <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Guardar</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
         </div>
@@ -749,6 +752,67 @@ if (data.existe) {
     });
 
 });
+</script>
+
+
+<script>
+const inputCodigo = document.getElementById('codigo_producto');
+
+inputCodigo.addEventListener('keyup', function () {
+
+    const valor = this.value.trim();
+
+    if (valor.length < 2) return; // evita consultas innecesarias
+
+    fetch('verificar_codigo.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'codigo=' + encodeURIComponent(valor)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.existe) {
+            inputCodigo.classList.add('is-invalid');
+        } else {
+            inputCodigo.classList.remove('is-invalid');
+        }
+
+    });
+
+});
+
+
+const ingresocodigo = document.getElementById('cod');
+
+ingresocodigo.addEventListener('keyup', function () {
+
+    const valor = this.value.trim();
+
+    if (valor.length < 2) return; // evita consultas innecesarias
+  
+    fetch('verificar_codigo.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'codigo=' + encodeURIComponent(valor)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.existe) {
+            ingresocodigo.classList.add('is-invalid');
+        } else {
+            ingresocodigo.classList.remove('is-invalid');
+        }
+
+    });
+
+});
+
 </script>
 
 </body>

@@ -1,178 +1,171 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
+    <style>
+        .total-obj {
+            display: none;
+        }
+        /* ── Tabla minimalista ── */
+        .tablaAvance {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.82rem;
+            border: none !important;
+        }
+        .tablaAvance thead th {
+            background: #8c96a72e;
+            color: #030a17;
+            font-weight: 500;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: none;
+            border-bottom: 1.5px solid #e5e7eb;
+            padding: 8px 10px;
+        }
+        .tablaAvance tbody tr {
+            border-bottom: 1px solid #d1d1d2;  /* ya la tienes */
+            transition: background 0.15s;
+            transition: background 0.15s;
+        }
+        .tablaAvance tbody tr:hover {
+            background-color: #b6b6b63d;
+        }
+        .tablaAvance tbody tr.table-warning {
+            background-color: #2ab8db4b !important;
+        }
+        .tablaAvance tbody tr.table-warning:hover {
+            background-color: #2ab8dba5 !important;
+        }
+        .tablaAvance tbody td {
+            border: none;
+            padding: 7px 10px;
+            vertical-align: middle;
+            color: #070b11;
+        }
+        .tablaAvance tfoot tr {
+            border-top: 1.5px solid #e5e7eb;
+            background: #f9fafb !important;
+        }
+        .tablaAvance tfoot td {
+            border: none;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            color: #374151;
+        }
 
-.total-obj {
-    display: none;
-}
+        /* ── Inputs dentro de la tabla ── */
+        .tablaAvance .form-control,
+        .tablaAvance .form-select {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            height: 32px;
+            background: white;
+            color: #374151;
+            box-shadow: none;
+            appearance: auto;
+            -webkit-appearance: auto;
+        }
+        .tablaAvance .form-control:focus,
+        .tablaAvance .form-select:focus {
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147,197,253,0.2);
+            outline: none;
+        }
 
+        /* ── Fase bloque ── */
+        .fase-bloque {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 1.5rem;
+        }
 
-/* ── Tabla minimalista ── */
-.tablaAvance {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.82rem;
-    border: none !important;
-}
-.tablaAvance thead th {
-    background: #8c96a72e;
-    color: #030a17;
-    font-weight: 500;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border: none;
-    border-bottom: 1.5px solid #e5e7eb;
-    padding: 8px 10px;
-}
-.tablaAvance tbody tr {
-    border-bottom: 1px solid #d1d1d2;  /* ya la tienes */
-    transition: background 0.15s;
-    transition: background 0.15s;
-}
-.tablaAvance tbody tr:hover {
-    background-color: #b6b6b63d;
-}
-.tablaAvance tbody tr.table-warning {
-    background-color: #2ab8db4b !important;
-}
-.tablaAvance tbody tr.table-warning:hover {
-    background-color: #2ab8dba5 !important;
-}
-.tablaAvance tbody td {
-    border: none;
-    padding: 7px 10px;
-    vertical-align: middle;
-    color: #070b11;
-}
-.tablaAvance tfoot tr {
-    border-top: 1.5px solid #e5e7eb;
-    background: #f9fafb !important;
-}
-.tablaAvance tfoot td {
-    border: none;
-    padding: 8px 10px;
-    font-size: 0.8rem;
-    color: #374151;
-}
+        /* ── Badge de fase ── */
+        .fase-bloque .badge.bg-primary {
+            background: #eff6ff !important;
+            color: #1727cf !important;
+            font-size: 0.90rem !important;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 4px 10px;
+            border: 1px solid #24c379;
+        }
 
-/* ── Inputs dentro de la tabla ── */
-.tablaAvance .form-control,
-.tablaAvance .form-select {
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    height: 32px;
-    background: white;
-    color: #374151;
-    box-shadow: none;
-     appearance: auto;
-    -webkit-appearance: auto;
-}
-.tablaAvance .form-control:focus,
-.tablaAvance .form-select:focus {
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(147,197,253,0.2);
-    outline: none;
-}
+        /* ── Botón añadir turno ── */
+        .btnAgregarTurno {
+            font-size: 0.78rem; 
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #bbf7d0;
+            background: #f0fdf4;
+            color: #15803d;
+            font-weight: 500;
+        }
+        .btnAgregarTurno:hover {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #185f32;
+        }
 
-/* ── Fase bloque ── */
-.fase-bloque {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 1.5rem;
-}
+        /* ── Botón eliminar ── */
+        .btnEliminarFila {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
 
-/* ── Badge de fase ── */
-.fase-bloque .badge.bg-primary {
-    background: #eff6ff !important;
-    color: #1727cf !important;
-    font-size: 0.90rem !important;
-    font-weight: 700;
-    border-radius: 6px;
-    padding: 4px 10px;
-    border: 1px solid #24c379;
-}
+        /* ── Progress bar ── */
+        .progress {
+            height: 12px;
+            border-radius: 99px;
+            background: #f3f4f6;
+            overflow: hidden;
+        }
+        .barra-cumplimiento {
+            border-radius: 99px;
+            transition: width 0.4s ease, background-color 0.4s ease;
+            font-size: 0;
+        }
 
-/* ── Botón añadir turno ── */
-.btnAgregarTurno {
-    font-size: 0.78rem; 
-    padding: 4px 12px;
-    border-radius: 6px;
-    border: 1px solid #bbf7d0;
-    background: #f0fdf4;
-    color: #15803d;
-    font-weight: 500;
-}
-.btnAgregarTurno:hover {
-    background: #dcfce7;
-    border-color: #86efac;
-    color: #185f32;
-}
+        .encabezado-pedido {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background-color: white;
+            border-bottom: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+            padding: 10px 0;
+            overflow: hidden;
+        }
+        .encabezado-pedido * {
+            transition: font-size 0.3s ease, padding 0.3s ease;
+        }
+        .encabezado-pedido.compacto {
+            padding: 3px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .encabezado-pedido.compacto .num-pedido { font-size: 0.75rem; }
+        .encabezado-pedido.compacto .detalle-pedido { font-size: 0.70rem; }
+        .encabezado-pedido.compacto .detalle-pedido b { font-size: 0.72rem; }
+        .encabezado-pedido.compacto .row { margin-bottom: 0 !important; }
+        .progress {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .barra-cumplimiento {
+            transition: width 0.4s ease, background-color 0.4s ease;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+            min-width: 36px;
+        }
 
-/* ── Botón eliminar ── */
-.btnEliminarFila {
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-}
-
-/* ── Progress bar ── */
-.progress {
-    height: 12px;
-    border-radius: 99px;
-    background: #f3f4f6;
-    overflow: hidden;
-}
-.barra-cumplimiento {
-    border-radius: 99px;
-    transition: width 0.4s ease, background-color 0.4s ease;
-    font-size: 0;
-}
-
-
-
-.encabezado-pedido {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    background-color: white;
-    border-bottom: 2px solid #dee2e6;
-    transition: all 0.3s ease;
-    padding: 10px 0;
-    overflow: hidden;
-}
-.encabezado-pedido * {
-    transition: font-size 0.3s ease, padding 0.3s ease;
-}
-.encabezado-pedido.compacto {
-    padding: 3px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-.encabezado-pedido.compacto .num-pedido { font-size: 0.75rem; }
-.encabezado-pedido.compacto .detalle-pedido { font-size: 0.70rem; }
-.encabezado-pedido.compacto .detalle-pedido b { font-size: 0.72rem; }
-.encabezado-pedido.compacto .row { margin-bottom: 0 !important; }
-
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.barra-cumplimiento {
-    transition: width 0.4s ease, background-color 0.4s ease;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-    min-width: 36px;
-}
-
-</style>
+    </style>
 
 <?php
 include '../connection/conexion.php';
@@ -180,13 +173,13 @@ $id = $_POST['id'];
 $avance = [];
 
 /*---------SE USA PARA PRECARGAR LOS INPUTS-----------*/
-$q = "SELECT turno, secuencia, unidades_reales, fecha_turno, turnodn, hc, obj_kg
-      FROM prod_avance_pedido
-      WHERE id_pedido = ?";
-$stmt = $conn->prepare($q);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$res = $stmt->get_result();
+    $q = "SELECT turno, secuencia, unidades_reales, fecha_turno, turnodn, hc, obj_kg
+        FROM prod_avance_pedido
+        WHERE id_pedido = ?";
+    $stmt = $conn->prepare($q);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
 while ($r = $res->fetch_assoc()) {
     $avance[$r['secuencia']][$r['turno']] = [
         'kg_real' => $r['unidades_reales'],
@@ -201,13 +194,14 @@ while ($r = $res->fetch_assoc()) {
 }
  $turnosEliminados = [];
 
-$qDel = "SELECT secuencia, turno 
-         FROM prod_avance_turnos_eliminados
-         WHERE id_pedido = ?";
-$stmtDel = $conn->prepare($qDel);
-$stmtDel->bind_param("i", $id);
-$stmtDel->execute();
-$resDel = $stmtDel->get_result();
+        $qDel = "SELECT secuencia, turno 
+                FROM prod_avance_turnos_eliminados
+                WHERE id_pedido = ?";
+
+        $stmtDel = $conn->prepare($qDel);
+        $stmtDel->bind_param("i", $id);
+        $stmtDel->execute();
+        $resDel = $stmtDel->get_result();
 
 while ($r = $resDel->fetch_assoc()) {
     $turnosEliminados[$r['secuencia']][] = $r['turno'];
@@ -215,72 +209,69 @@ while ($r = $resDel->fetch_assoc()) {
 /* ===============================
    CONSULTA → UNA FILA POR FASE
 ================================*/
-$d = "SELECT 
-    p.fecha_registro,
-    p.fecha_entrega,
-    p.cantidad,
-    pr.nombre as productonombre,
-    pr.peso_prod,
-    p.num_pedido,
-    p.estado,
-    p.id_pedido,
-    c.razon_social,
-    e.nombre as nombreenvase,
-    w.nombre as wnombre,
-    e.abreviatura,
-    f.peso_env as pen,
-    f.secuencia,
-    u_fase.sigla as udm,
-    u_prod.sigla,
-    u_prod.equivalente_kg as eq_kg,
-    u_fase.equivalente_kg as eq_kg_fase,
-    GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR '/') as etapanombre,
-    MAX(f.unds) as unds
-FROM prod_pedidos AS p
-INNER JOIN prod_productos AS pr ON pr.id = p.producto
-INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
-INNER JOIN prod_clientes AS c ON c.id = p.id_cliente
-INNER JOIN prod_act_prod AS a ON a.id = f.actividad
-INNER JOIN prod_envase AS e ON e.id = f.envase
-INNER JOIN prod_envase AS w ON w.id = pr.envase
-INNER JOIN prod_udm u_prod ON u_prod.id = pr.udm
-INNER JOIN prod_udm u_fase ON u_fase.id = f.udm_env
-WHERE p.id_pedido = ?
-GROUP BY
-    f.secuencia, f.peso_env, p.fecha_registro, p.fecha_entrega,
-    p.cantidad, p.num_pedido, p.id_pedido, c.razon_social,
-    pr.nombre, pr.peso_prod, e.nombre, u_fase.sigla,
-    u_prod.equivalente_kg, u_prod.sigla, e.abreviatura, u_fase.equivalente_kg
-ORDER BY f.secuencia";
+        $d = "SELECT 
+                    p.fecha_registro,
+                    p.fecha_entrega,
+                    p.cantidad,
+                    pr.nombre as productonombre,
+                    pr.peso_prod,
+                    p.num_pedido,
+                    p.estado,
+                    p.id_pedido,
+                    c.razon_social,
+                    e.nombre as nombreenvase,
+                    w.nombre as wnombre,
+                    e.abreviatura,
+                    f.peso_env as pen,
+                    f.secuencia,
+                    u_fase.sigla as udm,
+                    u_prod.sigla,
+                    u_prod.equivalente_kg as eq_kg,
+                    u_fase.equivalente_kg as eq_kg_fase,
+                    GROUP_CONCAT(a.nombre ORDER BY a.nombre SEPARATOR '/') as etapanombre,
+                    MAX(f.unds) as unds
+                FROM prod_pedidos AS p
+                INNER JOIN prod_productos AS pr ON pr.id = p.producto
+                INNER JOIN prod_fases_prod AS f ON f.producto = pr.id
+                INNER JOIN prod_clientes AS c ON c.id = p.id_cliente
+                INNER JOIN prod_act_prod AS a ON a.id = f.actividad
+                INNER JOIN prod_envase AS e ON e.id = f.envase
+                INNER JOIN prod_envase AS w ON w.id = pr.envase
+                INNER JOIN prod_udm u_prod ON u_prod.id = pr.udm
+                INNER JOIN prod_udm u_fase ON u_fase.id = f.udm_env
+                WHERE p.id_pedido = ?
+                GROUP BY
+                    f.secuencia, f.peso_env, p.fecha_registro, p.fecha_entrega,
+                    p.cantidad, p.num_pedido, p.id_pedido, c.razon_social,
+                    pr.nombre, pr.peso_prod, e.nombre, u_fase.sigla,
+                    u_prod.equivalente_kg, u_prod.sigla, e.abreviatura, u_fase.equivalente_kg
+                ORDER BY f.secuencia";
 
-$ff = $conn->prepare($d);
-$ff->bind_param("i", $id);
-$ff->execute();
-$result = $ff->get_result();
+    $ff = $conn->prepare($d);
+    $ff->bind_param("i", $id);
+    $ff->execute();
+    $result = $ff->get_result();
 
-$fases  = [];
-$pedido = null;
+    $fases  = [];
+    $pedido = null;
 
-while ($row = $result->fetch_assoc()) {
-    if (!$pedido) $pedido = $row;
-    $fases[] = [
-        'secuencia'  => $row['secuencia'],
-        'std'        => $row['unds'],
-        'peso_env'   => $row['pen'],
-        'etapa'      => $row['etapanombre'],
-        'udm'        => $row['udm'],
-        'sigenv'     => $row['abreviatura'],
-        'eq_kg_fase' => $row['eq_kg_fase'] ?? 1,
-        'nomenvase'  => $row['nombreenvase']
-    ];
-}
+        while ($row = $result->fetch_assoc()) {
+            if (!$pedido) $pedido = $row;
+            $fases[] = [
+                'secuencia'  => $row['secuencia'],
+                'std'        => $row['unds'],
+                'peso_env'   => $row['pen'],
+                'etapa'      => $row['etapanombre'],
+                'udm'        => $row['udm'],
+                'sigenv'     => $row['abreviatura'],
+                'eq_kg_fase' => $row['eq_kg_fase'] ?? 1,
+                'nomenvase'  => $row['nombreenvase']
+            ];
+        }
 
 if ($pedido) {
     $fecha_registro = $pedido['fecha_registro'];
     $fecha_entrega  = date('Y/m/d', strtotime($pedido['fecha_entrega']));
-
-
-
     $cantidad       = $pedido['cantidad'] ?? 0;
     $num_pedido     = $pedido['num_pedido'];
     $cliente        = $pedido['razon_social'];
@@ -293,31 +284,30 @@ if ($pedido) {
     $equivalente    = $pedido['eq_kg'] ?? 1;
     $eq_fase        = $pedido['eq_kg_fase'] ?? 1;
     $estado         = $pedido['estado']?? '';
-    $cerrado=($estado == 2);
-
-    $kilos = ($equivalente > 0) ? $cantidad * ($pesoprod * $equivalente) : 0;
-    $obj   = $unds * ($pesoenva * $eq_fase);
+    $cerrado        =($estado == 2);
+    $kilos          = ($equivalente > 0) ? $cantidad * ($pesoprod * $equivalente) : 0;
+    $obj            = $unds * ($pesoenva * $eq_fase);
 ?>
 
 <!-- ===== ENCABEZADO DEL PEDIDO ===== -->
-<div class="row mb-3">
-    <div class="col-auto pedido-box">
-        <b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?>
+    <div class="row mb-3">
+        <div class="col-auto pedido-box">
+            <b># Pedido:</b> <?= htmlspecialchars($num_pedido) ?>
+        </div>
     </div>
-</div>
 
-<style>
-.pedido-box {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 8px;
-    padding: 5px 14px;
-    color: #1d4ed8;
-    font-weight: 500;
-    font-size: 0.85rem;
-    letter-spacing: 0.02em;
-}
-</style>
+    <style>
+            .pedido-box {
+                background: #eff6ff;
+                border: 1px solid #bfdbfe;
+                border-radius: 8px;
+                padding: 5px 14px;
+                color: #1d4ed8;
+                font-weight: 500;
+                font-size: 0.85rem;
+                letter-spacing: 0.02em;
+            }
+    </style>
 
 <div class="encabezado-pedido">
     <div class="row mb-3 text-center">
@@ -365,11 +355,11 @@ if ($pedido) {
         $obj_fase_base = ($eq > 0) ? $unds * ($peso * $eq) : 0;
         $turnosFase    = ($obj_fase_base > 0) ? ceil($kilos / $obj_fase_base) : 0;
 
-// Calcula el máximo turno entre los existentes Y los eliminados de esta fase
-$maxTurnoEliminado = isset($turnosEliminados[$fase['secuencia']]) 
-    ? max($turnosEliminados[$fase['secuencia']]) 
-    : 0;
-$maxTurnoGlobal = max($turnosFase, $maxTurnoEliminado);
+        // Calcula el máximo turno entre los existentes Y los eliminados de esta fase
+        $maxTurnoEliminado = isset($turnosEliminados[$fase['secuencia']]) 
+            ? max($turnosEliminados[$fase['secuencia']]) 
+            : 0;
+        $maxTurnoGlobal = max($turnosFase, $maxTurnoEliminado);
 
 
         ?>
@@ -395,8 +385,7 @@ $maxTurnoGlobal = max($turnosFase, $maxTurnoEliminado);
                         data-udm="<?= htmlspecialchars($fase['udm']) ?>"
                         data-eq="<?= $fase['eq_kg_fase'] ?>"
                         data-obj-total="<?= $kilos ?>"
-                        data-max-turno="<?= $maxTurnoGlobal ?>"
-                        >
+                        data-max-turno="<?= $maxTurnoGlobal ?>">
                         <i class="fa-solid fa-square-plus" style="color: rgb(41, 132, 180);"></i> AÑADIR TURNO
                     </button>
                 </div>
@@ -429,40 +418,39 @@ $maxTurnoGlobal = max($turnosFase, $maxTurnoEliminado);
                 </thead>
                 <tbody>
                     <?php
-$turnosExistentes = [];
+        $turnosExistentes = [];
 
-// turnos calculados normales
-for ($i = 1; $i <= $turnosFase; $i++) {
+    // turnos calculados normales
+        for ($i = 1; $i <= $turnosFase; $i++) {
 
-    //  si está eliminado, NO lo agregues
-    if (isset($turnosEliminados[$fase['secuencia']]) &&
-        in_array($i, $turnosEliminados[$fase['secuencia']])) {
-        continue;
-    }
+            //  si está eliminado, NO lo agregues
+            if (isset($turnosEliminados[$fase['secuencia']]) &&
+                in_array($i, $turnosEliminados[$fase['secuencia']])) {
+                continue;
+            }
+            $turnosExistentes[] = $i;
+        }
 
-    $turnosExistentes[] = $i;
-}
+            // turnos guardados en BD
+            if (isset($avance[$fase['secuencia']])) {
+                foreach (array_keys($avance[$fase['secuencia']]) as $t) {
 
-// turnos guardados en BD
-if (isset($avance[$fase['secuencia']])) {
- foreach (array_keys($avance[$fase['secuencia']]) as $t) {
+                    if (isset($turnosEliminados[$fase['secuencia']]) &&
+                        in_array($t, $turnosEliminados[$fase['secuencia']])) {
+                        continue;
+                    }
 
-    if (isset($turnosEliminados[$fase['secuencia']]) &&
-        in_array($t, $turnosEliminados[$fase['secuencia']])) {
-        continue;
-    }
+                    if (!in_array($t, $turnosExistentes)) {
+                        $turnosExistentes[] = $t;
+                    }
+            }
+            }
 
-    if (!in_array($t, $turnosExistentes)) {
-        $turnosExistentes[] = $t;
-    }
-}
-}
-
-// ordenar
-sort($turnosExistentes);
+            // ordenar
+            sort($turnosExistentes);
 
 // recorrer SOLO los reales
-foreach ($turnosExistentes as $turno):
+            foreach ($turnosExistentes as $turno):
 
                         // Objetivo calculado por turno
                         if ($turno == $turnosFase) {
@@ -480,27 +468,22 @@ foreach ($turnosExistentes as $turno):
                         $val_hc      = $avance[$fase['secuencia']][$turno]['hc']      ?? '';
 
                      // ✅ CORREGIDO: Solo filas extra usan obj_kg de BD
-$obj_mostrar   = ($turno > $turnosFase && $val_obj !== null && $val_obj !== '')
-                    ? (float)$val_obj
-                    : $obj_fase;
-$cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
-                  
-                  
-
+                            $obj_mostrar   = ($turno > $turnosFase && $val_obj !== null && $val_obj !== '')
+                                                ? (float)$val_obj
+                                                : $obj_fase;
+                            $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
+                
                   ?>
 
                     <tr class="<?= ($turno > $turnosFase) ? 'table-warning' : '' ?>"
                         data-peso="<?= $fase['peso_env'] ?>"
                         data-eq="<?= $fase['eq_kg_fase'] ?>">
-
                         <td class="text-center align-middle turno-num"><?= $turno ?></td>
-
                         <td>
                             <input type="date" class="form-control"
                                 name="fecha[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
                                 value="<?= htmlspecialchars($val_fecha) ?>">
                         </td>
-
                         <td>
                             <select class="form-select" name="jornada[<?= $fase['secuencia'] ?>][<?= $turno ?>]">
                                 <option value=""></option>
@@ -550,8 +533,8 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                                 placeholder="0.00">
                         </td>
 
-                        <input type="hidden" name="peso[<?= $fase['secuencia'] ?>][<?= $turno ?>]" value="<?= $fase['peso_env'] ?>">
-                        <input type="hidden" name="eq[<?= $fase['secuencia'] ?>][<?= $turno ?>]"   value="<?= $fase['eq_kg_fase'] ?>">
+                            <input type="hidden" name="peso[<?= $fase['secuencia'] ?>][<?= $turno ?>]" value="<?= $fase['peso_env'] ?>">
+                            <input type="hidden" name="eq[<?= $fase['secuencia'] ?>][<?= $turno ?>]"   value="<?= $fase['eq_kg_fase'] ?>">
 
             <!---------KG REALES, DIFERENCIA, CUMPLIMIENTO----------------->
                         <td class="text-center align-middle td-kg"></td>
@@ -560,38 +543,34 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
                         
             <!---------BOTON ELIMINAR----------------->
                         <td class="text-center align-middle">
-                        <?php if ($turno == $turnosFase || $turno > $turnosFase): ?>
-                            <button type="button" 
-                                class="btn btn-sm btn-danger btnEliminarFila"
-                                data-id="<?= $id ?>"
-                                data-secuencia="<?= $fase['secuencia'] ?>"
-                                data-turno="<?= $turno ?>">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        <?php endif; ?>
+                            <?php if ($turno == $turnosFase || $turno > $turnosFase): ?>
+                                <button type="button" 
+                                        class="btn btn-sm btn-danger btnEliminarFila"
+                                        data-id="<?= $id ?>"
+                                        data-secuencia="<?= $fase['secuencia'] ?>"
+                                        data-turno="<?= $turno ?>">
+                                        <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            <?php endif; ?>
                         </td>
                     </tr>
 
                     <?php endforeach; ?>
                 </tbody>
 
-                <tfoot >
-    <tr>
-        <td colspan="5" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
-        <td></td>
-        <td class="text-center align-middle total-obj"></td>
-        <td class="text-center align-middle total-unds"></td>
-        <td class="text-center align-middle total-real"></td>
-        <td class="text-center align-middle total-dif"></td>
-        <td class="text-center align-middle total-cumpl"></td>
-        <td></td>
-    </tr>
-</tfoot>
-            </table>
-
-
-
-
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-center align-middle"><b>TOTAL PROCESO</b></td>
+                <td></td>
+                <td class="text-center align-middle total-obj"></td>
+                <td class="text-center align-middle total-unds"></td>
+                <td class="text-center align-middle total-real"></td>
+                <td class="text-center align-middle total-dif"></td>
+                <td class="text-center align-middle total-cumpl"></td>
+                <td></td>
+            </tr>
+        </tfoot>
+</table>
 
         </div><!-- /fase-bloque -->
 
@@ -609,12 +588,12 @@ $cant_obj_prod = ($peso > 0) ? $obj_mostrar / $peso : 0;
 ?>
 
 <!-- RECALCULO AL EDITAR EL OBJETIVO -->
-<script>
-$(document).on('input', '.input-obj', function () {
-    const $tabla = $(this).closest('.tablaAvance');
-    recalcularTotales($tabla);
-});
-</script>
+        <script>
+                $(document).on('input', '.input-obj', function () {
+                    const $tabla = $(this).closest('.tablaAvance');
+                    recalcularTotales($tabla);
+                });
+        </script>
 
 <script>
 /* ======================
@@ -693,7 +672,7 @@ const nextTurno = Math.max(maxTurno, maxTurnoGlobal) + 1;
 
     <td>
         <button type="button" class="btn btn-danger btn-sm btnEliminarFila">
-            <i class="bi bi-trash3-fill"></i>
+                <i class="bi bi-trash3-fill"></i>
         </button>
     </td>
 </tr>`;
@@ -792,7 +771,6 @@ $(document).off('click', '.btnEliminarFila').on('click', '.btnEliminarFila', fun
                 Swal.fire('Error', 'Error en la petición AJAX', 'error');
             }
         });
-
     });
 });
 
@@ -813,17 +791,13 @@ function recalcularTotales($tabla) {
     let totalUndsReal = 0;
     let totalObj      = parseFloat($tabla.closest('.fase-bloque').find('.btnAgregarTurno').data('obj-total')) || 0;
 
-
-
-
-
     
     $tabla.find('tbody tr').each(function () {
       let obj = 0;
 
-// prioridad: si existe input (fila agregada o editable), usar ese
-const $inputObj = $(this).find('.input-obj');
-const $tdObj    = $(this).find('.td-obj');
+    // prioridad: si existe input (fila agregada o editable), usar ese
+    const $inputObj = $(this).find('.input-obj');
+    const $tdObj    = $(this).find('.td-obj');
 
 if ($inputObj.length) {
     obj = parseFloat($inputObj.val()) || 0;
@@ -935,9 +909,6 @@ document.addEventListener("shown.bs.modal", function () {
     });
 });
 </script>
-
-
-
 
 <!---------SCRIPT DE VALIDACION DE LA FECHA-------------->
 

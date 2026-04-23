@@ -57,7 +57,7 @@ $consulta="select
 </div>
 </div>
 
-<table class="table mt-5 table-sm shadow" id="tblcolab">
+<table class="table mt-5 table-sm shadow table-hover" id="tblcolab">
   <thead class="table-dark">
     <tr>
      <th>Razón Social</th>
@@ -247,7 +247,7 @@ $consulta="select
 
     <div class="col-6">
       <label class="form-label">Tipo de Identificación</label>
-    <select class="form-select" name="tipo_doc_edit" id="tipo_doc_edit">
+    <select class="form-select" name="tipo_doc_edit" required id="tipo_doc_edit">
         <?php
         $cl=$conn->query("select idtipoidenti,tipo from prod_tipo_identi order by tipo asc");
         if ($cl->num_rows > 0) {
@@ -260,7 +260,7 @@ $consulta="select
     </div>
        <div class="col-6">
             <label class="form-label">Identificación</label>
-            <input type="text" class="form-control" name="identi" id="identi">
+            <input type="text" required class="form-control" name="identi" id="identi">
       </div>
 
   </div>
@@ -272,7 +272,7 @@ $consulta="select
   <div class="row mb-3">
     <div class="col-12">
       <label class="form-label">Direccion</label>
-      <input type="text" class="form-control" name="dir" id="dir">
+      <input type="text" class="form-control" required name="dir" id="dir">
     </div>
   </div>
 
@@ -280,7 +280,7 @@ $consulta="select
 <div class="row mb-3">
   <div class="col-6">
       <label class="form-label">Estado</label>
-      <select class="form-select" name="est" id="est">
+      <select class="form-select" required name="est" id="est">
         <?php
         $est=$conn->query("select id,nom from prod_estados order by nom asc");
         if ($est->num_rows > 0) {

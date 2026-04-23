@@ -11,48 +11,48 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-<style>
-/* Animación de entrada */
-.fila-animada {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: aparecer 0.4s ease forwards;
-}
+    <style>
+        /* Animación de entrada */
+        .fila-animada {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: aparecer 0.4s ease forwards;
+        }
 
-@keyframes aparecer {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+        @keyframes aparecer {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-/* Animación al desaparecer */
-.fade-out {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.2s ease;
-}
+        /* Animación al desaparecer */
+        .fade-out {
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: all 0.2s ease;
+        }
 
 
-.listado-scroll {
-  max-height: 350px;   /* puedes ajustar */
-  overflow-y: auto;
-}
+        .listado-scroll {
+          max-height: 350px;   /* puedes ajustar */
+          overflow-y: auto;
+        }
 
-/* Scroll más bonito (opcional) */
-.listado-scroll::-webkit-scrollbar {
-  width: 6px;
-}
+        /* Scroll más bonito (opcional) */
+        .listado-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
 
-.listado-scroll::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 10px;
-}
+        .listado-scroll::-webkit-scrollbar-thumb {
+          background: #ccc;
+          border-radius: 10px;
+        }
 
-.listado-scroll::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-</style>
+        .listado-scroll::-webkit-scrollbar-thumb:hover {
+          background: #999;
+        }
+    </style>
 
 </head>
 
@@ -64,29 +64,29 @@
 ?>
 <?php
 $alertas = $conn->query("
-SELECT 
-  p.id_pedido,
-  p.num_pedido,
-  c.razon_social AS cliente,
-  p.fecha_entrega,
-  pr.nombre as nompro,
-  ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100 ,2) as cumplimiento
+          SELECT 
+            p.id_pedido,
+            p.num_pedido,
+            c.razon_social AS cliente,
+            p.fecha_entrega,
+            pr.nombre as nompro,
+            ROUND((COALESCE(SUM(a.unidades_reales),0) / p.cantidad) * 100 ,2) as cumplimiento
 
-FROM prod_pedidos p
-INNER JOIN prod_clientes c ON c.id = p.id_cliente
-inner join prod_productos as pr on pr.id=p.producto
-LEFT JOIN prod_avance_pedido a ON a.id_pedido = p.id_pedido
-  AND a.secuencia = (
-                    SELECT MAX(secuencia)
-                    FROM prod_fases_prod
-                    WHERE producto = pr.id
-                )
-WHERE p.estado = 1
-AND DATEDIFF(p.fecha_entrega, CURDATE()) <= 3
+          FROM prod_pedidos p
+          INNER JOIN prod_clientes c ON c.id = p.id_cliente
+          inner join prod_productos as pr on pr.id=p.producto
+          LEFT JOIN prod_avance_pedido a ON a.id_pedido = p.id_pedido
+            AND a.secuencia = (
+                              SELECT MAX(secuencia)
+                              FROM prod_fases_prod
+                              WHERE producto = pr.id
+                          )
+          WHERE p.estado = 1
+          AND DATEDIFF(p.fecha_entrega, CURDATE()) <= 3
 
-GROUP BY p.id_pedido
-ORDER BY p.fecha_entrega ASC
-");
+          GROUP BY p.id_pedido
+          ORDER BY p.fecha_entrega ASC
+          ");
 
 $total_alertas = $alertas->num_rows;
 ?>
@@ -105,13 +105,15 @@ if($total_alertas <= 0) {
 ?>
 <!--------CUANDO NO HAY FALTANTES---------------->
     <div class="card shadow-lg border-0 rounded-4 bg-success text-white text-center mb-3">
-    <div class="card-body p-2">
-        <h6 class="mb-1">
-         <i class="fa-solid fa-circle-check" style="color: rgb(255, 255, 255);"></i>
-          Pedidos con entrega próxima a vencer
-        </h6>
-        <h2><?= $total_alertas ?></h2>
-      </div>
+          <div class="card-body p-2">
+                  <h6 class="mb-1">
+                      <i class="fa-solid fa-circle-check" style="color: rgb(255, 255, 255);"></i>
+                        Pedidos con entrega próxima a vencer
+                  </h6>
+                  <h2>
+                    <?= $total_alertas ?>
+                  </h2>
+            </div>
     </div>
 <?php
 
@@ -148,7 +150,6 @@ if($total_alertas <= 0) {
         <?php while($a = $alertas->fetch_assoc()){ ?>
 
           <div class="mb-2 pb-1 border-bottom">
-
             <div class="d-flex justify-content-between">
               <small><?= $a['num_pedido'] ?> <br> <?= $a['nompro'] ?></small>
               <span class="text-danger">
@@ -162,13 +163,10 @@ if($total_alertas <= 0) {
                 style="width: <?= min(100,$a['cumplimiento']) ?>%">
               </div>
             </div>
-
-            <small class="text-muted">
-              Avance: <?= $a['cumplimiento'] ?>%
-            </small>
-
+                <small class="text-muted">
+                  Avance: <?= $a['cumplimiento'] ?>%
+                </small>
           </div>
-
         <?php } ?>
 
       </div>
@@ -202,8 +200,8 @@ if($total_alertas <= 0) {
       <!-- NUEVO PEDIDO -->
       <div class="col-md-3">
         <div class="card shadow border-0 rounded-4 h-100 d-flex justify-content-center">
-          <div class="card-body text-center">
-            <button class="btn btn-success  rounded-3"
+          <div class="card-body text-center d-flex justify-content-center">
+            <button class="btn btn-success rounded-3"
               data-bs-toggle="modal" data-bs-target="#modalnuevo">
               <i class="fa-solid fa-square-plus"></i>
               Nuevo Pedido
@@ -870,12 +868,12 @@ document.addEventListener("DOMContentLoaded", function () {
       let coincideEstado = true;
       let estadoFila = row.dataset.estado;
 
-if(estado === "1"){
-  coincideEstado = (estadoFila === "ACTIVO");
-}
-else if(estado === "2"){
-  coincideEstado = (estadoFila === "INACTIVO");
-}
+      if(estado === "1"){
+        coincideEstado = (estadoFila === "ACTIVO");
+      }
+      else if(estado === "2"){
+        coincideEstado = (estadoFila === "INACTIVO");
+      }
 
       return coincideTexto && coincideEstado;
 

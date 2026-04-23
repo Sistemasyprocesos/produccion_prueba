@@ -11,7 +11,7 @@ $sql = "INSERT INTO prod_clientes (razon_social, identificacion, tipo, direccion
         VALUES (?,?, ?, ?,?, ?)";
 $esta=1;
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssisi", $rzscl, $iden, $tc, $dir, $esta,$documento);
+$stmt->bind_param("ssisii", $rzscl, $iden, $tc, $dir, $esta,$documento);
 
 if ($stmt->execute()) {
 ?>
