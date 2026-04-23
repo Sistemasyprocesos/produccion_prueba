@@ -5,12 +5,13 @@ require '../connection/conexion.php';
     $iden  = $_POST['iden'];
     $tc    = $_POST['tipo_cliente'];
     $dir   = strtoupper($_POST['direccion']);
+    $documento = $_POST['tipo_documento'];
 
-$sql = "INSERT INTO prod_clientes (razon_social, identificacion, tipo, direccion,estado)
-        VALUES (?,?, ?, ?, ?)";
+$sql = "INSERT INTO prod_clientes (razon_social, identificacion, tipo, direccion,estado,tipo_identi)
+        VALUES (?,?, ?, ?,?, ?)";
 $esta=1;
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssisi", $rzscl, $iden, $tc, $dir, $esta);
+$stmt->bind_param("ssisi", $rzscl, $iden, $tc, $dir, $esta,$documento);
 
 if ($stmt->execute()) {
 ?>

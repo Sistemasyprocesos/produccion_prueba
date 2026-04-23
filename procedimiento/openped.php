@@ -64,7 +64,7 @@ Swal.fire({
 <?php
   }
 
-} // ← ESTE cierre sí es válido
+}
 ?>
 
 </body>

@@ -389,10 +389,10 @@ if($total_alertas <= 0) {
 </main>
 
 <!--------------GENERA NUMERO DEL PEDIDO AUTOMATICAMENTE-------------------------------------->
-<?php
-$num_pedido = file_get_contents("generar_num_pedido.php");
- require 'generar_num_pedido.php';
-?>
+    <?php
+        $num_pedido = file_get_contents("generar_num_pedido.php");
+        require 'generar_num_pedido.php';
+    ?>
 
 <!--------------MODAL AGREGAR NUEVO--------------------->
 <div class="modal fade" tabindex="-1" id="modalnuevo" aria-hidden="true">
@@ -418,7 +418,7 @@ $num_pedido = file_get_contents("generar_num_pedido.php");
                 <!----CLIENTE-------->
                 <label class="form-label">Cliente</label>
                   <select class="form-select" name="clte" id="clte" required>
-                      <?php $c=$conn->query("select id,razon_social,estado from prod_clientes where estado=1"); ?>
+                      <?php $c=$conn->query("select id,razon_social,estado from prod_clientes where estado=1 order by razon_social asc"); ?>
                     <option></option>
                       <?php while($f=$c->fetch_assoc()){     ?>
                     <option value="<?=$f['id'] ?>"><?=$f['razon_social']  ?></option>

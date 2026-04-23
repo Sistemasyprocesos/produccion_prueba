@@ -19,9 +19,22 @@ include '../complemento/sidebar.php';
 include '../connection/conexion.php';
 
 
-$consulta="select c.id,c.identificacion,c.direccion,l.id as tipo,l.nombre as nombretipo,c.razon_social,e.nom as estado,e.id as estado_id from prod_clientes as c inner join prod_tipo_cliente as l on l.id=c.tipo
-inner join prod_estados as e on e.id=c.estado   
-order by c.razon_social asc";
+$consulta="select 
+    c.id,
+    c.identificacion,
+    c.direccion,
+    c.tipo_identi as tipo_doc,
+    l.id as tipo,
+    l.nombre as nombretipo,
+    c.razon_social,
+    e.nom as estado,
+    e.id as estado_id
+       from prod_clientes as c 
+        inner join prod_tipo_cliente as l 
+            on l.id=c.tipo
+        inner join prod_estados as e 
+            on e.id=c.estado   
+      order by c.razon_social asc";
 
 ?>
 
@@ -73,7 +86,8 @@ order by c.razon_social asc";
               data-iden="<?=  $row["identificacion"]?>"
               data-tipo="<?=  $row["tipo"]?>"
               data-dir="<?=  $row["direccion"]?>"
-             data-est="<?=  $row["estado_id"]?>"
+              data-est="<?=  $row["estado_id"]?>"
+              data-tipodoc="<?= $row["tipo_doc"]?>"
               ><i class="bi bi-pencil-square"></i></button>
 
               <button class="btn btn-danger btn-sm btn-eliminar" data-id=<?= $row["id"] ?>><i class="bi bi-trash3"></i></button></td>
@@ -103,10 +117,10 @@ order by c.razon_social asc";
 
 <!--------------MODAL AGREGAR NUEVO--------------------->
 <div class="modal fade" tabindex="-1" id="modalnuevo" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
 
-<form action="../procedimiento/newclt.php" method="post">
+<form action="../procedimiento/newclt.php" method="post" onsubmit="return validarIdentificacion('tipo_documento','iden')">
 
 <div class="modal-header" style="background-color: #198754; color: white;">
   <h5 class="modal-title">Registro de cliente</h5>
@@ -117,15 +131,36 @@ order by c.razon_social asc";
   <div class="row mb-3">
     <div class="col-6">
       <label class="form-label">Razon Social</label>
-      <input type="text" class="form-control" required name="razon_social">
+      <input type="text" class="form-control" required name="razon_social" id="nuevoclient">
+          <div class="invalid-feedback">
+                   Este cliente ya existe!
+          </div>
     </div>
+
+
+<!------------------------->
     <div class="col-6">
-      <label class="form-label">Identificación</label>
-      <input type="text" class="form-control" onkeypress="return soloNumeros(event);"  required name="iden">
+      <label class="form-label">Tipo de documento</label>
+        <select class="form-select" name="tipo_documento" id="tipo_documento" required>
+            <option></option>
+              <?php 
+                $p=$conn->query("select idtipoidenti,tipo from prod_tipo_identi order by tipo asc");
+                if ($p->num_rows > 0) {
+                    while($row = $p->fetch_assoc()) { ?>
+                        <option value="<?=$row['idtipoidenti'] ?>"><?= $row['tipo']?></option>
+                    <?php   }
+                }
+              ?>
+        </select>
     </div>
   </div>
 
   <div class="row mb-3">
+<div class="col-6">
+      <label class="form-label">Identificación</label>
+      <input type="text" class="form-control"   required id="iden" name="iden">
+    </div>
+
     <div class="col-6">
       <label class="form-label">Tipo de Cliente</label>
 
@@ -157,9 +192,9 @@ order by c.razon_social asc";
   </div>
 </div>
 
-<div class="modal-footer">
-  <button type="submit" class="btn btn-primary">Guardar</button>
-  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+<div class="modal-footer justify-content-center">
+  <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
+  <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
 </div>
 
 </form>
@@ -173,10 +208,10 @@ order by c.razon_social asc";
 <!--------------MODAL EDITAR--------------------->
 
 <div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
 
-<form action="../procedimiento/editclt.php" method="post">
+<form action="../procedimiento/editclt.php" method="post" onsubmit="return validarIdentificacion('tipo_doc_edit','identi')">
 
 <div class="modal-header" style="background-color: #198754; color: white;">
   <h5 class="modal-title">Editar informacion de cliente</h5>
@@ -187,19 +222,12 @@ order by c.razon_social asc";
   <div class="row mb-3">
     <div class="col-6">
 
-    <input type="hidden" name="iden" id="iden">
+    <input type="hidden" name="idclient" id="identcli">
 
       <label class="form-label">Razon Social</label>
       <input type="text" class="form-control" name="rs" id="rs">
     </div>
-    <div class="col-6">
-      <label class="form-label">Identificación</label>
-      <input type="text" class="form-control" onkeypress="return soloNumeros(event);" name="identi" id="identi">
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-6">
+<div class="col-6">
       <label class="form-label">Tipo de Cliente</label>
       <select class="form-select" name="tc" id="tc">
         <?php
@@ -212,21 +240,34 @@ order by c.razon_social asc";
         ?>
       </select>
     </div>
-   <div class="col-6">
-      <label class="form-label">Estado</label>
-      <select class="form-select" name="est" id="est">
+ 
+  </div>
+
+  <div class="row mb-3">
+
+    <div class="col-6">
+      <label class="form-label">Tipo de Identificación</label>
+    <select class="form-select" name="tipo_doc_edit" id="tipo_doc_edit">
         <?php
-        $est=$conn->query("select id,nom from prod_estados order by nom asc");
-        if ($est->num_rows > 0) {
-            while($row = $est->fetch_assoc()) { ?>
-                <option value="<?=$esc($row['id']) ?>"><?= $esc($row['nom'])?></option>
+        $cl=$conn->query("select idtipoidenti,tipo from prod_tipo_identi order by tipo asc");
+        if ($cl->num_rows > 0) {
+            while($row = $cl->fetch_assoc()) { ?>
+                <option value="<?=$row['idtipoidenti'] ?>"><?= $row['tipo']?></option>
             <?php   }
         }
         ?>
       </select>
+    </div>
+       <div class="col-6">
+            <label class="form-label">Identificación</label>
+            <input type="text" class="form-control" name="identi" id="identi">
+      </div>
 
-   </div>
   </div>
+
+
+
+
 
   <div class="row mb-3">
     <div class="col-12">
@@ -234,11 +275,27 @@ order by c.razon_social asc";
       <input type="text" class="form-control" name="dir" id="dir">
     </div>
   </div>
-</div>
 
-<div class="modal-footer">
-  <button type="submit" class="btn btn-primary">Guardar</button>
-  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+
+<div class="row mb-3">
+  <div class="col-6">
+      <label class="form-label">Estado</label>
+      <select class="form-select" name="est" id="est">
+        <?php
+        $est=$conn->query("select id,nom from prod_estados order by nom asc");
+        if ($est->num_rows > 0) {
+            while($row = $est->fetch_assoc()) { ?>
+                <option value="<?=$row['id'] ?>"><?= $row['nom']?></option>
+            <?php   }
+        }
+        ?>
+      </select>
+
+   </div>
+</div>
+<div class="modal-footer justify-content-center">
+  <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
+  <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
 </div>
 
 </form>
@@ -260,9 +317,10 @@ order by c.razon_social asc";
   const tipo = button.getAttribute('data-tipo');
   const est = button.getAttribute('data-est');
   const dir = button.getAttribute('data-dir');
-
+const tipodoc = button.getAttribute('data-tipodoc');
+document.getElementById('tipo_doc_edit').value = tipodoc;
 // Pasar info a los inputs del modal
-  document.getElementById('iden').value = id;//id de identificacion
+  document.getElementById('identcli').value = id;//id de identificacion
   document.getElementById('rs').value = rz;
   document.getElementById('identi').value = iden;//cedula
   document.getElementById('tc').value = tipo;
@@ -311,6 +369,118 @@ function soloNumeros(event) {
   return /^[0-9]$/.test(char);
 }
   </script>
+
+
+
+
+<!---------------VERIFICA DISPONIBILIDAD DE LA CATEGORIA-------------------->
+<script>
+const inputCategoria = document.getElementById('nuevoclient');
+
+inputCategoria.addEventListener('keyup', function () {
+
+    const valor = this.value.trim();
+
+    if (valor.length < 2) return; // evita spam
+
+    fetch('verificar_cliente.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'cliente=' + encodeURIComponent(valor)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+     
+if (data.existe) {
+    inputCategoria.classList.add('is-invalid');
+} else {
+    inputCategoria.classList.remove('is-invalid');
+}
+
+    });
+
+});
+</script>
+
+<script>
+document.getElementById("tipo_documento").addEventListener("change", function() {
+    const tipo = this.value;
+    const input = document.getElementById("iden");
+
+    input.value = "";
+
+    if (tipo === "1") {
+        input.maxLength = 10;
+    } else if (tipo === "2") {
+        input.maxLength = 13;
+    } else if (tipo === "3") {
+        input.maxLength = 9;
+    } else {
+        input.removeAttribute("maxLength");
+    }
+});
+
+
+
+document.getElementById("tipo_doc_edit").addEventListener("change", function() {
+    const tipo = this.value;
+    const input = document.getElementById("identi");
+
+    input.value = "";
+
+    if (tipo === "1") {
+        input.maxLength = 10;
+    } else if (tipo === "2") {
+        input.maxLength = 13;
+    } else if (tipo === "3") {
+        input.maxLength = 9;
+    } else {
+        input.removeAttribute("maxLength");
+    }
+});
+</script>
+
+
+<script>
+let validando = false;
+
+function validarIdentificacion(tipoId, inputId) {
+
+    const tipo  = document.getElementById(tipoId).value;
+    const input = document.getElementById(inputId);
+    const valor = input.value;
+
+    if (tipo === "1" && valor.length !== 10) {
+        Swal.fire("Error", "La cédula debe tener 10 dígitos", "warning");
+        input.focus();
+        return false;
+    }
+
+    if (tipo === "2") {
+        if (valor.length !== 13) {
+            Swal.fire("Error", "El RUC debe tener 13 dígitos", "warning");
+            input.focus();
+            return false;
+        }
+        if (!valor.endsWith("001")) {
+            Swal.fire("Error", "El RUC debe terminar en 001", "warning");
+            input.focus();
+            return false;
+        }
+    }
+
+    if (tipo === "3" && valor.length !== 9) {
+        Swal.fire("Error", "El pasaporte debe tener 9 dígitos", "warning");
+        input.focus();
+        return false;
+    }
+
+    return true;
+}
+</script>
 <!------------------------------------------------------------------------------------->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
