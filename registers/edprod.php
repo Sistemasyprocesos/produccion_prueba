@@ -101,11 +101,12 @@ $er = $conn->prepare("UPDATE prod_productos SET
     envase=?,
     unds_cjsc=?,
     und_pallet=?,
-    estado=?
+    estado=?,
+    nombre_prod =?
   WHERE id=?"
 );  
 
-$er->bind_param("isssssiiiiii",
+$er->bind_param("isssssiiiiisi",
     $tipo_emb,
     $codigo,
     $nuevonom,
@@ -117,6 +118,7 @@ $er->bind_param("isssssiiiiii",
     $undcjsc,
     $undpallet,
     $estado,
+    $nombre,
     $id
 );
 

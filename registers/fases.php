@@ -101,38 +101,43 @@ $res=$conn->query($sql);
   </thead>
   <tbody><?php if ($res && $res->num_rows > 0) { ?>
 
-  <?php 
-    while ($f = $res->fetch_assoc()) 
-      { ?>
-    <tr>
-          <td><?=$f['producto']?></td>
-          <td><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
-          <td><?= $f['kg'].' KG' ?></td>
-          <td>
-            <?php if($f['sec'] == 1)
-              { ?>
-              <!-- EDITAR -->
-              <button 
+ <?php 
+$productoActual = '';
+$colorFila = 'white';
+
+while ($f = $res->fetch_assoc()) { 
+
+    // Cambiar color SOLO cuando cambia el producto
+    if ($f['producto'] !== $productoActual) {
+        $productoActual = $f['producto'];
+        $colorFila = ($colorFila === 'white') ? '#93bed851' : 'white';
+    }
+?>
+<tr >
+    <td style="background-color: <?= $colorFila ?> !important;"><?= $f['producto'] ?></td>
+    <td style="background-color: <?= $colorFila ?> !important;"><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
+    <td style="background-color: <?= $colorFila ?> !important;"><?= $f['kg'].' KG' ?></td>
+    <td style="background-color: <?= $colorFila ?> !important;">
+        <?php if($f['sec'] == 1) { ?>
+            <!-- EDITAR -->
+            <button 
                 class="btn btn-primary btn-sm btnEditarProceso"
                 data-proceso="<?=htmlspecialchars($f['proce'], ENT_QUOTES, 'UTF-8') ?>"
                 data-bs-toggle="modal"
                 data-bs-target="#modaleditar">
                 <i class="bi bi-pencil-square"></i>
-              </button>
+            </button>
 
-              <!-- ELIMINAR -->
-              <button 
+            <!-- ELIMINAR -->
+            <button 
                 class="btn btn-danger btn-sm btnEliminarProceso"
                 data-proceso="<?=$f['proce']?>">
                 <i class="bi bi-trash3-fill"></i>
-              </button>
-
-            <?php 
-              } ?>
-          </td>
-    </tr>
-          <?php
-      } ?>
+            </button>
+        <?php } ?>
+    </td>
+</tr>
+<?php } ?>
 
 <?php } else { ?>
   <tr>
