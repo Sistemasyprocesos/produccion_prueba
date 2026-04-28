@@ -780,31 +780,49 @@ $(document).on("change", "#prod", calcularEquivalente);
 <!------------GUARDAR AVANCE V3--------------------------------------->
 <script>
 $(document).on("click", "#guardarAvancev3", function () {
-    let datos = $("#formAvance").serialize();
+
+  const form = document.getElementById("formAvance");
+
+    if (!form.checkValidity()) {
+        form.reportValidity(); // muestra los mensajes nativos
+        return;
+    }
+
+        let datos = $("#formAvance").serialize();
 
     $.ajax({
         url: "guardar_avancev3.php",
         type: "POST",
         data: datos,
         dataType: "json",
-        success: function (resp) {
-            if (resp.ok) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Guardado',
-                    text: resp.guardados + ' turno(s) guardados correctamente'
-                }).then(() => {
-                    $('#modaldetallesv3').modal('hide');
-                    location.reload();
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Guardado parcial',
-                    text: resp.guardados + ' guardados, ' + resp.errores + ' con error'
-                });
-            }
-        },
+success: function (resp) {
+
+    if (resp.error === "FALTAN_FECHAS") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Debe asignar fecha a todos los turnos con datos'
+        });
+        return;
+    }
+
+    if (resp.ok) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Guardado',
+            text: resp.guardados + ' turno(s) guardados correctamente'
+        }).then(() => {
+            $('#modaldetallesv3').modal('hide');
+            location.reload();
+        });
+    } else {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Guardado parcial',
+            text: resp.guardados + ' guardados, ' + resp.errores + ' con error'
+        });
+    }
+},
         error: function () {
             Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar' });
         }

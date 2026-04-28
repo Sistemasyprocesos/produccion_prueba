@@ -171,7 +171,7 @@ $consulta="select
       ?>
 
       <select class="form-select" required name="tipo_cliente">
-        <option>Seleccione...</option>
+        <option></option>
         <?php
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) { ?>

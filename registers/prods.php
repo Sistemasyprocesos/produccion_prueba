@@ -148,7 +148,7 @@ $consulta="select
             </button>
 
               <!-------BOTON ELIMINAR------------->
-              <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["idprod"] ?>"><i class="bi bi-trash3" ></i></button>
+              <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["idprod"] ?>"><i class="bi bi-trash3-fill"></i></button>
             </td>
 
               
@@ -190,8 +190,9 @@ $consulta="select
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
-        <div class="modal-body">
-          <h6 class="text-decoration-underline">Datos del producto</h6>
+    <div class="modal-body">
+        <div class="bg-light p-3 border border-primary rounded mb-3">
+            <h6 class="mb-3"><i class="bi bi-box-seam"></i> Datos del producto</h6>
 
           <div class="row mb-3">
             <div class="col-6">
@@ -267,14 +268,12 @@ $consulta="select
                 <?php } ?>
               </select>
             </div>
-           
-           
           </div>
+        </div><!------CIERRA SECCION--------->
+        <div class="bg-light border border-primary p-3 rounded">
+            <h6 class="mb-3"><i class="fa-solid fa-pallet" style="color: rgb(19, 15, 15);"></i> Datos del pallet</h6>
 
-          <hr>
-          <h6><u>Datos pallet</u></h6>
-
-          <div class="row mb-3">
+          <div class="row">
             <div class="col-4">
               <label class="form-label">Unds(CJ/SC)</label>
               <input type="text" class="form-control" id="unds_cjsc" onkeypress=soloNumeros(event) name="unds_cjsc">
@@ -294,11 +293,12 @@ $consulta="select
               <input type="text" class="form-control" onkeypress=soloNumeros(event) name="unds_pallet" id="unds_pallet">
             </div>
           </div>
+</div>
+       
+ 
+         
 
-          <hr>
-          <h6><u>Unidades equivalentes</u></h6>
-
-          <div class="row mb-3">
+          <div class="row">
             <div class="col-4">
               <label class="form-label">Producto base</label>
               <select class="form-select" name="prod_base" id="prod_base">
@@ -311,10 +311,14 @@ $consulta="select
 
         </div> <!-- ✅ CIERRE modal-body -->
 
-        <div class="modal-footer justify-content-center">
-          <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
-        </div>
+      <div class="modal-footer bg-light border-top">
+        <button type="submit" class="btn btn-success px-4">
+          <i class="bi bi-check-circle"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
 
       </form>
 
@@ -338,59 +342,72 @@ $consulta="select
         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 
           <!-- Código -->
-        <div class="row mb-3">
-          <div class="col-6">
+       <div class="border border-primary rounded p-3 mb-3 bg-light">
+          <div class="row mb-3">
+          <div class="col-4">
               <label class="form-label">Código</label>
                   <input type="text" required class="form-control" id="cod" name="cod">
                   <div class="invalid-feedback">
                   Este código ya está registrado
                 </div>
           </div>
-          <div class="col-4">
+          <div class="col-6">
               <label class="form-label">Nombre Actual</label>
                   <input type="text" required class="form-control" id="nombre" name="nombr" disabled readonly>
           </div>
+          <div class="col-2">
+              <label class="form-label">Estado</label>
+                <select name="estate" required id="estate" class="form-select">
+                  <?php $f=$conn->query("select id,nom from prod_estados order by nom desc");
+                  while($k=$f->fetch_assoc()){
+                  ?>
+                    <option value="<?=$k['id'] ?>"><?=$k['nom'] ?></option>
+                  <?php } ?>
+                </select>
+            </div>
         </div>
-<hr>
+</div>
+
 
 
   <!-- Categoría / PVP / Peso -->
+    <div class="border border-primary rounded p-3 mb-3 bg-light">
           <div class="row mb-3">
-            <div class="col-3">
-              <label class="form-label">Nombre producto</label>
-                  <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nuevonombreprod" required>
-            </div>
+                <div class="col-5">
+                  <label class="form-label">Nombre producto</label>
+                      <input type="text" class="form-control" placeholder="Azúcar,Moringa, etc..." id="nuevonombreprod" name="nuevonombreprod" required>
+                </div>
 
-            <div class="col-3">
-              <label class="form-label">Envase</label>
-              <select required class="form-select" name="env" id="env">
-                <?php 
-                      $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
-                      while($row = $g->fetch_assoc()) { ?>
-                        <option value="<?= $row['id'] ?>">
-                            <?= $row['nombre']." (".$row['abreviatura'].")" ?>
-                        </option>
-                <?php } ?>
-              </select>
-            </div>
-
-            <div class="col-3">
-              <label class="form-label">Peso</label>
-                  <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
-            </div>
-
-            <div class="col-3">
-              <label class="form-label">UDM</label>
-                  <select required class="form-select" name="um" id="um">
-                      <?php 
-                          $g=$conn->query("SELECT id,nombre,sigla FROM prod_udm  ORDER BY sigla");
-                            while($row = $g->fetch_assoc()) { ?>
-                              <option value="<?= $row['id'] ?>">
-                                  <?= $row['sigla']?>
-                              </option>
-                        <?php } ?>
+                <div class="col-3">
+                  <label class="form-label">Envase</label>
+                  <select required class="form-select" name="env" id="env">
+                    <?php 
+                          $g=$conn->query("SELECT id,nombre,abreviatura FROM prod_envase WHERE estado=1 ORDER BY abreviatura");
+                          while($row = $g->fetch_assoc()) { ?>
+                            <option value="<?= $row['id'] ?>">
+                                <?= $row['nombre']." (".$row['abreviatura'].")" ?>
+                            </option>
+                    <?php } ?>
                   </select>
-            </div>
+                </div>
+
+                <div class="col-2">
+                  <label class="form-label">Peso</label>
+                      <input type="number"  step="0.01" min="0" onkeypress=soloNumeros(event) class="form-control" required id="peso" name="peso">
+                </div>
+
+                <div class="col-2">
+                  <label class="form-label">UDM</label>
+                      <select required class="form-select" name="um" id="um">
+                          <?php 
+                              $g=$conn->query("SELECT id,nombre,sigla FROM prod_udm  ORDER BY sigla");
+                                while($row = $g->fetch_assoc()) { ?>
+                                  <option value="<?= $row['id'] ?>">
+                                      <?= $row['sigla']?>
+                                  </option>
+                            <?php } ?>
+                      </select>
+                </div>
           
           </div>
 
@@ -428,9 +445,11 @@ $consulta="select
         
 
         </div>
-  <hr>
+</div>
+ 
 
 <!-- Unidades -->
+  <div class="border border-primary rounded p-3 mb-3 bg-light">
           <div class="row mb-3">
             <div class="col-4">
               <label class="form-label">Unidades x cj/sc</label>
@@ -456,26 +475,21 @@ $consulta="select
             </div>
 
           </div>
-<hr>
-              <div class="row mb-3">
-                 <div class="col-4">
-              <label class="form-label">Estado</label>
-                <select name="estate" required id="estate" class="form-select">
-                  <?php $f=$conn->query("select id,nom from prod_estados order by nom desc");
-                  while($k=$f->fetch_assoc()){
-                  ?>
-                    <option value="<?=$k['id'] ?>"><?=$k['nom'] ?></option>
-                  <?php } ?>
-                </select>
-            </div>
-</div>   
+    </div>
+
+
+
 
 
         </div>
 
-        <div class="modal-footer justify-content-center">
-          <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Guardar</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cancelar</button>
+        <div class="modal-footer bg-light border-top">
+                <button type="submit" class="btn btn-success px-4">
+                  <i class="bi bi-check-circle"></i> Guardar
+                </button>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                  Cancelar
+                </button>
         </div>
       </form>
     </div>
@@ -526,20 +540,20 @@ document.addEventListener("click", function(e) {
   const button = event.relatedTarget; // botón que abrió el modal
 
   // Extraer info desde data-*
-  const id = button.getAttribute('data-id');//id
-  const cod = button.getAttribute('data-codigo');
-  const nombre = button.getAttribute('data-nombre');
-  const categoria= button.getAttribute('data-categoria');
-  const tipo = button.getAttribute('data-tipo');
-  const peso= button.getAttribute('data-peso');
-  const envase = button.getAttribute('data-envase');
-  const embalaje = button.getAttribute('data-tipo_embalaje');
-  const unds_cjsc = button.getAttribute('data-unds_cjsc');
-  const umd = button.getAttribute('data-udm');
-  const und_pallet = button.getAttribute('data-und_pallet');
-  const estado = button.getAttribute('data-estado');
+  const id =          button.getAttribute('data-id');//id
+  const cod =         button.getAttribute('data-codigo');
+  const nombre =      button.getAttribute('data-nombre');
+  const categoria=    button.getAttribute('data-categoria');
+  const tipo =        button.getAttribute('data-tipo');
+  const peso=         button.getAttribute('data-peso');
+  const envase =      button.getAttribute('data-envase');
+  const embalaje =    button.getAttribute('data-tipo_embalaje');
+  const unds_cjsc =   button.getAttribute('data-unds_cjsc');
+  const umd =         button.getAttribute('data-udm');
+  const und_pallet =  button.getAttribute('data-und_pallet');
+  const estado =      button.getAttribute('data-estado');
   const nombre_prod = button.getAttribute('data-nombre_prod');
-  const idcat = button.getAttribute('data-idcat');
+  const idcat =       button.getAttribute('data-idcat');
 
 
 
@@ -624,7 +638,7 @@ document.getElementById('formguarda').addEventListener('submit', function(e) {
             </button>
 
             <button class="btn btn-danger btn-sm btn-eliminar" data-id="${data.id}">
-              <i class="bi bi-trash3"></i>
+              <i class="bi bi-trash3-fill"></i>
             </button>
           </td>
         </tr>
@@ -642,13 +656,13 @@ document.getElementById('formguarda').addEventListener('submit', function(e) {
 
 <script>
 
-function soloNumeros(e){
+  function soloNumeros(e){
 
-if (!/[0-9.,]/.test(e.key)) {
-e.preventDefault();
-}
+      if (!/[0-9.,]/.test(e.key)) {
+      e.preventDefault();
+      }
 
-}
+  }
 
 </script>
 

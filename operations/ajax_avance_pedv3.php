@@ -480,7 +480,7 @@ if ($pedido) {
                         data-eq="<?= $fase['eq_kg_fase'] ?>">
                         <td class="text-center align-middle turno-num"><?= $turno ?></td>
                         <td>
-                            <input type="date" class="form-control"
+                            <input type="date"  class="form-control"
                                 name="fecha[<?= $fase['secuencia'] ?>][<?= $turno ?>]"
                                 value="<?= htmlspecialchars($val_fecha) ?>">
                         </td>
@@ -640,7 +640,7 @@ const nextTurno = Math.max(maxTurno, maxTurnoGlobal) + 1;
     const fila = `
 <tr data-peso="${pesoEnv}" data-eq="${eq}">
     <td class="text-center turno-num">${nextTurno}</td>
-    <td><input type="date" class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
+    <td><input type="date" required class="form-control" name="fecha[${secuencia}][${nextTurno}]"></td>
     <td>
         <select class="form-select" name="jornada[${secuencia}][${nextTurno}]">
             <option value=""></option>
