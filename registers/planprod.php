@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-  <title>Registro de Pedidos</title>
+  <title>Reporte de planificacion</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -66,7 +66,7 @@
 
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1 class="mt-1"><i class="fa-solid fa-clipboard-list" style="color: rgb(0, 0, 0);"></i> Reporte de Planificacion</h1>
+  <h1 class="mt-1"><i class="fa-solid fa-clipboard-list" style="color: rgb(0, 0, 0);"></i> Reporte de Planificación</h1>
   <div class="row mt-1 gx-0">
 
   
@@ -76,33 +76,18 @@
 <div class="col-md-12 ps-3">
 
     <!-- CONTROLES -->
-    <div class="row g-2 mb-2">
-
-      <!-- BUSCADOR -->
-     
-
-      <!-- NUEVO PEDIDO --
-      <div class="col-md-3">
-        <div class="card shadow border-0 rounded-4 h-100 d-flex justify-content-center">
-          <div class="card-body text-center d-flex justify-content-center">
-            <button class="btn btn-success rounded-3"
-              data-bs-toggle="modal" data-bs-target="#modalnuevo">
-              <i class="fa-solid fa-square-plus"></i>
-              Nuevo Pedido
-            </button>
-          </div>
-        </div>
-      </div>
-------------------->
+    <div class="row g-2 mb-2 justify-content-center">
 
 
       <!-- FILTRO -->
       <div class="col-md-6">
         <div class="card shadow border-0 rounded-4 h-100">
           <div class="card-body">
-            <label class="form-label fw-semibold">
-              <i class="fa-solid fa-filter"></i> Rango de fechas
-            </label>
+            <div class="justify-content-end"> 
+                 <label class="form-label fw-semibold text-center w-100 d-block">
+                    <i class="fa-solid fa-filter"></i> Rango de fechas
+                  </label>
+            </div>
                 <div class="row">
                     <div class="col-md-5">
                             <input class="form-control mt-2" id="fechadesde" name="desde" required type="date" placeholder="Desde">
@@ -111,15 +96,27 @@
                             <input class="form-control mt-2" id="fechahasta" name="hasta" type="date" placeholder="Hasta">
                     </div>
                     <div class="col-md-2 mt-2">
-                        <button class="btn btn-success btn-sm btnBuscarFecha"><i class="fa-solid fa-magnifying-glass" style="color: rgb(255, 255, 255);"></i></button>
+                        <button class="btn btn-success  rounded-3 btnBuscarFecha"><i class="fa-solid fa-magnifying-glass" style="color: rgb(255, 255, 255);"></i></button>
                     </div>
                 </div>    
+            </div>
         </div>
-        </div>
-      </div>
 
+
+      </div>
+        <div class="col-md-2">
+  <div class="card shadow border-0 rounded-4 h-100">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+
+      <label class="form-label fw-semibold mb-3">Imprimir</label>
+
+      <button class="btn btn-danger rounded-3">
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+   </div>
+  </div>
+</div>
     </div>
-        <table class="table mt-3 table-striped shadow table-sm table-hover" id="tblcolab">
+        <table class="table mt-3 shadow table-sm table-hover" id="tblcolab">
           <thead class="table-dark">
             <tr>
               <th>FECHA PLANIFICADA</th>
