@@ -42,7 +42,7 @@ require_once __DIR__ . '/../complemento/config.php';
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Transaccion </a>
                   <ul class="dropdown-menu dropdown-menu-dark">
                     <li><a class="dropdown-item" href="<?= BASE_URL ?>operations/pedidos.php"><i class="bi bi-list-check"></i> Pedidos</a></li>
-                    <li><a class="dropdown-item" href="../operations/op.php"><i class="bi bi-file-earmark-bar-graph"></i> Orden de producción</a></li>  
+                    
                   </ul>
               </li>
           </li>
@@ -50,7 +50,7 @@ require_once __DIR__ . '/../complemento/config.php';
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Reportes </a>
               <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href=""><i class="bi bi-file-earmark-text"></i> Reporte planificación</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/planprod.php"><i class="bi bi-file-earmark-text"></i> Reporte planificación</a></li>
                 <li><a class="dropdown-item" href=""><i class="bi bi-file-earmark-bar-graph"></i> Reporte producción</a></li>
                 <li><a class="dropdown-item" href=""><i class="bi bi-graph-up"></i> Reporte cumplimiento</a></li>
               </ul>

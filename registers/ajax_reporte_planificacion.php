@@ -1,0 +1,71 @@
+<?php
+include '../connection/conexion.php';
+
+$desde = $_POST['desde'] ?? '';
+$hasta = $_POST['hasta'] ?? '';
+
+if (empty($desde) || empty($hasta)) {
+    echo json_encode(['error' => 'Fechas requeridas']);
+    exit;
+}
+
+$desde = $conn->real_escape_string($desde);
+$hasta = $conn->real_escape_string($hasta);
+
+$whereFecha = " AND a.fecha_turno BETWEEN '$desde' AND '$hasta' ";
+
+$f = $conn->query("SELECT 
+    p.id_pedido,
+    pr.nombre as pedidonom,
+    f.secuencia,
+
+    GROUP_CONCAT(DISTINCT ap.abreviatura ORDER BY ap.abreviatura SEPARATOR '+') as actividades,
+    a.turnodn as turno, 
+    f.unds as undsstd,
+    a.fecha_turno,
+    u.sigla as sigla,
+    a.obj_kg as objetivo,
+    a.unidades_reales as reales,
+    a.hc as personas,
+    ROUND(
+        (SUM(a.unidades_reales * pr.peso_prod) / NULLIF(SUM(a.obj_kg),0)) * 100
+    ,2) as cumplimiento
+
+FROM prod_pedidos as p 
+
+INNER JOIN prod_productos as pr ON pr.id = p.producto
+INNER JOIN prod_fases_prod as f ON f.producto = pr.id
+INNER JOIN prod_act_prod as ap ON f.actividad = ap.id
+INNER JOIN prod_udm as u ON u.id=f.udm_env
+LEFT JOIN prod_avance_pedido a 
+    ON a.id_pedido = p.id_pedido
+    AND a.secuencia = f.secuencia
+    AND a.fecha_turno BETWEEN '$desde' AND '$hasta'
+
+GROUP BY 
+    p.id_pedido,
+    f.secuencia,
+    a.fecha_turno,
+    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc
+
+ORDER BY 
+    a.fecha_turno ASC,
+    p.id_pedido DESC,
+    f.secuencia ASC;");
+
+$rows = [];
+while ($g = $f->fetch_assoc()) {
+    $rows[] = [
+        'fecha_turno' => $g['fecha_turno'],
+        'orden'       =>$g['secuencia'].' '. $g['pedidonom'] . ' - ' . $g['actividades'],
+        'undsstd'     => $g['undsstd'],
+        'objetivo'    => $g['objetivo'].' '.$g['sigla'],
+        'reales'      => $g['reales'],
+        'cumplimiento'=> $g['cumplimiento'],
+        'turno'       => $g['turno'],
+        'personas'    => $g['personas'],
+    ];
+}
+
+header('Content-Type: application/json');
+echo json_encode($rows);
