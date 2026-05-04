@@ -26,18 +26,30 @@ if($row = $res->fetch_assoc()){
 ?>
 
 <div class="row">
-  <div class="col-6"><b>Pedido:</b> <?= $row['num_pedido'] ?></div>
-  <div class="col-6"><b>Cliente:</b> <?= $row['cliente'] ?></div>
+    <div class="col-6">
+      <b>Pedido:</b> <?= $row['num_pedido'] ?>
+    </div>
+    <div class="col-6">
+      <b>Cliente:</b> <?= $row['cliente'] ?>
+    </div>
 </div>
 
 <div class="row mt-2">
-  <div class="col-6"><b>Producto:</b> <?= $row['producto'] ?></div>
-  <div class="col-6"><b>Cantidad:</b> <?= $row['cantidad'].' '.$row['udm'] ?></div>
+  <div class="col-6">
+    <b>Producto:</b> <?= $row['producto'] ?>
+  </div>
+  <div class="col-6">
+    <b>Cantidad:</b> <?= $row['cantidad'].' '.$row['udm'] ?>
+  </div>
 </div>
 
 <div class="row mt-2">
-  <div class="col-6"><b>Fecha registro:</b> <?= $row['fecha_registro'] ?></div>
-  <div class="col-6"><b>Fecha entrega:</b> <?= $row['fecha_entrega'] ?></div>
+  <div class="col-6">
+    <b>Fecha registro:</b> <?= $row['fecha_registro'] ?>
+  </div>
+  <div class="col-6">
+    <b>Fecha entrega:</b> <?= $row['fecha_entrega'] ?>
+  </div>
 </div>
 
 <?php

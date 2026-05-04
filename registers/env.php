@@ -83,10 +83,10 @@ $consulta="select id, nombre,abreviatura from prod_envase order by nombre asc";
 
 <!----PAGINADOR------->
 
-<nav>
-<?php include '../complemento/paginator.php' ?>
-<ul class="pagination justify-content-center" id="pagination"></ul>
-</nav>
+  <nav>
+      <?php include '../complemento/paginator.php' ?>
+      <ul class="pagination justify-content-center" id="pagination"></ul>
+  </nav>
 
 </div>
   </div>
@@ -122,8 +122,12 @@ $consulta="select id, nombre,abreviatura from prod_envase order by nombre asc";
       </div>
       <div class="modal-footer">
         
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+              Guardar
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+              Cancelar
+          </button>
       </form>
       </div>
     </div>
@@ -144,25 +148,28 @@ $consulta="select id, nombre,abreviatura from prod_envase order by nombre asc";
 
       <form action="../procedimiento/actenv.php" method="POST">
         <input type="hidden" name="cod" id="cod">
+
       <div class="row mb-3">
         <div class="col-6">
           <label class="form-label">Envase</label>
           <input type="text" class="form-control" name="envase" id="envase">
         </div>
-      </div>       
+      </div> 
+
       <div class="row mb-3">
         <div class="col-6">
           <label class="form-label">Abreviatura</label>
           <input type="text" class="form-control" name="abrev" id="abrev">
-        </div>
-       
+        </div> 
       </div>
 
     </div>
       </div>
       <div class="modal-footer">        
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
       </form>
       </div>
     </div>
@@ -212,25 +219,15 @@ document.addEventListener("click", function(e){
   const abrev = button.getAttribute('data-abreviatura');
   const nombre = button.getAttribute('data-nombre');
 
-
 // Pasar info a los inputs del modal
   document.getElementById('cod').value = id;//id de identificacion
   document.getElementById('abrev').value = abrev;
   document.getElementById('envase').value = nombre;
 
-
-
-
-
 });
 
 </script>
 
-
-
-
-
-<!------------------------------------------------------------------------------------->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

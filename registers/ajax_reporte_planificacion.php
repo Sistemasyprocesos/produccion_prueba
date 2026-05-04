@@ -16,9 +16,10 @@ $whereFecha = " AND a.fecha_turno BETWEEN '$desde' AND '$hasta' ";
 
 $f = $conn->query("SELECT 
     p.id_pedido,
+    p.num_pedido as identificacionpedido,
     pr.nombre as pedidonom,
     f.secuencia,
-
+u.equivalente_kg as pesoequi,
     GROUP_CONCAT(DISTINCT ap.abreviatura ORDER BY ap.abreviatura SEPARATOR '+') as actividades,
     a.turnodn as turno, 
     f.unds as undsstd,
@@ -27,9 +28,13 @@ $f = $conn->query("SELECT
     a.obj_kg as objetivo,
     a.unidades_reales as reales,
     a.hc as personas,
-    ROUND(
-        (SUM(a.unidades_reales * pr.peso_prod) / NULLIF(SUM(a.obj_kg),0)) * 100
-    ,2) as cumplimiento
+  ROUND(
+    (
+        SUM(a.unidades_reales * f.peso_env * u.equivalente_kg)
+        /
+        NULLIF(SUM(a.obj_kg), 0)
+    ) * 100
+,2) as cumplimiento
 
 FROM prod_pedidos as p 
 
@@ -42,11 +47,13 @@ LEFT JOIN prod_avance_pedido a
     AND a.secuencia = f.secuencia
     AND a.fecha_turno BETWEEN '$desde' AND '$hasta'
 
+    where a.fecha_turno IS NOT NULL
+
 GROUP BY 
     p.id_pedido,
     f.secuencia,
     a.fecha_turno,
-    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc
+    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc,u.equivalente_kg
 
 ORDER BY 
     a.fecha_turno ASC,
@@ -57,13 +64,14 @@ $rows = [];
 while ($g = $f->fetch_assoc()) {
     $rows[] = [
         'fecha_turno' => $g['fecha_turno'],
-        'orden'       =>$g['secuencia'].' '. $g['pedidonom'] . ' - ' . $g['actividades'],
+        'orden'       => $g['pedidonom'] . ' (' . $g['actividades'].')',
         'undsstd'     => $g['undsstd'],
         'objetivo'    => $g['objetivo'].' '.$g['sigla'],
         'reales'      => $g['reales'],
         'cumplimiento'=> $g['cumplimiento'],
         'turno'       => $g['turno'],
         'personas'    => $g['personas'],
+        'idenpedido'  => $g['identificacionpedido'],    
     ];
 }
 

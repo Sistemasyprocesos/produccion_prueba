@@ -26,13 +26,14 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
   <h1>Registro de categorias</h1>
   <div class="row justify-content-center">
     <!----------------------------->
-  
 
-<!------------------------>
     <div class="container mt-2">
       <div class="row mb-3">
         <div class="col-2">
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva categoria</button>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo">
+            <i class="bi bi-plus-square"></i>
+             Agregar nueva categoria
+          </button>
         </div>
         <div class="col-4">
           <input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar categoria...">
@@ -53,15 +54,16 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) { ?>
           <tr>
-            <td><?=  $row["cat_nombre"]?></td>
-            
+            <td>
+              <?= $row["cat_nombre"]?>
+            </td>
             
             <td>
               <!--------BOTON EDITAR---------->
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
                     data-cod="<?= $row["id_cat"]?>"
-                    data-nombre="<?= $row["cat_nombre"]?>"  
-                ><i class="bi bi-pencil-square"></i>
+                    data-nombre="<?= $row["cat_nombre"]?>">
+                    <i class="bi bi-pencil-square"></i>
               </button>
               <!--------BOTON ELIMINAR---------->
               <button class="btn btn-danger btn-sm btn-eliminar" 
@@ -73,17 +75,21 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
      <?php   }
     } else {
       ?>
-        <tr><td colspan='2'>No hay registros</td></tr>
+        <tr>
+          <td colspan='2'>
+            No hay registros
+          </td>
+        </tr>
    <?php }
     ?>
   </tbody>
 </table>
-<!----PAGINADOR------->
 
-  <nav>
-    <?php include '../complemento/paginator.php' ?>
-    <ul class="pagination justify-content-center" id="pagination"></ul>
-  </nav>
+<!----PAGINADOR------->
+      <nav>
+        <?php include '../complemento/paginator.php' ?>
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+      </nav>
 
   </div>
 </div>

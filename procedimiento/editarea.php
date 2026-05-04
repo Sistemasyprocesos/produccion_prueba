@@ -15,5 +15,4 @@ if($edit->execute()){
 else{
     echo "Error al actualizar el area";
 }
-
 ?>

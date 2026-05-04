@@ -13,7 +13,8 @@
 
 <body>
 
-<?php include '../complemento/sidebar.php';
+<?php 
+  include '../complemento/sidebar.php';
   include '../connection/conexion.php';
 
 
@@ -25,8 +26,6 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
 <main class="container-fluid pt-5 mt-3">
   <h1>Areas de produccion</h1>
   <div class="row justify-content-center">
-    <!----------------------------->
-  
 
 <!------------------------>
   <div class="container mt-2">
@@ -82,8 +81,6 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
 </table>
 <!----PAGINADOR------->
 
-
-
 <nav>
 <?php include '../complemento/paginator.php' ?>
 <ul class="pagination justify-content-center" id="pagination"></ul>
@@ -121,8 +118,7 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
 
     </div>
       </div>
-      <div class="modal-footer">
-        
+      <div class="modal-footer">     
         <button type="submit" class="btn btn-primary">Guardar</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
       </form>
@@ -130,9 +126,6 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
     </div>
   </div>
 </div>
-
-<!----------------------------------->
-
 
 
 <!--------------MODAL EDITAR--------------------->
@@ -146,7 +139,6 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
       <div class="modal-body">
           <div class="col-12 ">
  
-
       <form action="../procedimiento/editarea.php" method="POST">
         <input type="hidden" name="idarea" id="idarea">
       <div class="row mb-3">

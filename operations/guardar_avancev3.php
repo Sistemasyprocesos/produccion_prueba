@@ -1,15 +1,14 @@
 <?php
 require '../connection/conexion.php';
 
-$id_pedido = $_POST['id_pedido'];
-
-$real    = $_POST['real'] ?? [];
-$fecha   = $_POST['fecha'] ?? [];
-$jornada = $_POST['jornada'] ?? [];
-$hc      = $_POST['hc'] ?? [];
-$peso    = $_POST['peso'] ?? [];
-$eq      = $_POST['eq'] ?? [];
-$obj     = $_POST['obj'] ?? [];
+$id_pedido  = $_POST['id_pedido'];
+$real       = $_POST['real'] ?? [];
+$fecha      = $_POST['fecha'] ?? [];
+$jornada    = $_POST['jornada'] ?? [];
+$hc         = $_POST['hc'] ?? [];
+$peso       = $_POST['peso'] ?? [];
+$eq         = $_POST['eq'] ?? [];
+$obj        = $_POST['obj'] ?? [];
 
 $guardados = 0;
 $errores   = 0;

@@ -624,8 +624,6 @@ $tbody.find('.turno-num').each(function () {
 const maxTurnoGlobal = parseInt($(this).data('max-turno')) || 0;
 const nextTurno = Math.max(maxTurno, maxTurnoGlobal) + 1;
 
-  
-
     // calcular kg acumulado
     let kgAcumulado = 0;
     $tbody.find('tr').each(function () {

@@ -108,32 +108,34 @@
   <div class="card shadow border-0 rounded-4 h-100">
     <div class="card-body d-flex flex-column justify-content-center align-items-center">
 
-      <label class="form-label fw-semibold mb-3">Imprimir</label>
+        <label class="form-label fw-semibold mb-3">Imprimir reporte</label>
 
       <button class="btn btn-danger rounded-3">
         <i class="bi bi-file-earmark-pdf-fill"></i>
+      </button>
    </div>
   </div>
 </div>
     </div>
-        <table class="table mt-3 shadow table-sm table-hover" id="tblcolab">
-          <thead class="table-dark">
+        <table class="table mt-3 shadow table-sm table-hover table-bordered" id="tblcolab">
+          <thead>
             <tr>
               <th>FECHA PLANIFICADA</th>
+              <th>PEDIDO</th>
               <th>ORDEN DE PRODUCCION</th>
-                <th>TURNO</th>
+              <th>TURNO</th>
               <th>UNIDADES ESTANDAR</th>
               <th>OBJETIVO</th>
               <th>UNIDADES REALES</th>
-                <th>CUMPLIMIENTO</th>
-                <th>HC</th>
+              <th>CUMPLIMIENTO</th>
+              <th>HC</th>
             </tr>
         </thead>
       
 <!-- TBODY — arranca vacío -->
-<tbody id="tbodyReporte">
+<tbody id="tbodyReporte" class="table-group-divider">
   <tr id="filaVacia">
-    <td colspan="8" class="text-center text-muted py-4">
+    <td colspan="9" class="text-center text-muted py-4">
       <i class="fa-solid fa-calendar-days me-2"></i>
       Seleccione un rango de fechas y presione buscar <i class="fa-solid fa-magnifying-glass" style="color: rgb(19, 15, 15);"></i>
     </td>
@@ -159,20 +161,16 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-
-<!----------------------->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-<!--------------------------------->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  const rowsPerPage = 10;
-  const pagination = document.getElementById("pagination");
+    const rowsPerPage = 10;
+    const pagination = document.getElementById("pagination");
 
-  let currentPage = 1;
-  let allRows = [];      // ← ahora se llena desde el fetch, no del DOM
+    let currentPage = 1;
+    let allRows = [];      // ← ahora se llena desde el fetch, no del DOM
 
   // ---------- PAGINADOR ----------
   function displayRows() {
@@ -244,8 +242,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" class="text-center py-4">
-          <div class="spinner-border text-success" role="status"></div>
+        <td colspan="9" class="text-center py-4">
+          <div class="spinner-border text-success" role="status">
+          </div>
           <p class="mt-2 text-muted">Buscando datos...</p>
         </td>
       </tr>`;
@@ -264,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allRows = [];
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center text-muted py-4">
+            <td colspan="9" class="text-center text-muted py-4">
               <i class="fa-solid fa-circle-info me-2"></i>
               No se encontraron registros en ese rango de fechas
             </td>
@@ -282,6 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.fecha_turno ?? '—'}</td>
+          <td>${row.idenpedido ?? '—'}</td>
           <td>${row.orden}</td>
           <td>${row.turno ?? '—'}</td>
           <td>${row.undsstd ?? '—'}</td>
@@ -302,12 +302,31 @@ document.addEventListener("DOMContentLoaded", function () {
       update();         // ← aquí pinta las primeras 10 y crea el paginador
     })
     .catch(() => {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al conectar con el servidor</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error al conectar con el servidor</td></tr>`;
     });
   });
 
 });
 </script>
+
+
+<script>
+
+// Agrega esto dentro del DOMContentLoaded, junto al resto del JS
+document.querySelector('.btn.btn-danger').addEventListener('click', function () {
+    const desde = document.getElementById('fechadesde').value;
+    const hasta  = document.getElementById('fechahasta').value;
+
+    if (!desde || !hasta) {
+        Swal.fire({ icon: 'warning', title: 'Fechas requeridas', text: 'Seleccione ambas fechas antes de imprimir' });
+        return;
+    }
+
+    const url = `pdf_reporte_planificacion.php?desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
+    window.open(url, '_blank');
+});
+
+  </script>
 
 <!---------------------------->
 </body>

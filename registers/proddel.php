@@ -28,11 +28,11 @@ if (isset($_GET['codigo'])) {
         $mensaje = 'Este producto tiene producción asociada y no puede ser eliminado';
     }
 
-} else {
-    $icono = 'error';
-    $titulo = 'Error';
-    $mensaje = 'No se recibió el código del producto a eliminar';
-}
+    } else {
+        $icono = 'error';
+        $titulo = 'Error';
+        $mensaje = 'No se recibió el código del producto a eliminar';
+    }
 ?>
 
 <!DOCTYPE html>

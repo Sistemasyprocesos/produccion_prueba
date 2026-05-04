@@ -152,29 +152,35 @@ $consulta = "
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <div class="col-12 ">
+        <div class="col-12 ">
  
-
-      <form id="formEdit">
-        <input type="hidden" name="iden" id="iden">
-      <div class="row mb-3">
-        <div class="col-8">
-          <label class="form-label">Nombre</label>
-          <input type="text" class="form-control" id="nombre" name="nombre_act">
-          <label class="form-label">Abreviatura</label>
-          <input type="text" class="form-control" id="abre" name="abrevia_act">
-
-          <label class="form-label">Estado</label>
-            <?php
-            $g=$conn->query("select id,nom from  prod_estados");
-            ?>
-          <select name="est" id="est" class="form-select">
-            <?php
-            while($r=$g->fetch_assoc()){
-            ?>
-            <option value="<?=$r['id'] ?>"><?=$r['nom'] ?></option>
-            <?php } ?>
-          </select>
+          <form id="formEdit">
+            <input type="hidden" name="iden" id="iden">
+          <div class="row mb-3">
+              <div class="col-8">
+                  <label class="form-label">
+                    Nombre
+                  </label>
+                  <input type="text" class="form-control" id="nombre" name="nombre_act">
+                  <label class="form-label">
+                    Abreviatura
+                  </label>
+                  <input type="text" class="form-control" id="abre" name="abrevia_act">
+                  <label class="form-label">
+                    Estado
+                  </label>
+                    <?php
+                    $g=$conn->query("select id,nom from  prod_estados");
+                    ?>
+                  <select name="est" id="est" class="form-select">
+                    <?php
+                    while($r=$g->fetch_assoc()){
+                    ?>
+                    <option value="<?=$r['id'] ?>">
+                      <?=$r['nom'] ?>
+                    </option>
+                    <?php } ?>
+                  </select>
         </div>
       </div>
 
@@ -191,25 +197,6 @@ $consulta = "
 </div>
 
 
-<!----------------------------------->
-<script>
-//  const modaleditar = document.getElementById('modaleditar');
-//  modaleditar.addEventListener('show.bs.modal', event => {
-//  const button = event.relatedTarget; // botón que abrió el modal
-
-  // Extraer info desde data-*
-//  const id = button.getAttribute('data-id');//id
-//  const rz = button.getAttribute('data-nombre');
-//  const ab = button.getAttribute('data-abrev');
-
-
-// Pasar info a los inputs del modal
-//  document.getElementById('iden').value = id;//id de identificacion
-//  document.getElementById('nombre').value = rz;
-//  document.getElementById('abre').value = ab;
-//});
-
-  </script>
 <!------------PAGINADOR--------------------->
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -268,10 +255,7 @@ document.getElementById('tblcolab').addEventListener('click', function (e) {
 });
 </script>
 
-
-
 <!---------GUARDA NUEVO REGISTRO SIN RECARGAR--------------------------->
-
 
 <script>
 document.getElementById('formNuevo').addEventListener('submit', function(e) {
@@ -334,8 +318,6 @@ document.getElementById('formNuevo').addEventListener('submit', function(e) {
 });
 </script>
 
-
-
 <!-------------------------EDITAR------------------------------------->
 <script>
 let filaEditando = null;
@@ -377,7 +359,7 @@ document.getElementById('formEdit').addEventListener('submit', function (e) {
     filaEditando.children[0].textContent = data.nombre;
     filaEditando.children[1].textContent = data.abreviatura;
 
-// opcional: si quieres mostrar ID del estado
+// muestra ID del estado
     filaEditando.children[2].textContent =
       document.querySelector(`#est option[value="${data.estado_id}"]`).textContent;
 
@@ -391,10 +373,7 @@ document.getElementById('formEdit').addEventListener('submit', function (e) {
   });
 });
 </script>
-<!------------------------------------------------------------->
 
-
-<!------------------------------------------------------------------------------------->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -13,9 +13,9 @@
 
 <body>
 
-<?php include '../complemento/sidebar.php';
+<?php 
+  include '../complemento/sidebar.php';
   include '../connection/conexion.php';
-
 
 $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
 
@@ -26,7 +26,7 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
   <h1>Unidades de Medida</h1>
   <div class="row justify-content-center">
     <!----------------------------->
-<!------------------------>
+
 <div class="container mt-2">
     <div class="row mb-3">
       <div class="col-2">
@@ -52,8 +52,12 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) { ?>
             <tr>
-                <td><?=  $row["nombre"]?></td>
-                <td><?=  $row["sigla"]?></td>
+                <td>
+                  <?=  $row["nombre"]?>
+                </td>
+                <td>
+                  <?=  $row["sigla"]?>
+                </td>
                 
                 <td>
                   <!----MODAL EDITAR-------->
@@ -63,13 +67,17 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
                       data-sigla="<?= $row["sigla"]?>">             
                       <i class="bi bi-pencil-square"></i></button>
                   <!------BOTON ELIMINAR------>
-                  <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?=$row["id"]?>"><i class="bi bi-trash3"></i></button></td>
+                  <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?=$row["id"]?>"><i class="bi bi-trash3"></i>
+                </button>
+              </td>
             </tr>
      <?php   }
     } else {
       ?>
         <tr>
-          <td colspan='5'>No hay registros</td>
+          <td colspan='5'>
+            No hay registros
+          </td>
         </tr>
    <?php }
     ?>
@@ -123,7 +131,6 @@ $consulta="select id,nombre,sigla from prod_udm order by nombre asc";
   </div>
 </div>
 
-<!----------------------------------->
 
 <!--------------MODAL EDITAR--------------------->
 <div class="modal fade" tabindex="-1" id="modaleditar" aria-hidden="true">

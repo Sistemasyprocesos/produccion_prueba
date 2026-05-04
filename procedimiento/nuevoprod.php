@@ -62,9 +62,9 @@ if (!$categoria_id) {
 }
 
 // ------------------ ENVASE ------------------
-$q = $conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
-$q->bind_param("i", $envase);
-$q->execute();
+        $q = $conn->prepare("SELECT abreviatura FROM prod_envase WHERE id = ?");
+        $q->bind_param("i", $envase);
+        $q->execute();
 $res = $q->get_result()->fetch_assoc();
 $envase_txt = $res['abreviatura'] ?? '';
 
@@ -80,21 +80,21 @@ $nombreconcat = $nombreprod . ' ' . $envase_txt . ' ' . $pesoprod . ' ' . $unida
 
 // ------------------ INSERT ------------------
 $sql = "INSERT INTO prod_productos (
-  codigo_prod,
-  nombre, 
-  nombre_prod,
-  cat_prod,
-  tipo_prod,
-  envase,
-  peso_prod,
-  unds_cjsc, 
-  tipo_embalaje,
-  und_pallet,
-  producto_base,
-  estado,
-  udm,
-  fase
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        codigo_prod,
+        nombre, 
+        nombre_prod,
+        cat_prod,
+        tipo_prod,
+        envase,
+        peso_prod,
+        unds_cjsc, 
+        tipo_embalaje,
+        und_pallet,
+        producto_base,
+        estado,
+        udm,
+        fase
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmt = $conn->prepare($sql);
 
