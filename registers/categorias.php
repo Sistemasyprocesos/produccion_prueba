@@ -31,7 +31,7 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
       <div class="row mb-3">
         <div class="col-2">
           <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo">
-            <i class="bi bi-plus-square"></i>
+            <i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i>
              Agregar nueva categoria
           </button>
         </div>
@@ -39,8 +39,8 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
           <input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar categoria...">
         </div>
     </div>
-
-    <table class="table mt-5 table-sm shadow" id="tblcolab">
+<div class="row justify-content-center">
+    <table class="table mt-5 table-sm shadow table-bordered" style="width: 60%;" id="tblcolab">
       <thead class="table-dark">
         <tr>
           <th>Nombre</th>
@@ -58,7 +58,7 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
               <?= $row["cat_nombre"]?>
             </td>
             
-            <td>
+            <td class="text-center">
               <!--------BOTON EDITAR---------->
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
                     data-cod="<?= $row["id_cat"]?>"
@@ -68,7 +68,7 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
               <!--------BOTON ELIMINAR---------->
               <button class="btn btn-danger btn-sm btn-eliminar" 
                 data-eliminar="<?=$row['id_cat'] ?>">
-                  <i class="bi bi-trash3"></i>
+                <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
               </button>
             </td>
           </tr>
@@ -84,7 +84,7 @@ $consulta="select id_cat,cat_nombre from prod_categoria_prod order by cat_nombre
     ?>
   </tbody>
 </table>
-
+</div>
 <!----PAGINADOR------->
       <nav>
         <?php include '../complemento/paginator.php' ?>

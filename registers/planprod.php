@@ -126,7 +126,7 @@
               <th>TURNO</th>
               <th>UNIDADES ESTANDAR</th>
               <th>OBJETIVO</th>
-              <th>UNIDADES REALES</th>
+              <th>KG PRODUCIDOS</th>
               <th>CUMPLIMIENTO</th>
               <th>HC</th>
             </tr>

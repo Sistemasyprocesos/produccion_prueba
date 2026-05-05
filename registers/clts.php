@@ -50,14 +50,14 @@ $consulta="select
   
 <div class="row mb-3">
 <div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Cliente</button>
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Agregar Cliente</button>
 </div>
 <div class="col-4">
 <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar cliente...">
 </div>
 </div>
 
-<table class="table mt-5 table-sm shadow table-hover" id="tblcolab">
+<table class="table mt-5 table-sm shadow table-hover table-bordered" id="tblcolab">
   <thead class="table-dark">
     <tr>
      <th>Razón Social</th>
@@ -79,7 +79,7 @@ $consulta="select
             <td><?=  $row["identificacion"]?></td>
             <td><?=  $row["nombretipo"]?></td>
             <td><?=  $row["estado"]?></td>
-            <td>
+            <td class="text-center">
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
               data-id="<?= $esc($row["id"]) ?>"
               data-rs="<?= $esc($row["razon_social"]) ?>"
@@ -90,7 +90,7 @@ $consulta="select
               data-tipodoc="<?= $row["tipo_doc"]?>"
               ><i class="bi bi-pencil-square"></i></button>
 
-              <button class="btn btn-danger btn-sm btn-eliminar" data-id=<?= $row["id"] ?>><i class="bi bi-trash3"></i></button></td>
+              <button class="btn btn-danger btn-sm btn-eliminar" data-id=<?= $row["id"] ?>><i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i></button></td>
 
 
             </tr>

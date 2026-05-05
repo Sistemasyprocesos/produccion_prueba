@@ -24,61 +24,62 @@ $consulta="select id,nombre,abreviatura from prod_area_prod order by nombre asc"
 
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1>Areas de produccion</h1>
+  <h1>Areas de producción</h1>
   <div class="row justify-content-center">
 
 <!------------------------>
   <div class="container mt-2">
     <div class="row mb-3">
       <div class="col-2">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar nueva area</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Agregar área</button>
       </div>
       <div class="col-4">
         <input  type="text" id="Buscador"  class="form-control mb-3"  placeholder="Buscar area...">
       </div>
     </div>
-
-<table class="table mt-5 table-sm shadow" id="tblcolab">
-  <thead class="table-dark">
-    <tr>
-      <th>Nombre</th>
-      <th>Abreviatura</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-  
-    $result = $conn->query($consulta);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) { ?>
-          <tr>
-            <td><?=  $row["nombre"]?></td>
-            <td><?=  $row["abreviatura"]?></td>
-            
-            <td>
-              <!--------BOTON EDITAR---------->
-              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
-                data-cod="<?= $row["id"]?>"
-                data-nombre="<?= $row["nombre"]?>"  
-                data-abrev="<?= $row["abreviatura"]?>"
-                ><i class="bi bi-pencil-square"></i>
-              </button>
-              <!--------BOTON ELIMINAR---------->
-              <button class="btn btn-danger btn-sm btn-eliminar" 
-                data-eliminar="<?=$row['id'] ?>">
-                  <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-     <?php   }
-    } else {
-      ?>
-        <tr><td colspan='5'>No hay registros</td></tr>
-   <?php }
-    ?>
-  </tbody>
-</table>
+<div class="row justify-content-center">
+    <table class="table mt-5 table-sm shadow" style="width:70%" id="tblcolab">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Abreviatura</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+      
+        $result = $conn->query($consulta);
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) { ?>
+              <tr>
+                <td><?=  $row["nombre"]?></td>
+                <td><?=  $row["abreviatura"]?></td>
+                
+                <td class="text-center">
+                  <!--------BOTON EDITAR---------->
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar" 
+                    data-cod="<?= $row["id"]?>"
+                    data-nombre="<?= $row["nombre"]?>"  
+                    data-abrev="<?= $row["abreviatura"]?>"
+                    ><i class="bi bi-pencil-square"></i>
+                  </button>
+                  <!--------BOTON ELIMINAR---------->
+                  <button class="btn btn-danger btn-sm btn-eliminar" 
+                    data-eliminar="<?=$row['id'] ?>">
+                      <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
+                  </button>
+                </td>
+              </tr>
+        <?php   }
+        } else {
+          ?>
+            <tr><td colspan='5'>No hay registros</td></tr>
+      <?php }
+        ?>
+      </tbody>
+    </table>
+</div>
 <!----PAGINADOR------->
 
 <nav>

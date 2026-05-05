@@ -322,6 +322,7 @@ if($total_alertas <= 0) {
                 <td class="text-danger"><i class="fa-solid fa-circle-xmark" style="color: rgb(194, 9, 9);"></i></td>
                   <?php  }
                   ?>
+               
                 <td>
      
                   <!----------------------------------------------->

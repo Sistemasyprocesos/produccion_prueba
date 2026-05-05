@@ -43,14 +43,14 @@ $consulta = "
 <div class="container mt-2">
     <div class="row mb-3">
         <div class="col-2">
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Actividad de Produccion</button>
+          <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Agregar Actividad de Produccion</button>
         </div>
         <div class="col-4">
           <input type="text" id="Buscador" class="form-control mb-3" placeholder="Buscar actividad de producción...">
         </div>
     </div>
 
-<table class="table mt-5 table-sm shadow" id="tblcolab">
+<table class="table mt-5 table-sm shadow table-bordered" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Nombre</th>
@@ -70,7 +70,7 @@ $consulta = "
             <td><?=  $row["nombre"]?></td>
             <td><?=  $row["abreviatura"]?></td>
             <td><?=  $row["nombreestado"]?></td>
-            <td>
+            <td class="text-center">
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
                 data-id=<?=$row["id"] ?> 
                 data-nombre=<?=$row['nombre'] ?> 
@@ -80,7 +80,7 @@ $consulta = "
               
               <!-------BOTON ELIMINAR-------->
             <button class="btn btn-danger btn-sm btn-eliminar" data-id="<?= $row['id'] ?>">
-              <i class="bi bi-trash3"></i>
+              <i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i>
             </button>
 
               </tr>

@@ -29,6 +29,8 @@ $f = $conn->query("SELECT
     u.sigla as sigla,
     a.obj_kg as objetivo,
     a.unidades_reales as reales,
+    f.peso_env as pesoenv,
+    u.equivalente_kg as pesoequi,
     a.hc as personas,
   ROUND(
     (
@@ -36,7 +38,8 @@ $f = $conn->query("SELECT
         /
         NULLIF(SUM(a.obj_kg), 0)
     ) * 100
-,2) as cumplimiento
+,2) as cumplimiento,
+SUM(a.unidades_reales * f.peso_env * u.equivalente_kg) as kg_realproducidos
 FROM prod_pedidos as p 
 INNER JOIN prod_productos as pr ON pr.id = p.producto
 INNER JOIN prod_fases_prod as f ON f.producto = pr.id
@@ -49,7 +52,7 @@ LEFT JOIN prod_avance_pedido a
 WHERE a.fecha_turno IS NOT NULL
 GROUP BY 
     p.id_pedido, f.secuencia, a.fecha_turno,
-    f.unds, u.sigla, a.obj_kg, a.unidades_reales, a.turnodn, a.hc
+    f.unds, u.sigla, a.obj_kg, a.unidades_reales, a.turnodn, a.hc,f.peso_env,u.equivalente_kg
 ORDER BY 
     a.fecha_turno ASC, p.id_pedido DESC, f.secuencia ASC");
 
@@ -96,7 +99,7 @@ foreach ($porFecha as $fecha => $grupo) {
             <td>" . htmlspecialchars($r['turno'] ?? '—') . "</td>
             <td>" . htmlspecialchars($r['undsstd'] ?? '—') . "</td>
             <td>" . htmlspecialchars($r['objetivo'] . ' ' . $r['sigla']) . "</td>
-            <td>" . htmlspecialchars($r['reales'] ?? '—') . "</td>
+            <td>" . htmlspecialchars($r['kg_realproducidos'] . ' KG' ?? '—') . "</td>
             <td style='color:{$color}; font-weight:bold;'>{$cumplimiento}%</td>
             <td>" . htmlspecialchars($r['personas'] ?? '—') . "</td>
         </tr>";
@@ -104,11 +107,11 @@ foreach ($porFecha as $fecha => $grupo) {
 
     // Fila de subtotal por fecha
     $subObj   = array_sum(array_column($grupo, 'objetivo'));
-    $subReal  = array_sum(array_column($grupo, 'reales'));
+    $subReal  = array_sum(array_column($grupo, 'kg_realproducidos'));
     $subcumplimiento=array_sum(array_column($grupo, 'cumplimiento')) / count($grupo);
     $subCump  = $subObj > 0 ? round($subcumplimiento, 2) : 0;
     $subColor = "hsl(" . round((min($subCump,100)*120)/100) . ", 70%, 35%)";
-$subpersonal= array_sum(array_column($grupo, 'personas'));
+    $subpersonal= array_sum(array_column($grupo, 'personas'));
     $filas .= "
     <tr style='background:#f0fdf4; font-style:italic;'>
         <td colspan='5' style='text-align:right; color:#555; font-size:8px;'>
@@ -145,7 +148,7 @@ $html = "
 </head>
 <body>
   <h2>Reporte de Planificación</h2>
-  <p class='sub'>Período: <strong>{$desde}</strong> al <strong>{$hasta}</strong></p>
+  <p class='sub'>Periodo: <strong>{$desde}</strong> al <strong>{$hasta}</strong></p>
 
   <table>
     <thead>
@@ -156,7 +159,7 @@ $html = "
         <th>TURNO</th>
         <th>UNIDADES ESTÁNDAR</th>
         <th>OBJETIVO</th>
-        <th>UNIDADES REALES</th>
+        <th>KG PRODUCIDOS</th>
         <th>CUMPLIMIENTO</th>
         <th>HC</th>
       </tr>

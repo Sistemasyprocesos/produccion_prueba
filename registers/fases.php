@@ -28,6 +28,7 @@ $sql="SELECT
     t.total_fases,
     e.abreviatura as envase,
     p.peso_prod,
+    f.peso_env as pesoenvase,
     f.unds AS kg,
     f.proceso_id AS proce,
     u.sigla as umed,
@@ -64,7 +65,7 @@ GROUP BY
     f.proceso_id,
     f.secuencia,
     f.unds,
-    t.total_fases
+    t.total_fases,f.peso_env
 
 ORDER BY
     p.nombre,
@@ -95,7 +96,7 @@ $res=$conn->query($sql);
     <tr>
       <th>PRODUCTO PT</th>
       <th>ORDEN OP</th>
-      <th>Produccion Estandar</th>
+      <th>Producción Estandar</th>
       <th></th>
     </tr>
   </thead>
@@ -110,14 +111,14 @@ while ($f = $res->fetch_assoc()) {
     // Cambiar color SOLO cuando cambia el producto
     if ($f['producto'] !== $productoActual) {
         $productoActual = $f['producto'];
-        $colorFila = ($colorFila === 'white') ? '#93bed851' : 'white';
+        $colorFila = ($colorFila === 'white') ? '#c7e2c951' : 'white';
     }
 ?>
 <tr >
     <td style="background-color: <?= $colorFila ?> !important;"><?= $f['producto'] ?></td>
     <td style="background-color: <?= $colorFila ?> !important;"><?= $f['producto'].' ('.$f['sec'].'/'.$f['total_fases'].') '.$f['act'] ?></td>
-    <td style="background-color: <?= $colorFila ?> !important;"><?= $f['kg'].' KG' ?></td>
-    <td style="background-color: <?= $colorFila ?> !important;">
+    <td style="background-color: <?= $colorFila ?> !important;"><?= $f['kg'].' '.$f['envase'].' '. $f['pesoenvase'].' KG' ?></td>
+    <td style="background-color: <?= $colorFila ?> !important;" class="text-center">
         <?php if($f['sec'] == 1) { ?>
             <!-- EDITAR -->
             <button 
@@ -273,7 +274,7 @@ while ($f = $res->fetch_assoc()) {
       <input type="number" min="0" step="0.01" required onkeypress="return solonum(event)" class="form-control" name="kgstd[]">
     </td>
 
-<!---------envase----------->
+        <!---------envase----------->
           <td>
             <select class="form-select" required name="envase[]">
             <?php 

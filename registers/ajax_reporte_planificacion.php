@@ -19,7 +19,7 @@ $f = $conn->query("SELECT
     p.num_pedido as identificacionpedido,
     pr.nombre as pedidonom,
     f.secuencia,
-u.equivalente_kg as pesoequi,
+    u.equivalente_kg as pesoequi,
     GROUP_CONCAT(DISTINCT ap.abreviatura ORDER BY ap.abreviatura SEPARATOR '+') as actividades,
     a.turnodn as turno, 
     f.unds as undsstd,
@@ -28,6 +28,7 @@ u.equivalente_kg as pesoequi,
     a.obj_kg as objetivo,
     a.unidades_reales as reales,
     a.hc as personas,
+    f.peso_env as pesoenv,
   ROUND(
     (
         SUM(a.unidades_reales * f.peso_env * u.equivalente_kg)
@@ -53,7 +54,7 @@ GROUP BY
     p.id_pedido,
     f.secuencia,
     a.fecha_turno,
-    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc,u.equivalente_kg
+    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc,u.equivalente_kg,f.peso_env
 
 ORDER BY 
     a.fecha_turno ASC,
@@ -67,7 +68,7 @@ while ($g = $f->fetch_assoc()) {
         'orden'       => $g['pedidonom'] . ' (' . $g['actividades'].')',
         'undsstd'     => $g['undsstd'],
         'objetivo'    => $g['objetivo'].' '.$g['sigla'],
-        'reales'      => $g['reales'],
+        'reales'      => $g['reales']*$g['pesoenv']*$g['pesoequi'].' KG',
         'cumplimiento'=> $g['cumplimiento'],
         'turno'       => $g['turno'],
         'personas'    => $g['personas'],

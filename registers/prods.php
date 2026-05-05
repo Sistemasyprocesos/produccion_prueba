@@ -83,14 +83,14 @@ $consulta="select
 <div class="container mt-2">
   <div class="row mb-3">
     <div class="col-2">
-      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-circle-fill"></i> Agregar Producto</button>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Agregar Producto</button>
     </div>
     <div class="col-4">
         <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar producto...">
     </div>
   </div>
 
-<table class="table mt-5 table-sm table-hover shadow" id="tblcolab">
+<table class="table mt-5 table-sm table-hover shadow table-bordered" id="tblcolab">
   <thead class="table-dark">
     <tr>
       <th>Codigo</th>
@@ -104,7 +104,6 @@ $consulta="select
       <th>Unds(Pallet)</th>     
       <th>Producto Base</th>
       <th>Acciones</th>
-     
     </tr>
   </thead>
   <tbody>
@@ -125,7 +124,7 @@ $consulta="select
             <td><?=$row["tipo_embalaj"] ?></td>
             <td><?= $row["und_pallet"]?></td>
             <td><?=$row["producto_base"] ?></td>
-            <td>
+            <td class="text-center">
 
             <!-------BOTON EDITAR------------->
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modaleditar"
@@ -183,7 +182,7 @@ $consulta="select
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
 
-     
+
 <form action="../procedimiento/nuevoprod.php" method="POST">
         <div class="modal-header" style="background-color: #198754; color: white;">
           <h5 class="modal-title">Registro de nuevo producto</h5>
@@ -197,7 +196,7 @@ $consulta="select
           <div class="row mb-3">
             <div class="col-6">
                 <label class="form-label">Código</label>
-                <input type="text" class="form-control" id="codigo_producto" name="codigo" required>
+                <input type="text" class="form-control" id="codigo_producto" name="codigoprod" required>
                 <div class="invalid-feedback">
                   Este código ya está registrado
                 </div>

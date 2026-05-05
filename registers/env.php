@@ -32,54 +32,55 @@ $consulta="select id, nombre,abreviatura from prod_envase order by nombre asc";
 <div class="container mt-2">
 <div class="row mb-3">
 <div class="col-2">
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="bi bi-plus-square"></i> Agregar Envase</button>
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalnuevo"><i class="fa-solid fa-square-plus" style="color: rgb(255, 255, 255);"></i> Agregar Envase</button>
 </div>
 <div class="col-4">
 <input  type="text"  id="Buscador"  class="form-control mb-3"  placeholder="Buscar envase...">
 </div>
 </div>
 
-<table class="table mt-5 table-sm shadow" id="tblcolab">
-  <thead class="table-dark">
-    <tr>
-      <th>Envase</th>
-      <th>abreviatura</th>
-   
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-  
-    $result = $conn->query($consulta);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) { ?>
-            <tr>
-            <td><?=  $row["nombre"]?></td>
-            <td><?=  $row["abreviatura"]?></td>
-            <td>
-              <!---------EDITAR------------>
-              <button class="btn btn-primary btn-sm"  
-              data-bs-toggle="modal"
-              data-bs-target="#modaleditar"
-                data-id="<?= $row["id"]?>"
-                data-nombre="<?= $row["nombre"]?>"
-                data-abreviatura="<?= $row["abreviatura"]?>">
-              <i class="bi bi-pencil-square"></i>
-              </button>
+<div class="row justify-content-center">
+    <table class="table mt-5 table-sm shadow" style="width:70%" id="tblcolab">
+      <thead class="table-dark">
+        <tr>
+          <th>Envase</th>
+          <th>abreviatura</th>
+      
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+      
+        $result = $conn->query($consulta);
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) { ?>
+                <tr>
+                <td><?=  $row["nombre"]?></td>
+                <td><?=  $row["abreviatura"]?></td>
+                <td class="text-center">
+                  <!---------EDITAR------------>
+                  <button class="btn btn-primary btn-sm"  
+                  data-bs-toggle="modal"
+                  data-bs-target="#modaleditar"
+                    data-id="<?= $row["id"]?>"
+                    data-nombre="<?= $row["nombre"]?>"
+                    data-abreviatura="<?= $row["abreviatura"]?>">
+                  <i class="bi bi-pencil-square"></i>
+                  </button>
 
-              <!---------ELIMNAR------------>
-              <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["id"]?>"><i class="bi bi-trash3"></i></button></td>
-            </tr>
-     <?php   }
-    } else {
-      ?>
-        <tr><td colspan='5'>No hay registros</td></tr>
-   <?php }
-    ?>
-  </tbody>
-</table>
-
+                  <!---------ELIMNAR------------>
+                  <button class="btn btn-danger btn-sm btn-eliminar" data-cod="<?= $row["id"]?>"><i class="fa-solid fa-trash-can" style="color: rgb(255, 255, 255);"></i></button></td>
+                </tr>
+        <?php   }
+        } else {
+          ?>
+            <tr><td colspan='5'>No hay registros</td></tr>
+      <?php }
+        ?>
+      </tbody>
+    </table>
+</div>
 
 <!----PAGINADOR------->
 
