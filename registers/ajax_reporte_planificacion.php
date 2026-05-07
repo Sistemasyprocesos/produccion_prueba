@@ -29,6 +29,7 @@ $f = $conn->query("SELECT
     a.unidades_reales as reales,
     a.hc as personas,
     f.peso_env as pesoenv,
+    ar.nombre as areanombre,
   ROUND(
     (
         SUM(a.unidades_reales * f.peso_env * u.equivalente_kg)
@@ -43,6 +44,7 @@ INNER JOIN prod_productos as pr ON pr.id = p.producto
 INNER JOIN prod_fases_prod as f ON f.producto = pr.id
 INNER JOIN prod_act_prod as ap ON f.actividad = ap.id
 INNER JOIN prod_udm as u ON u.id=f.udm_env
+inner join prod_area_prod as ar on ar.id=f.area
 LEFT JOIN prod_avance_pedido a 
     ON a.id_pedido = p.id_pedido
     AND a.secuencia = f.secuencia
@@ -54,7 +56,7 @@ GROUP BY
     p.id_pedido,
     f.secuencia,
     a.fecha_turno,
-    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc,u.equivalente_kg,f.peso_env
+    f.unds,u.sigla,a.obj_kg,a.unidades_reales,a.turnodn,a.hc,u.equivalente_kg,f.peso_env,ar.nombre
 
 ORDER BY 
     a.fecha_turno ASC,
@@ -64,6 +66,7 @@ ORDER BY
 $rows = [];
 while ($g = $f->fetch_assoc()) {
     $rows[] = [
+        'area'        => $g['areanombre'],
         'fecha_turno' => $g['fecha_turno'],
         'orden'       => $g['pedidonom'] . ' (' . $g['actividades'].')',
         'undsstd'     => $g['undsstd'],

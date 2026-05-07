@@ -50,9 +50,10 @@ require_once __DIR__ . '/../complemento/config.php';
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Reportes </a>
               <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/planprod.php"><i class="bi bi-file-earmark-text"></i> Reporte planificación</a></li>
-                <li><a class="dropdown-item" href=""><i class="bi bi-file-earmark-bar-graph"></i> Reporte producción</a></li>
-                <li><a class="dropdown-item" href=""><i class="bi bi-graph-up"></i> Reporte cumplimiento</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/planprod.php"><i class="bi bi-file-earmark-text"></i> Planificación</a></li>
+                <li><a class="dropdown-item" href="<?= BASE_URL ?>registers/repprod.php"><i class="bi bi-file-earmark-bar-graph"></i> Por Producto</a></li>
+                <li><a class="dropdown-item" href=""><i class="bi bi-graph-up"></i> Standar</a></li>
+                <li><a class="dropdown-item" href=""><i class="bi bi-graph-up"></i> Producto</a></li>
               </ul>
           </li>
         </ul>

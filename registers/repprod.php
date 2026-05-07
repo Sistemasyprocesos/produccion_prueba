@@ -66,13 +66,10 @@
 
 <!-- CONTENIDO -->
 <main class="container-fluid pt-5 mt-3">
-  <h1 class="mt-1"><i class="fa-solid fa-clipboard-list" style="color: rgb(0, 0, 0);"></i> Reporte de Planificación</h1>
+  <h1 class="mt-1"><i class="fa-solid fa-clipboard-list" style="color: rgb(0, 0, 0);"></i> Reporte por producto</h1>
   <div class="row mt-1 gx-0">
 
   
-
-
- <!-- DERECHA -->
 <div class="col-md-12 ps-3">
 
     <!-- CONTROLES -->
@@ -121,7 +118,6 @@
           <thead>
             <tr>
               <th>FECHA PLANIFICADA</th>
-              <th>AREA</th>
               <th>PEDIDO</th>
               <th>ORDEN DE PRODUCCION</th>
               <th>TURNO</th>
@@ -282,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.fecha_turno ?? '—'}</td>
-          <td>${row.area ?? '—'}</td>
           <td>${row.idenpedido ?? '—'}</td>
           <td>${row.orden}</td>
           <td>${row.turno ?? '—'}</td>

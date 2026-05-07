@@ -32,6 +32,7 @@ $f = $conn->query("SELECT
     f.peso_env as pesoenv,
     u.equivalente_kg as pesoequi,
     a.hc as personas,
+    ar.nombre as areanombre,
   ROUND(
     (
         SUM(a.unidades_reales * f.peso_env * u.equivalente_kg)
@@ -45,6 +46,7 @@ INNER JOIN prod_productos as pr ON pr.id = p.producto
 INNER JOIN prod_fases_prod as f ON f.producto = pr.id
 INNER JOIN prod_act_prod as ap ON f.actividad = ap.id
 INNER JOIN prod_udm as u ON u.id = f.udm_env
+INNER JOIN prod_area_prod as ar on ar.id=f.area
 LEFT JOIN prod_avance_pedido a 
     ON a.id_pedido = p.id_pedido
     AND a.secuencia = f.secuencia
@@ -52,7 +54,7 @@ LEFT JOIN prod_avance_pedido a
 WHERE a.fecha_turno IS NOT NULL
 GROUP BY 
     p.id_pedido, f.secuencia, a.fecha_turno,
-    f.unds, u.sigla, a.obj_kg, a.unidades_reales, a.turnodn, a.hc,f.peso_env,u.equivalente_kg
+    f.unds, u.sigla, a.obj_kg, a.unidades_reales, a.turnodn, a.hc,f.peso_env,u.equivalente_kg, ar.nombre
 ORDER BY 
     a.fecha_turno ASC, p.id_pedido DESC, f.secuencia ASC");
 
@@ -62,7 +64,7 @@ while ($g = $f->fetch_assoc()) {
 }
 
 // ── Construir HTML para dompdf ──────────────────────────────────────────────
-// ── Construir HTML para dompdf ──────────────────────────────────────────────
+
 $filas = '';
 
 // Agrupar por fecha
@@ -94,6 +96,7 @@ foreach ($porFecha as $fecha => $grupo) {
         $filas .= "
         <tr>
           {$celdaFecha}
+                      <td>" . htmlspecialchars($r['areanombre'] ?? '—') . "</td>
             <td>" . htmlspecialchars($r['identificacionpedido']) . "</td>
             <td style='text-align:left;'>{$orden}</td>
             <td>" . htmlspecialchars($r['turno'] ?? '—') . "</td>
@@ -116,6 +119,7 @@ foreach ($porFecha as $fecha => $grupo) {
     <tr style='background:#f0fdf4; font-style:italic;'>
         <td colspan='5' style='text-align:right; color:#555; font-size:8px;'>
             Subtotal {$fecha}</td>
+
         <td style='font-weight:bold;'>" . number_format($subObj, 2) . "</td>
         <td style='font-weight:bold;'>" . number_format($subReal, 2) . "</td>
         <td style='color:{$subColor}; font-weight:bold;'>{$subCump}%</td>
@@ -154,6 +158,7 @@ $html = "
     <thead>
       <tr>
         <th>FECHA PLANIFICADA</th>
+        <th>AREA</th>
         <th>PEDIDO</th>
         <th>ORDEN DE PRODUCCIÓN</th>
         <th>TURNO</th>
